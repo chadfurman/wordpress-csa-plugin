@@ -1,0 +1,19 @@
+{
+    "name": "red-fire-farm/csa-plugin",
+    "description": "A WordPress plugin for managing the Red Fire Farm CSA",
+    "type": "project",
+    "license": "mit",
+    "autoload": {
+        "psr-4": {
+            "RedFireFarm\\CsaPlugin\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Chad Furman",
+            "email": "chad@chadfurman.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}

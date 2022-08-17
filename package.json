@@ -1,0 +1,19 @@
+{
+  "name": "red-fire-farm-csa-plugin",
+  "version": "1.0.0",
+  "description": "A WordPress plugin for managing the Red Fire Farm CSA",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "wp-scripts build",
+    "start": "wp-scripts start"
+  },
+  "author": "Chad Furman <chad@chadfurman.com>",
+  "license": "ISC",
+  "dependencies": {
+    "react-router-dom": "^6.3.0"
+  },
+  "devDependencies": {
+    "@wordpress/scripts": "^23.7.1"
+  }
+}

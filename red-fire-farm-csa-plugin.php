@@ -67,6 +67,7 @@ function rffcsa_register_post_types() {
                 'name'          => __('CSA Share Options', 'textdomain'),
                 'singular_name' => __('CSA Share Option', 'textdomain'),
             ),
+            'show_in_rest' => true,
             'description' => 'A CSA Share Option.  Examples include Regular, Small, Fruit, Mushroom, etc.'
         )
     );

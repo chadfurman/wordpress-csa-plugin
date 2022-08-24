@@ -77,3 +77,23 @@ function rffcsa_create_block_signup_button() {
     register_block_type( __DIR__ . '/build/blocks/signup-button' );
 }
 add_action( 'init', 'rffcsa_create_block_signup_button' );
+
+add_shortcode( 'rffcsa_signup_page', 'rffcsa_csa_signup_page_shortcode' );
+
+function rffcsa_csa_signup_page_shortcode() {
+    return '<div id="rffcsa"></div>';
+}
+
+add_action( 'wp_enqueue_scripts', 'enqueue_my_app' );
+
+function enqueue_my_app() {
+    global $post;
+
+    if ( has_shortcode( $post->post_content, 'rffcsa_signup_page' ) ) {
+        $build_directory     = __DIR__ . '/build/shortcodes/csa-signup-shortcode';
+        $build_directory_uri = plugin_dir_url( __FILE__ ) . 'build/shortcodes/csa-signup-shortcode/';
+
+//        wp_enqueue_style( 'app_styles', $build_directory_uri . 'csa-signup-shortcode.css', [], '1.0.0' );
+        wp_enqueue_script( 'app_script', $build_directory_uri . 'csa-signup-shortcode.js', [], '1.0.0', true );
+    }
+}

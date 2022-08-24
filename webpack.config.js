@@ -5,10 +5,10 @@ module.exports = {
     entry: {
         ...defaults.entry,
         'index': './src/index.js',
-        'csa-signup-shortcode': './src/shortcodes/csa-signup/index.js',
+        'shortcodes/csa-signup-shortcode/csa-signup-shortcode': './src/shortcodes/csa-signup/index.js',
     },
     externals: {
-        react: 'React',
-        'react-dom': 'ReactDOM',
+        // react: 'React',
+        // 'react-dom': 'ReactDOM',
     },
 };

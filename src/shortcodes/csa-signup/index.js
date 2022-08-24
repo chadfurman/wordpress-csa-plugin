@@ -1,5 +1,5 @@
 import App from "./App";
-import { render } from '@wordpress/element';
+import { createRoot } from 'react-dom/client';
 
 /**
  * Import the stylesheet for the plugin.
@@ -7,4 +7,5 @@ import { render } from '@wordpress/element';
 // import './style/main.css';
 
 // Render the App component into the DOM
-render(<App />, document.getElementById('rffcsa'));
+const root = createRoot(<App />)
+root.render(document.getElementById('rffcsa'))

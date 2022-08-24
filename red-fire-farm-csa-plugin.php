@@ -74,6 +74,6 @@ function rffcsa_register_post_types() {
 }
 
 function rffcsa_create_block_signup_button() {
-    register_block_type( __DIR__ . '/blocks/signup-button/build' );
+    register_block_type( __DIR__ . '/build/blocks/signup-button' );
 }
 add_action( 'init', 'rffcsa_create_block_signup_button' );

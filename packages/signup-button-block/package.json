@@ -1,0 +1,16 @@
+{
+  "name": "signup-button-block",
+  "version": "1.0.0",
+  "description": "A button block for linking to the CSA signup page",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "wp-scripts build",
+    "start": "wp-scripts start"
+  },
+  "author": "Chad Furman <chad@chadfurman.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@wordpress/scripts": "^23.7.1"
+  }
+}

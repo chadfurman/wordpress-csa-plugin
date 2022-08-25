@@ -1,7 +1,7 @@
 {
-  "name": "red-fire-farm-csa-plugin",
+  "name": "csa-signup-shortcode",
   "version": "1.0.0",
-  "description": "A WordPress plugin for managing the Red Fire Farm CSA",
+  "description": "A shortcode for displaying the CSA Signup Page",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

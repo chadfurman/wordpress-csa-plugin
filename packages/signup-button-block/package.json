@@ -2,7 +2,7 @@
   "name": "signup-button-block",
   "version": "1.0.0",
   "description": "A button block for linking to the CSA signup page",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "wp-scripts build",

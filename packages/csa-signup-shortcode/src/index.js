@@ -1,5 +1,5 @@
 import App from "./App";
-import { createRoot } from 'react-dom/client';
+import { createRoot } from 'react-dom';
 
 /**
  * Import the stylesheet for the plugin.

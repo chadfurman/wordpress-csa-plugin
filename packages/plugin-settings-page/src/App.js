@@ -16,7 +16,7 @@ const App = () => {
                 <Routes>
                     <Route path="/" element={<Layout/>}>
                         <Route index element={<Dashboard/>} />
-                        <Route path={"csa-manage-shares"} element={<ManageCSAShares/>} />
+                        <Route path="manage-csa-shares" element={<ManageCSAShares/>} />
                         <Route path="manage-pickup-locations" element={<ManagePickupLocations/>} />
                         <Route path="*" element={<NoPage />} />
                     </Route>

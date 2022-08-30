@@ -93,9 +93,12 @@ function enqueue_my_app() {
     if ( ! has_shortcode( $post->post_content, 'csa_signup' ) ) {
         return false;
     }
-    $plugin_app_dir_url = plugin_dir_url( __FILE__ ) . 'packages/csa-signup-shortcode/';
-    $react_app_build = $plugin_app_dir_url .'build/';
-    $manifest_url = $react_app_build. 'asset-manifest.json';
+    $plugin_app_dir = plugin_dir_path( __FILE__ ) . 'packages/csa-signup-shortcode/';
+    $plugin_app_url = plugin_dir_url( __FILE__ ) . 'packages/csa-signup-shortcode/';
+    $build_dir = 'build/';
+    $react_app_url = $plugin_app_url . $build_dir;
+    $react_app_dir = $plugin_app_dir . $build_dir;
+    $manifest_url = $react_app_dir. 'asset-manifest.json';
 
     // Request manifest file.
     $request = file_get_contents( $manifest_url );
@@ -123,12 +126,12 @@ function enqueue_my_app() {
 
     // Load css files.
     foreach ($css_files as $index => $css_file){
-        wp_enqueue_style('react-plugin-'.$index, $react_app_build . $css_file);
+        wp_enqueue_style('react-plugin-'.$index, $react_app_url . $css_file);
     }
 
     // Load js files.
     foreach ($js_files as $index => $js_file){
-        wp_enqueue_script('react-plugin-'.$index, $react_app_build . $js_file, array(), 1, true);
+        wp_enqueue_script('react-plugin-'.$index, $react_app_url . $js_file, array(), 1, true);
     }
 
     // Variables for app use.

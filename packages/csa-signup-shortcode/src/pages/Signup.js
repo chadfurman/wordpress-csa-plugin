@@ -26,14 +26,6 @@ const SignupRegions = ({selectedRegion, changeRegion}) => {
 }
 
 const SignupSeasons = ({selectedSeasons, changeSeasons}) => {
-    // Start with an empty list
-    // when I pick a season
-    // if that season is not in the list, add it
-    // when I unpick a season
-    // if that season is in the list, remove it
-    // set the global seasons to the lists value
-
-
     let seasons = [...selectedSeasons]
     const handleSeasonChange = (e) => {
         const season = e.target.value
@@ -43,7 +35,6 @@ const SignupSeasons = ({selectedSeasons, changeSeasons}) => {
         } else if (isSelected && seasons.indexOf(season) === -1) {
             seasons.push(season)
         }
-        console.log(seasons)
         changeSeasons(seasons)
     }
 
@@ -671,6 +662,8 @@ function SignupContactInfo() {
 function Signup() {
     const [selectedRegion, changeRegion] = useState()
     const [selectedSeasons, changeSeasons] = useState([])
+    let isFall = false;
+    let isSummer = false;
     useEffect(() => {
         console.log("selected region is: " + selectedRegion)
     }, [selectedRegion])
@@ -679,16 +672,15 @@ function Signup() {
             <SignupWelcomeText/>
             <SignupRegions selectedRegion={selectedRegion} changeRegion={changeRegion}/>
             { selectedRegion ? <SignupSeasons selectedSeasons={selectedSeasons} changeSeasons={changeSeasons} /> : '' }
-            {/*{ selectedSeasons.indexOf('summer') != -1 ? <SignupSeason season={"summer"}/> : '' }*/}
-            {/*{ selectedSeasons.indexOf('fall') != -1 ? <SignupSeason season={"fall"}/> : '' }*/}
-            {/*{ selectedSeasons.indexOf('fall') != -1 ? <SignupSeason season={"fall"}/> : '' }*/}
-            <SignupBundles/>
-            <SignupAddons/>
-            <SignupPickupLocation/>
-            <SignupTotal/>
-            <SignupPaymentOptions/>
-            <SignupContactInfo/>
-            <SignupComments />
+            { selectedSeasons.indexOf('summer') !== -1 ? <SignupSeason season={"summer"}/> : '' }
+            { selectedSeasons.indexOf('fall') !== -1 ? <SignupSeason season={"fall"}/> : '' }
+            { selectedSeasons.indexOf('summer') !== -1 && selectedSeasons.indexOf('fall') != -1 ? <SignupBundles/> : '' }
+            {/*<SignupAddons/>*/}
+            {/*<SignupPickupLocation/>*/}
+            {/*<SignupTotal/>*/}
+            {/*<SignupPaymentOptions/>*/}
+            {/*<SignupContactInfo/>*/}
+            {/*<SignupComments />*/}
         </>
     )
 }

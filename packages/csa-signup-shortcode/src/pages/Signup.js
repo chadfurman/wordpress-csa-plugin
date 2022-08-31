@@ -1,25 +1,41 @@
 import React from 'react'
 
 const SignupRegions = () => {
-        return <>
-            <h3>Start by Choosing Your Farm Share Area:</h3>
-            <p>Where you would like to get a share? [Answer reveals pricing and pickup locations.]</p>
-            <ul>
-                <li>
-                    <input type="radio" id="choice_35_3_0"/>
-                    <label htmlFor="choice_35_3_0" id="label_35_3_0">Western Massachusetts</label>
-                </li>
-                <li>
-                    <input type="radio" id="choice_35_3_1"/>
-                    <label htmlFor="choice_35_3_1" id="label_35_3_1">Boston Area &amp; Worcester</label>
-                </li>
-            </ul>
-        </>;
+    const regions = {
+        "western-ma": "Western Massachusetts",
+        "boston-worcester": "Boston Area & Worcester",
+    }
+    const [selectedRegion, changeRegion] = useState()
+    return <>
+        <h3>Start by Choosing Your Farm Share Area:</h3>
+        <p>Where you would like to get a share? [Answer reveals pricing and pickup locations.]</p>
+        <ul>
+            {Object.keys(regions).map(e => {
+                return (
+                    <li>
+                        <input type="radio"/>
+                        <label>
+                )
+            }}
+
+
+            )
+        }
+            <li>
+                <input type="radio" id="choice_35_3_0" selected={selectedRegion == "western_ma"}/>
+                <label htmlFor="choice_35_3_0" id="label_35_3_0">Western Massachusetts</label>
+            </li>
+            <li>
+                <input type="radio" id="choice_35_3_1"/>
+                <label htmlFor="choice_35_3_1" id="label_35_3_1">Boston Area &amp; Worcester</label>
+            </li>
+        </ul>
+    </>;
 }
 
 const SignupSeasons = () => {
         return <>
-            <h2>Which Seasons are you interested in?</h2>
+            <h3>Which Seasons are you interested in?</h3>
             <ul>
                 <li>
                     <input type="checkbox" id="csa-share-summer-csa"/>
@@ -121,16 +137,18 @@ const SignupSeason = ({season}) => {
 
 function SignupWelcomeText() {
     return <>
-        <h2>Welcome to our share sign up page! Hello!</h2>
+        <h3>Welcome to our share sign up page! Hello!</h3>
+        <h4>sign up for your vegetable share (and any additional shares) here!</h4>
         <p>
-            <strong>sign up for your vegetable share (and any additional shares) here!</strong>
-            upon completion of this form, you will be prompted to pay with a check or redirected to paypal. please
+            Upon completion of this form, you will be prompted to pay with a check or redirected to paypal. please
             call or email the farm with any questions while doing the form.
-            <br/>
-            <br/>
+        </p>
+        <p>
             413-467-7645 | &nbsp;<a href="mailto:thefarmers@redfirefarm.com">thefarmers@redfirefarm.com</a>
             <br/>
-            <strong>be a part of building the local foodsystem!</strong>
+        </p>
+        <p>
+            <strong>Be a part of building the local food system!</strong>
         </p>
     </>;
 }
@@ -340,6 +358,8 @@ function SignupPickupLocation() {
 
 function SignupTotal() {
     return (
+        <>
+        <h3>Total</h3>
         <ul>
             <li id="field_35_6" className="gfield gfield_price gfield_price_35_ gfield_total gfield_total_35_ field_sublabel_below field_description_above gfield_visibility_visible">
                 <label className="gfield_label" htmlFor="input_35_6">Total</label>
@@ -349,14 +369,14 @@ function SignupTotal() {
                 </div>
             </li>
         </ul>
+        </>
     )
 }
 
 function SignupPaymentOptions() {
     return <>
-        <li id="field_35_15"
-            className="gfield gfield_contains_required field_sublabel_below field_description_above gfield_visibility_visible">
-            <label className="gfield_label">Payment Options<span className="gfield_required">*</span></label>
+        <h3>Payment Options</h3>
+            <label className="gfield_label"><span className="gfield_required">*</span></label>
             <div className="gfield_description" id="gfield_description_35_15">
                 Deposits are
                 non-refundable. We work with people all the time to make payment plans that
@@ -381,9 +401,7 @@ function SignupPaymentOptions() {
                     </li>
                 </ul>
             </div>
-        </li>
-        <li id="field_35_46"
-            className="gfield gfield_contains_required field_sublabel_below field_description_above gfield_visibility_visible">
+        <div>
             <label className="gfield_label" htmlFor="input_35_46">Amount you will pay today:<span
                 className="gfield_required">*</span></label>
             <div className="gfield_description" id="gfield_description_35_46">Please enter
@@ -393,8 +411,8 @@ function SignupPaymentOptions() {
                 <input name="input_46" id="input_35_46" type="text" className="medium" aria-required="true"
                        aria-invalid="false" aria-describedby="gfield_description_35_46"/>
             </div>
-        </li>
-        <h2>Payment Method</h2>
+        </div>
+        <h3>Payment Method</h3>
         <div className="gfield_description" id="gfield_description_35_16">
             Please choose your payment method. SNAP/EBT available with sign up- please email
             thefarmers@redfirefarm.com to request SNAP/EBT CSA signup forms
@@ -414,7 +432,7 @@ function SignupPaymentOptions() {
 
 function SignupComments() {
     return <>
-        <h2>Comments</h2>
+        <h3>Comments</h3>
         <textarea name="input_18" id="input_35_18" className="textarea medium" aria-invalid="false" rows="10" cols="50"></textarea>
         <ul>
             <li>
@@ -455,7 +473,7 @@ function SignupComments() {
 
 function SignupContactInfo() {
     return <>
-        <h2>Contact Info</h2>
+        <h3>Contact Info</h3>
         <ul id="gform_fields_35_2" className="gform_fields top_label form_sublabel_below description_above">
             <li id="field_35_10"
                 className="gfield gfield_contains_required field_sublabel_below field_description_above gfield_visibility_visible">

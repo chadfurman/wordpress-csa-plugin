@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 
 const SignupRegions = () => {
     const regions = {
@@ -6,29 +6,23 @@ const SignupRegions = () => {
         "boston-worcester": "Boston Area & Worcester",
     }
     const [selectedRegion, changeRegion] = useState()
+    const handleRegionChange = (e) => {
+        changeRegion(e.target.value)
+        console.log(`changed region to ${e.target.value}`)
+    }
+    const regionElements = Object.keys(regions).map(region => {
+        return (
+            <li key={region} >
+                <input type="radio" value={region} checked={selectedRegion == region} onChange={handleRegionChange}/>
+                <label>{regions[region]}</label>
+            </li>
+        )
+    })
     return <>
-        <h3>Start by Choosing Your Farm Share Area:</h3>
-        <p>Where you would like to get a share? [Answer reveals pricing and pickup locations.]</p>
+        <h3>Start by choosing your farm share area:</h3>
+        <p>Where you would like to get a share? [answer reveals pricing and pickup locations.]</p>
         <ul>
-            {Object.keys(regions).map(e => {
-                return (
-                    <li>
-                        <input type="radio"/>
-                        <label>
-                )
-            }}
-
-
-            )
-        }
-            <li>
-                <input type="radio" id="choice_35_3_0" selected={selectedRegion == "western_ma"}/>
-                <label htmlFor="choice_35_3_0" id="label_35_3_0">Western Massachusetts</label>
-            </li>
-            <li>
-                <input type="radio" id="choice_35_3_1"/>
-                <label htmlFor="choice_35_3_1" id="label_35_3_1">Boston Area &amp; Worcester</label>
-            </li>
+            {regionElements}
         </ul>
     </>;
 }
@@ -523,7 +517,7 @@ function SignupContactInfo() {
                     <label htmlFor="input_35_13_2" id="input_35_13_2_label">Address Line 2</label>
                     <input type="text" name="input_13.3" id="input_35_13_3"/>
                     <label htmlFor="input_35_13_3" id="input_35_13_3_label">City</label>
-                    <select>
+                    <select defaultValue={"Massachusetts"}>
                         <option value=""></option>
                         <option value="Alabama">Alabama</option>
                         <option
@@ -572,7 +566,7 @@ function SignupContactInfo() {
                         <option
                             value="Maryland">Maryland
                         </option>
-                        <option value="Massachusetts" selected="selected">Massachusetts</option>
+                        <option value="Massachusetts">Massachusetts</option>
                         <option
                             value="Michigan">Michigan
                         </option>

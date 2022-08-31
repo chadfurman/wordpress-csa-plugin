@@ -1,19 +1,17 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
-const SignupRegions = () => {
+const SignupRegions = ({selectedRegion, changeRegion}) => {
     const regions = {
         "western-ma": "Western Massachusetts",
         "boston-worcester": "Boston Area & Worcester",
     }
-    const [selectedRegion, changeRegion] = useState()
     const handleRegionChange = (e) => {
         changeRegion(e.target.value)
-        console.log(`changed region to ${e.target.value}`)
     }
     const regionElements = Object.keys(regions).map(region => {
         return (
             <li key={region} >
-                <input type="radio" value={region} checked={selectedRegion == region} onChange={handleRegionChange}/>
+                <input type="radio" value={region} checked={selectedRegion === region} onChange={handleRegionChange}/>
                 <label>{regions[region]}</label>
             </li>
         )
@@ -27,20 +25,41 @@ const SignupRegions = () => {
     </>;
 }
 
-const SignupSeasons = () => {
-        return <>
-            <h3>Which Seasons are you interested in?</h3>
-            <ul>
-                <li>
-                    <input type="checkbox" id="csa-share-summer-csa"/>
-                    <label htmlFor="csa-share-summer-csa">Summer CSA</label>
-                </li>
-                <li>
-                    <input type="checkbox" id="csa-share-fall-csa"/>
-                    <label htmlFor="csa-share-summer-csa">Fall CSA</label>
-                </li>
-            </ul>
-        </>;
+const SignupSeasons = ({selectedSeasons, changeSeasons}) => {
+    // Start with an empty list
+    // when I pick a season
+    // if that season is not in the list, add it
+    // when I unpick a season
+    // if that season is in the list, remove it
+    // set the global seasons to the lists value
+
+
+    let seasons = [...selectedSeasons]
+    const handleSeasonChange = (e) => {
+        const season = e.target.value
+        const isSelected = e.target.checked
+        if (!isSelected) {
+            seasons = seasons.filter((e) => e !== season)
+        } else if (isSelected && seasons.indexOf(season) === -1) {
+            seasons.push(season)
+        }
+        console.log(seasons)
+        changeSeasons(seasons)
+    }
+
+    return <>
+        <h3>Which Seasons are you interested in?</h3>
+        <ul>
+            <li>
+                <input type="checkbox" value="summer" id="csa-share-summer-csa" onChange={handleSeasonChange}/>
+                <label htmlFor="csa-share-summer-csa">Summer CSA</label>
+            </li>
+            <li>
+                <input type="checkbox" value="fall" id="csa-share-fall-csa" onChange={handleSeasonChange}/>
+                <label htmlFor="csa-share-summer-csa">Fall CSA</label>
+            </li>
+        </ul>
+    </>;
 }
 
 const SignupSeason = ({season}) => {
@@ -650,13 +669,19 @@ function SignupContactInfo() {
 }
 
 function Signup() {
+    const [selectedRegion, changeRegion] = useState()
+    const [selectedSeasons, changeSeasons] = useState([])
+    useEffect(() => {
+        console.log("selected region is: " + selectedRegion)
+    }, [selectedRegion])
     return (
         <>
             <SignupWelcomeText/>
-            <SignupRegions/>
-            <SignupSeasons/>
-            <SignupSeason season={"summer"}/>
-            <SignupSeason season={"fall"}/>
+            <SignupRegions selectedRegion={selectedRegion} changeRegion={changeRegion}/>
+            { selectedRegion ? <SignupSeasons selectedSeasons={selectedSeasons} changeSeasons={changeSeasons} /> : '' }
+            {/*{ selectedSeasons.indexOf('summer') != -1 ? <SignupSeason season={"summer"}/> : '' }*/}
+            {/*{ selectedSeasons.indexOf('fall') != -1 ? <SignupSeason season={"fall"}/> : '' }*/}
+            {/*{ selectedSeasons.indexOf('fall') != -1 ? <SignupSeason season={"fall"}/> : '' }*/}
             <SignupBundles/>
             <SignupAddons/>
             <SignupPickupLocation/>

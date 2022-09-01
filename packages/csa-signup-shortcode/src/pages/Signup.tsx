@@ -1,7 +1,15 @@
 import React, {useEffect, useState} from 'react'
 
-const SignupRegions = ({selectedRegion, changeRegion}) => {
-    const regions = {
+interface SignupRegionsProps {
+    selectedRegion: string
+    changeRegion: Function
+}
+
+type RegionSlug = string
+type RegionName = string
+type Regions = Record<RegionSlug, RegionName>;
+const SignupRegions = ({selectedRegion, changeRegion}: SignupRegionsProps) => {
+    const regions: Regions = {
         "western-ma": "Western Massachusetts",
         "boston-worcester": "Boston Area & Worcester",
     }
@@ -171,26 +179,26 @@ function SignupBundles() {
                 </div>
                 <div>
                     <ul>
-                        <li><input name="input_116" type="radio" id="choice_35_116_0" disabled=""/>
+                        <li><input name="input_116" type="radio" id="choice_35_116_0" />
                             <label htmlFor="choice_35_116_0" id="label_35_116_0">$1,180 Bundle Helping Hands Bundle'
                                 - Help offset signup costs for up to 7 households needing lower priced
                                 shares</label>
                         </li>
                         <li className="gchoice_35_116_1">
-                            <input name="input_116" type="radio" id="choice_35_116_1" disabled=""/>
+                            <input name="input_116" type="radio" id="choice_35_116_1" />
                             <label htmlFor="choice_35_116_1" id="label_35_116_1">$925 Bundle 'Helping Hands Bundle'
                                 - Help offset signup costs for a household needing lower priced shares</label>
                         </li>
                         <li className="gchoice_35_116_2">
-                            <input name="input_116" type="radio" id="choice_35_116_2" disabled=""/>
+                            <input name="input_116" type="radio" id="choice_35_116_2" />
                             <label htmlFor="choice_35_116_2" id="label_35_116_2">$885 Bundle Regular Price</label>
                         </li>
                         <li className="gchoice_35_116_3">
-                            <input name="input_116" type="radio" id="choice_35_116_3" disabled=""/>
+                            <input name="input_116" type="radio" id="choice_35_116_3" />
                             <label htmlFor="choice_35_116_3" id="label_35_116_3">$847 Bundle</label>
                         </li>
                         <li className="gchoice_35_116_4">
-                            <input name="input_116" type="radio" id="choice_35_116_4" disabled=""/>
+                            <input name="input_116" type="radio" id="choice_35_116_4" />
                             <label htmlFor="choice_35_116_4" id="label_35_116_4">$842 Bundle</label>
                         </li>
                     </ul>
@@ -291,14 +299,14 @@ function SignupPickupLocation() {
                             <label htmlFor="choice_35_39_0" id="label_35_39_0">N/A - NOT GETTING A SUMMER SHARE</label>
                         </li>
                         <li className="gchoice_35_40_1">
-                            <input name="input_40" type="radio" id="choice_35_40_1" disabled=""/>
+                            <input name="input_40" type="radio" id="choice_35_40_1" />
                             <label htmlFor="choice_35_40_1" id="label_35_40_1">
                                 WORCESTER - Wednesdays 3-7 p.m. at
                                 the First Unitarian Church (90 Main Street)
                             </label>
                         </li>
                         <li className="gchoice_35_40_2">
-                            <input name="input_40" type="radio" id="choice_35_40_2" disabled=""/>
+                            <input name="input_40" type="radio" id="choice_35_40_2" />
                             <label htmlFor="choice_35_40_2" id="label_35_40_2">
                                 CAMBRIDGE - Wednesdays 4-7 p.m. at the East Cambridge Savings Bank in Inman Square (1310 Cambridge Street)
                             </label>
@@ -320,40 +328,40 @@ function SignupPickupLocation() {
                 <label className="gfield_label" htmlFor="input_35_45_1">Fall Boxing Fee</label>
                 <div className="gfield_description" id="gfield_description_35_45">$2.50/week for boxes (required to cover cost-thanks!)</div>
                 <div className="ginput_container ginput_container_singleproduct">
-                    <input type="hidden" name="input_45.1" className="gform_hidden" disabled=""/>
+                    <input type="hidden" name="input_45.1" className="gform_hidden" />
                     <span className="ginput_product_price_label">Price:</span> <span className="ginput_product_price" id="input_35_45">$10.00</span>
-                    <input type="hidden" name="input_45.2" id="ginput_base_price_35_45" className="gform_hidden" disabled=""/>
-                    <input type="hidden" name="input_45.3" className="ginput_quantity_35_45 gform_hidden" disabled=""/>
+                    <input type="hidden" name="input_45.2" id="ginput_base_price_35_45" className="gform_hidden" />
+                    <input type="hidden" name="input_45.3" className="ginput_quantity_35_45 gform_hidden" />
                 </div>
             </li>
             <li id="field_35_102" className="gfield gfield_price gfield_price_35_102 gfield_product_35_102 field_sublabel_below field_description_above gfield_visibility_visible">
                 <label className="gfield_label" htmlFor="input_35_102_1">Summer Boxing Fee</label>
                 <div className="gfield_description" id="gfield_description_35_102">$1.50/week for boxes (required to cover cost-thanks!)</div>
                 <div className="ginput_container ginput_container_singleproduct">
-                    <input type="hidden" name="input_102.1" className="gform_hidden" disabled=""/>
+                    <input type="hidden" name="input_102.1" className="gform_hidden" />
                     <span className="ginput_product_price_label">Price:</span> <span className="ginput_product_price" id="input_35_102">$10.50</span>
-                    <input type="hidden" name="input_102.2" id="ginput_base_price_35_102" className="gform_hidden" disabled=""/>
-                    <input type="hidden" name="input_102.3" className="ginput_quantity_35_102 gform_hidden" disabled=""/>
+                    <input type="hidden" name="input_102.2" id="ginput_base_price_35_102" className="gform_hidden" />
+                    <input type="hidden" name="input_102.3" className="ginput_quantity_35_102 gform_hidden" />
                 </div>
             </li>
             <li id="field_35_100" className="gfield gfield_price gfield_price_35_100 gfield_product_35_100 field_sublabel_below field_description_above gfield_visibility_visible">
                 <label className="gfield_label" htmlFor="input_35_100_1">Fall Home Delivery Fee</label>
                 <div className="gfield_description" id="gfield_description_35_100">$13.75 per week fee for home delivery via Mass Food Delivery.</div>
                 <div className="ginput_container ginput_container_singleproduct">
-                    <input type="hidden" name="input_100.1" className="gform_hidden" disabled=""/>
+                    <input type="hidden" name="input_100.1" className="gform_hidden" />
                     <span className="ginput_product_price_label">Price:</span> <span className="ginput_product_price" id="input_35_100">$55.00</span>
-                    <input type="hidden" name="input_100.2" id="ginput_base_price_35_100" className="gform_hidden" disabled=""/>
-                    <input type="hidden" name="input_100.3" className="ginput_quantity_35_100 gform_hidden" disabled=""/>
+                    <input type="hidden" name="input_100.2" id="ginput_base_price_35_100" className="gform_hidden" />
+                    <input type="hidden" name="input_100.3" className="ginput_quantity_35_100 gform_hidden" />
                 </div>
             </li>
             <li id="field_35_101" className="gfield gfield_price gfield_price_35_101 gfield_product_35_101 field_sublabel_below field_description_above gfield_visibility_visible">
                 <label className="gfield_label" htmlFor="input_35_101_1">Summer Home Delivery Fee</label>
                 <div className="gfield_description" id="gfield_description_35_101">$13.75 per week fee for home delivery via Mass Food Delivery.</div>
                 <div className="ginput_container ginput_container_singleproduct">
-                    <input type="hidden" name="input_101.1" className="gform_hidden" disabled=""/>
+                    <input type="hidden" name="input_101.1" className="gform_hidden" />
                     <span className="ginput_product_price_label">Price:</span> <span className="ginput_product_price" id="input_35_101">$96.00</span>
-                    <input type="hidden" name="input_101.2" id="ginput_base_price_35_101" className="gform_hidden" disabled=""/>
-                    <input type="hidden" name="input_101.3" className="ginput_quantity_35_101 gform_hidden" disabled=""/>
+                    <input type="hidden" name="input_101.2" id="ginput_base_price_35_101" className="gform_hidden" />
+                    <input type="hidden" name="input_101.3" className="ginput_quantity_35_101 gform_hidden" />
                 </div>
             </li>
         </ul>
@@ -664,6 +672,19 @@ function Signup() {
     const [selectedSeasons, changeSeasons] = useState([])
     let isFall = false;
     let isSummer = false;
+    // calculator:
+    //     start at 0
+    // collect all the things with prices and the numbers of each thing
+    // add all the things with prices times the number of each thing together
+    // store it in the total
+    const shares = {}
+    const updateSelectedShares = (shareId, sharePrice, quantity) => {
+
+    }
+    let totalPrice = 0.0
+    useEffect(() => {
+
+    })
     useEffect(() => {
         console.log("selected region is: " + selectedRegion)
     }, [selectedRegion])
@@ -675,13 +696,13 @@ function Signup() {
             { selectedSeasons.indexOf('summer') !== -1 ? (
                 <>
                     <SignupSeason season={"summer"}/>
-                    <SignupAddons season={"summer"}/>
+                    <SignupAddons />
                 </>
             ) : '' }
             { selectedSeasons.indexOf('fall') !== -1 ? (
                 <>
-                    <SignupSeason season={"fall"}/>
-                    <SignupAddons season={"fall"}/>
+                    <SignupSeason season={"fall"} />
+                    <SignupAddons />
                 </>
             ) : '' }
             { selectedSeasons.indexOf('summer') !== -1 && selectedSeasons.indexOf('fall') != -1 ? <SignupBundles/> : '' }

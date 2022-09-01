@@ -672,10 +672,19 @@ function Signup() {
             <SignupWelcomeText/>
             <SignupRegions selectedRegion={selectedRegion} changeRegion={changeRegion}/>
             { selectedRegion ? <SignupSeasons selectedSeasons={selectedSeasons} changeSeasons={changeSeasons} /> : '' }
-            { selectedSeasons.indexOf('summer') !== -1 ? <SignupSeason season={"summer"}/> : '' }
-            { selectedSeasons.indexOf('fall') !== -1 ? <SignupSeason season={"fall"}/> : '' }
+            { selectedSeasons.indexOf('summer') !== -1 ? (
+                <>
+                    <SignupSeason season={"summer"}/>
+                    <SignupAddons season={"summer"}/>
+                </>
+            ) : '' }
+            { selectedSeasons.indexOf('fall') !== -1 ? (
+                <>
+                    <SignupSeason season={"fall"}/>
+                    <SignupAddons season={"fall"}/>
+                </>
+            ) : '' }
             { selectedSeasons.indexOf('summer') !== -1 && selectedSeasons.indexOf('fall') != -1 ? <SignupBundles/> : '' }
-            {/*<SignupAddons/>*/}
             {/*<SignupPickupLocation/>*/}
             {/*<SignupTotal/>*/}
             {/*<SignupPaymentOptions/>*/}

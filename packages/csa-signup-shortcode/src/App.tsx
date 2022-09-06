@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import {Routes, Route, HashRouter} from "react-router-dom"
 import Layout from './pages/Layout'
 import Signup from './pages/Signup'

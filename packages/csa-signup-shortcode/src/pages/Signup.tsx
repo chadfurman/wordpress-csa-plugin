@@ -9,19 +9,20 @@ type Region = {
 }
 type Regions = Record<RegionId, Region>;
 interface SignupRegionsProps {
+    regions: Regions,
     selectedRegionId?: RegionId
     handleChangeRegion: Function
 }
 
-const SignupRegions = ({selectedRegionId, handleChangeRegion}: SignupRegionsProps) => {
+const SignupRegions = ({regions, selectedRegionId, handleChangeRegion}: SignupRegionsProps) => {
     const handleRegionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         handleChangeRegion(e.target.value)
     }
-    const regionElements = Object.keys(regions).map(region => {
+    const regionElements = Object.keys(regions).map(regionId => {
         return (
-            <li key={region} >
-                <input type="radio" value={region} checked={selectedRegionId === region} onChange={handleRegionChange}/>
-                <label>{regions[region]}</label>
+            <li key={regionId} >
+                <input type="radio" value={regionId} checked={selectedRegionId === regionId} onChange={handleRegionChange}/>
+                <label>{regions[regionId].label}</label>
             </li>
         )
     })
@@ -42,56 +43,68 @@ type Season = {
 }
 type Seasons = Record<SeasonId, Season>
 interface SignupSeasonsProps {
+    seasons: Seasons,
     selectedSeasons: Seasons
     handleChangeSeasons: Function
 }
-const SignupSeasons = ({selectedSeasons, handleChangeSeasons}: SignupSeasonsProps) => {
-    let seasons = [...selectedSeasons]
+const SignupSeasons = ({seasons, handleChangeSeasons}: SignupSeasonsProps) => {
     const handleSeasonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const season = e.target.value
+        const seasonId = e.target.value
         const isSelected = e.target.checked
-        if (!isSelected) {
-            seasons = seasons.filter((e) => e !== season)
-        } else if (isSelected && seasons.indexOf(season) === -1) {
-            seasons.push(season)
-        }
-        handleChangeSeasons(seasons)
+        handleChangeSeasons((selectedSeasons: Seasons) => {
+            if (!isSelected) {
+                console.log(`seasionId ${seasonId} is deselected`)
+                delete selectedSeasons[seasonId]
+            } else if (isSelected) {
+                console.log(`seasionId ${seasonId} is selected`)
+                selectedSeasons[seasonId] = seasons[seasonId]
+            }
+            console.log({selectedSeasons})
+            return {
+                ...selectedSeasons
+            }
+        })
     }
 
     return <>
         <h3>Which Seasons are you interested in?</h3>
         <ul>
-            <li>
-                <input type="checkbox" value="summer" id="csa-share-summer-csa" onChange={handleSeasonChange}/>
-                <label htmlFor="csa-share-summer-csa">Summer CSA</label>
-            </li>
-            <li>
-                <input type="checkbox" value="fall" id="csa-share-fall-csa" onChange={handleSeasonChange}/>
-                <label htmlFor="csa-share-summer-csa">Fall CSA</label>
-            </li>
+            {Object.keys(seasons).map(seasonId => {
+                const season = seasons[seasonId]
+                return (
+                    <li key={seasonId}>
+                        <input type="checkbox" value={season.id} id="csa-share-summer-csa" onChange={handleSeasonChange}/>
+                        <label htmlFor="csa-share-summer-csa">{season.label}</label>
+                    </li>
+                )
+            })}
         </ul>
     </>;
 }
 
 interface SignupSeasonProps {
-    seasonId: Season
+    season: Season
+    shares: CsaShares
     handleUpdateShares: Function
 }
 const SignupSeason = ({season, shares, handleUpdateShares}: SignupSeasonProps) => {
     return <>
         <h3>{season.label} Shares</h3>
         <ul>
-            {shares.map(share =>
-                <li>
-                    <label>{share.label}</label>
-                    <div>{share.description}</div>
-                    <div>
-                        <input type="text"/>
-                        <span>Price:</span> <span>{share.price}</span>
-                        <span>Quantity:</span> <input type="text"/>
-                    </div>
-                </li>
-            )}
+            {Object.keys(shares).map(shareId => {
+                const share = shares[shareId]
+                return (
+                    <li key={shareId}>
+                        <label>{share.label}</label>
+                        <div>{share.description}</div>
+                        <div>
+                            <input type="text"/>
+                            <span>Price:</span> <span>{share.price}</span>
+                            <span>Quantity:</span> <input type="text"/>
+                        </div>
+                    </li>
+                )
+            })}
         </ul>
     </>
 }
@@ -632,6 +645,7 @@ type CsaShare = {
     regionId: RegionId,
     seasonId: SeasonId
 }
+type CsaShares = Record<CsaShareId, CsaShare>
 type SelectedShare = {
     shareId: CsaShareId
     quantity: number
@@ -658,7 +672,7 @@ function Signup() {
             label: "Boston Area & Worcester"
         },
     }
-    const shares: Record<CsaShareId, CsaShare> = {
+    const shares: CsaShares = {
         "1": {
             id: "1",
             label: "Regular Summer CSA Share (Western MA)",
@@ -693,19 +707,24 @@ function Signup() {
         },
     }
     const [selectedRegion, handleChangeRegion] = useState<RegionLabel>()
-    const [selectedSeasons, handleChangeSeasons] = useState<Seasons>([])
+    const [selectedSeasons, handleChangeSeasons] = useState<Seasons>({})
     const [selectedShares, handleChangeSelectedShares] = useState<SelectedShares>({})
     let totalPrice: CsaSharePrice = 0.0
     const handleUpdateShares = (share: CsaShare, quantity: number) => {
-        selectedShares[share.id] = {
-            shareId: share.id,
-            quantity: quantity
-        }
-        handleChangeSelectedShares(selectedShares)
+        handleChangeSelectedShares(selectedShares => ({
+            ...selectedShares,
+            [share.id]: {
+                shareId: share.id,
+                quantity: quantity
+            }
+        }))
     }
     useEffect(() => {
         console.log("selected region is: " + selectedRegion)
     }, [selectedRegion])
+    useEffect(() => {
+        console.log("selected seasons are: ", {selectedSeasons})
+    }, [selectedSeasons])
     useEffect(() => {
         totalPrice = Object.keys(selectedShares).reduce((previousTotal, _, currentShareKeyIndex, selectedSharesKeys) => {
             const shareId = selectedSharesKeys[currentShareKeyIndex]
@@ -716,21 +735,17 @@ function Signup() {
     return (
         <>
             <SignupWelcomeText/>
-            <SignupRegions selectedRegionId={selectedRegion} handleChangeRegion={handleChangeRegion}/>
-            { selectedRegion ? <SignupSeasons selectedSeasons={selectedSeasons} handleChangeSeasons={handleChangeSeasons} /> : '' }
-            { selectedSeasons.indexOf('summer') !== -1 ? (
-                <>
-                    <SignupSeason season={"summer"} handleUpdateShares={handleUpdateShares} />
-                    <SignupAddons season={"summer"} handleUpdateShares={handleUpdateShares} />
-                </>
-            ) : '' }
-            { selectedSeasons.indexOf('fall') !== -1 ? (
-                <>
-                    <SignupSeason season={"fall"} handleUpdateShares={handleUpdateShares} />
-                    <SignupAddons season={"fall"} handleUpdateShares={handleUpdateShares} />
-                </>
-            ) : '' }
-            { selectedSeasons.indexOf('summer') !== -1 && selectedSeasons.indexOf('fall') !== -1 ? <SignupBundles/> : '' }
+            <SignupRegions regions={regions} selectedRegionId={selectedRegion} handleChangeRegion={handleChangeRegion}/>
+            { selectedRegion ? <SignupSeasons seasons={seasons} selectedSeasons={selectedSeasons} handleChangeSeasons={handleChangeSeasons} /> : '' }
+            { Object.keys(selectedSeasons).map(selectedSeasonId => {
+                console.log(`regenerating season signup blocks for seasonId ${selectedSeasonId}`)
+                const selectedSeason = seasons[selectedSeasonId]
+                return <div key={selectedSeasonId}>
+                    <SignupSeason shares={shares} season={selectedSeason} handleUpdateShares={handleUpdateShares} />
+                    <SignupAddons season={selectedSeason}  handleUpdateShares={handleUpdateShares} />
+                </div>
+            })}
+            { Object.keys(selectedSeasons).length === Object.keys(seasons).length ? <SignupBundles/> : '' }
             { totalPrice ?
                 <>
                     <SignupTotal/>

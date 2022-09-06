@@ -1,25 +1,26 @@
-import React, {useEffect, useState} from 'react'
+import * as React from 'react'
+import {useEffect, useState} from 'react'
 
+type RegionId = string
+type RegionLabel = string
+type Region = {
+    id: RegionId,
+    label: RegionLabel,
+}
+type Regions = Record<RegionId, Region>;
 interface SignupRegionsProps {
-    selectedRegion: string
-    changeRegion: Function
+    selectedRegionId?: RegionId
+    handleChangeRegion: Function
 }
 
-type RegionSlug = string
-type RegionName = string
-type Regions = Record<RegionSlug, RegionName>;
-const SignupRegions = ({selectedRegion, changeRegion}: SignupRegionsProps) => {
-    const regions: Regions = {
-        "western-ma": "Western Massachusetts",
-        "boston-worcester": "Boston Area & Worcester",
-    }
-    const handleRegionChange = (e) => {
-        changeRegion(e.target.value)
+const SignupRegions = ({selectedRegionId, handleChangeRegion}: SignupRegionsProps) => {
+    const handleRegionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        handleChangeRegion(e.target.value)
     }
     const regionElements = Object.keys(regions).map(region => {
         return (
             <li key={region} >
-                <input type="radio" value={region} checked={selectedRegion === region} onChange={handleRegionChange}/>
+                <input type="radio" value={region} checked={selectedRegionId === region} onChange={handleRegionChange}/>
                 <label>{regions[region]}</label>
             </li>
         )
@@ -33,9 +34,20 @@ const SignupRegions = ({selectedRegion, changeRegion}: SignupRegionsProps) => {
     </>;
 }
 
-const SignupSeasons = ({selectedSeasons, changeSeasons}) => {
+type SeasonId = string
+type SeasonLabel = string
+type Season = {
+    id: SeasonId,
+    label: SeasonLabel
+}
+type Seasons = Record<SeasonId, Season>
+interface SignupSeasonsProps {
+    selectedSeasons: Seasons
+    handleChangeSeasons: Function
+}
+const SignupSeasons = ({selectedSeasons, handleChangeSeasons}: SignupSeasonsProps) => {
     let seasons = [...selectedSeasons]
-    const handleSeasonChange = (e) => {
+    const handleSeasonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const season = e.target.value
         const isSelected = e.target.checked
         if (!isSelected) {
@@ -43,7 +55,7 @@ const SignupSeasons = ({selectedSeasons, changeSeasons}) => {
         } else if (isSelected && seasons.indexOf(season) === -1) {
             seasons.push(season)
         }
-        changeSeasons(seasons)
+        handleChangeSeasons(seasons)
     }
 
     return <>
@@ -61,90 +73,27 @@ const SignupSeasons = ({selectedSeasons, changeSeasons}) => {
     </>;
 }
 
-const SignupSeason = ({season}) => {
-        const summer = (<>
-            <h3>Summer CSA Shares</h3>
-            <ul>
+interface SignupSeasonProps {
+    seasonId: Season
+    handleUpdateShares: Function
+}
+const SignupSeason = ({season, shares, handleUpdateShares}: SignupSeasonProps) => {
+    return <>
+        <h3>{season.label} Shares</h3>
+        <ul>
+            {shares.map(share =>
                 <li>
-                    <label>Regular Summer CSA Share (Western MA)</label>
-                    <div>Great for 2-4 people who cook 3 times per week. Enjoy all the crops and varieties RFF has to
-                        offer. Weekly shares through mid-October. Comes with full PYO privileges.
-                    </div>
+                    <label>{share.label}</label>
+                    <div>{share.description}</div>
                     <div>
                         <input type="text"/>
-                        <span>Price:</span> <span>$247.00</span>
+                        <span>Price:</span> <span>{share.price}</span>
                         <span>Quantity:</span> <input type="text"/>
                     </div>
                 </li>
-                <li>
-                    <label>Regular Summer CSA Share (Boston &amp; Worcester)</label>
-                    <div>Great for 2-4 people who cook 3 times per week. Enjoy all the crops and varieties RFF has to
-                        offer. Weekly shares through mid-October. Comes with full PYO privileges.
-                    </div>
-                    <div>
-                        <input type="text"/>
-                        <span>Price:</span> <span>$278.00</span>
-                        <span>Quantity:</span> <input type="text"/>
-                    </div>
-                </li>
-                <li>
-                    <label>Small Summer CSA Share (Western MA)</label>
-                    <div>Great for 1-2 people who cook 3 times per week. Not all items or varieties may be available
-                        with the small share. PYO availability is half of the regular share.
-                    </div>
-                    <div>
-                        <input type="text"/>
-                        <span>Price:</span> <span>$192.00</span>
-                        <span>Quantity:</span> <input type="text"/>
-                    </div>
-                </li>
-                <li>
-                    <label>Small Summer CSA Share (Boston &amp; Worcester)</label>
-                    <div>Great for 1-2 people who cook 3 times per week. Not all items or varieties may be available
-                        with the small share. PYO availability is half of the regular share.
-                    </div>
-                    <div>
-                        <input type="text"/>
-                        <span>Price:</span> <span>$219.00</span>
-                        <span>Quantity:</span> <input type="text"/>
-                    </div>
-                </li>
-            </ul>
-        </>)
-        const fall = (
-            <>
-                <h3>Fall CSA Shares</h3>
-                <ul>
-                    <li>
-                        <label>Fall CSA Share (Western MA)</label>
-                        <div>Great for 2-4 people who cook 3 times per week. Enjoy all the crops and varieties RFF has to
-                            offer. Weekly shares through mid-October. Comes with full PYO privileges.
-                        </div>
-                        <div>
-                            <input type="text"/>
-                            <span>Price:</span> <span>$247.00</span>
-                            <span>Quantity:</span> <input type="text"/>
-                        </div>
-                    </li>
-                    <li>
-                        <label>Fall CSA Share (Boston &amp; Worcester)</label>
-                        <div>Delicious organic fall produce including winter squash, fall greens, potatoes, brussels sprouts
-                            and more. Four hearty pickups every other week in November and December.
-                        </div>
-                        <div>
-                            <input type="text"/>
-                            <span>Price:</span> <span>$207.00</span>
-                            <span>Quantity:</span> <input type="text"/>
-                        </div>
-                    </li>
-                </ul>
-            </>
-        )
-        const seasons = {
-            summer,
-            fall
-        }
-        return seasons[season]
+            )}
+        </ul>
+    </>
 }
 
 function SignupWelcomeText() {
@@ -208,7 +157,11 @@ function SignupBundles() {
     </>;
 }
 
-function SignupAddons() {
+interface SignupAddonsProps {
+    season: Season
+    handleUpdateShares: Function
+}
+function SignupAddons({season, handleUpdateShares}: SignupAddonsProps) {
     return <>
         <h3>Available Add-On Shares For Summer</h3>
         <p>UPDATE: Please note that Summer Egg Shares are SOLD OUT for the season!</p>
@@ -445,7 +398,7 @@ function SignupPaymentOptions() {
 function SignupComments() {
     return <>
         <h3>Comments</h3>
-        <textarea name="input_18" id="input_35_18" className="textarea medium" aria-invalid="false" rows="10" cols="50"></textarea>
+        <textarea name="input_18" id="input_35_18" className="textarea medium" aria-invalid="false" rows={10} cols={50}></textarea>
         <ul>
             <li>
                 <label>How did you hear about Red Fire Farm?</label>
@@ -667,50 +620,126 @@ function SignupContactInfo() {
     </>
 }
 
+type CsaShareLabel = string
+type CsaShareDescription = string
+type CsaShareId = string
+type CsaSharePrice = number
+type CsaShare = {
+    label: CsaShareLabel,
+    description: CsaShareDescription,
+    id: CsaShareId
+    price: CsaSharePrice
+    regionId: RegionId,
+    seasonId: SeasonId
+}
+type SelectedShare = {
+    shareId: CsaShareId
+    quantity: number
+}
+type SelectedShares = Record<CsaShareId, SelectedShare>
 function Signup() {
-    const [selectedRegion, changeRegion] = useState()
-    const [selectedSeasons, changeSeasons] = useState([])
-    let isFall = false;
-    let isSummer = false;
-    // calculator:
-    //     start at 0
-    // collect all the things with prices and the numbers of each thing
-    // add all the things with prices times the number of each thing together
-    // store it in the total
-    const shares = {}
-    const updateSelectedShares = (shareId, sharePrice, quantity) => {
-
+    const seasons: Seasons = {
+        "1": {
+            id: "1",
+            label: "Summer"
+        },
+        "2": {
+            id: "2",
+            label: "Fall"
+        }
     }
-    let totalPrice = 0.0
-    useEffect(() => {
-
-    })
+    const regions: Regions = {
+        "1": {
+            id: "1",
+            label: "Western Massachusetts"
+        },
+        "2": {
+            id: "2",
+            label: "Boston Area & Worcester"
+        },
+    }
+    const shares: Record<CsaShareId, CsaShare> = {
+        "1": {
+            id: "1",
+            label: "Regular Summer CSA Share (Western MA)",
+            description: "Great for 2-4 people who cook 3 times per week. Enjoy all the crops and varieties RFF has to offer. Weekly shares through mid-October. Comes with full PYO privileges.",
+            price: 247.00,
+            regionId: "1",
+            seasonId: "1"
+        },
+        "2": {
+            id: "2",
+            label: "Regular Summer CSA Share (Boston & Worcester)",
+            description: "Great for 2-4 people who cook 3 times per week. Enjoy all the crops and varieties RFF has to offer. Weekly shares through mid-October. Comes with full PYO privileges.",
+            price: 278.00,
+            regionId: "2",
+            seasonId: "1"
+        },
+        "3": {
+            id: "3",
+            label: "Small Summer CSA Share (Western MA)",
+            description: "Great for 1-2 people who cook 3 times per week. Not all items or varieties may be available with the small share. PYO availability is half of the regular share.",
+            price: 192.00,
+            regionId: "1",
+            seasonId: "1"
+        },
+        "4": {
+            id: "4",
+            label: "Small Summer CSA Share (Boston & Worcester)",
+            description: "Great for 1-2 people who cook 3 times per week. Not all items or varieties may be available with the small share. PYO availability is half of the regular share.",
+            price: 219.00,
+            regionId: "2",
+            seasonId: "1"
+        },
+    }
+    const [selectedRegion, handleChangeRegion] = useState<RegionLabel>()
+    const [selectedSeasons, handleChangeSeasons] = useState<Seasons>([])
+    const [selectedShares, handleChangeSelectedShares] = useState<SelectedShares>({})
+    let totalPrice: CsaSharePrice = 0.0
+    const handleUpdateShares = (share: CsaShare, quantity: number) => {
+        selectedShares[share.id] = {
+            shareId: share.id,
+            quantity: quantity
+        }
+        handleChangeSelectedShares(selectedShares)
+    }
     useEffect(() => {
         console.log("selected region is: " + selectedRegion)
     }, [selectedRegion])
+    useEffect(() => {
+        totalPrice = Object.keys(selectedShares).reduce((previousTotal, _, currentShareKeyIndex, selectedSharesKeys) => {
+            const shareId = selectedSharesKeys[currentShareKeyIndex]
+            return previousTotal + (shares[shareId].price * selectedShares[shareId].quantity)
+        }, 0.0)
+        console.log("New total is : " + totalPrice)
+    }, [selectedShares])
     return (
         <>
             <SignupWelcomeText/>
-            <SignupRegions selectedRegion={selectedRegion} changeRegion={changeRegion}/>
-            { selectedRegion ? <SignupSeasons selectedSeasons={selectedSeasons} changeSeasons={changeSeasons} /> : '' }
+            <SignupRegions selectedRegionId={selectedRegion} handleChangeRegion={handleChangeRegion}/>
+            { selectedRegion ? <SignupSeasons selectedSeasons={selectedSeasons} handleChangeSeasons={handleChangeSeasons} /> : '' }
             { selectedSeasons.indexOf('summer') !== -1 ? (
                 <>
-                    <SignupSeason season={"summer"}/>
-                    <SignupAddons />
+                    <SignupSeason season={"summer"} handleUpdateShares={handleUpdateShares} />
+                    <SignupAddons season={"summer"} handleUpdateShares={handleUpdateShares} />
                 </>
             ) : '' }
             { selectedSeasons.indexOf('fall') !== -1 ? (
                 <>
-                    <SignupSeason season={"fall"} />
-                    <SignupAddons />
+                    <SignupSeason season={"fall"} handleUpdateShares={handleUpdateShares} />
+                    <SignupAddons season={"fall"} handleUpdateShares={handleUpdateShares} />
                 </>
             ) : '' }
-            { selectedSeasons.indexOf('summer') !== -1 && selectedSeasons.indexOf('fall') != -1 ? <SignupBundles/> : '' }
-            {/*<SignupPickupLocation/>*/}
-            {/*<SignupTotal/>*/}
-            {/*<SignupPaymentOptions/>*/}
-            {/*<SignupContactInfo/>*/}
-            {/*<SignupComments />*/}
+            { selectedSeasons.indexOf('summer') !== -1 && selectedSeasons.indexOf('fall') !== -1 ? <SignupBundles/> : '' }
+            { totalPrice ?
+                <>
+                    <SignupTotal/>
+                    <SignupPaymentOptions/>
+                </>
+            : ''}
+            <SignupPickupLocation />
+            <SignupContactInfo/>
+            <SignupComments />
         </>
     )
 }

@@ -1,6 +1,24 @@
 import * as React from 'react'
 import {useEffect, useState} from 'react'
 
+function SignupWelcomeText() {
+    return <>
+        <h3>Welcome to our share sign up page! Hello!</h3>
+        <h4>sign up for your vegetable share (and any additional shares) here!</h4>
+        <p>
+            Upon completion of this form, you will be prompted to pay with a check or redirected to paypal. please
+            call or email the farm with any questions while doing the form.
+        </p>
+        <p>
+            413-467-7645 | &nbsp;<a href="mailto:thefarmers@redfirefarm.com">thefarmers@redfirefarm.com</a>
+            <br/>
+        </p>
+        <p>
+            <strong>Be a part of building the local food system!</strong>
+        </p>
+    </>;
+}
+
 type RegionId = string
 type RegionLabel = string
 type Region = {
@@ -10,14 +28,15 @@ type Region = {
 type Regions = Record<RegionId, Region>;
 interface SignupRegionsProps {
     regions: Regions,
-    selectedRegionId?: RegionId
+    selectedRegion?: Region
     handleChangeRegion: Function
 }
 
-const SignupRegions = ({regions, selectedRegionId, handleChangeRegion}: SignupRegionsProps) => {
+const SignupRegions = ({regions, selectedRegion, handleChangeRegion}: SignupRegionsProps) => {
     const handleRegionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        handleChangeRegion(e.target.value)
+        handleChangeRegion(regions[e.target.value])
     }
+    const selectedRegionId = selectedRegion ? selectedRegion.id : null
     const regionElements = Object.keys(regions).map(regionId => {
         return (
             <li key={regionId} >
@@ -43,8 +62,7 @@ type Season = {
 }
 type Seasons = Record<SeasonId, Season>
 interface SignupSeasonsProps {
-    seasons: Seasons,
-    selectedSeasons: Seasons
+    seasons: Seasons
     handleChangeSeasons: Function
 }
 const SignupSeasons = ({seasons, handleChangeSeasons}: SignupSeasonsProps) => {
@@ -83,22 +101,25 @@ const SignupSeasons = ({seasons, handleChangeSeasons}: SignupSeasonsProps) => {
 }
 
 interface SignupSeasonProps {
-    season: Season
+    selectedSeason: Season
+    selectedRegion: Region
     shares: CsaShares
     handleUpdateShares: Function
 }
-const SignupSeason = ({season, shares, handleUpdateShares}: SignupSeasonProps) => {
+const SignupSeason = ({selectedSeason, selectedRegion, shares, handleUpdateShares}: SignupSeasonProps) => {
     return <>
-        <h3>{season.label} Shares</h3>
+        <h3>{selectedSeason.label} Shares</h3>
         <ul>
             {Object.keys(shares).map(shareId => {
                 const share = shares[shareId]
+                if (share.regionId !== selectedRegion.id) {
+                    return
+                }
                 return (
                     <li key={shareId}>
                         <label>{share.label}</label>
                         <div>{share.description}</div>
                         <div>
-                            <input type="text"/>
                             <span>Price:</span> <span>{share.price}</span>
                             <span>Quantity:</span> <input type="text"/>
                         </div>
@@ -107,24 +128,6 @@ const SignupSeason = ({season, shares, handleUpdateShares}: SignupSeasonProps) =
             })}
         </ul>
     </>
-}
-
-function SignupWelcomeText() {
-    return <>
-        <h3>Welcome to our share sign up page! Hello!</h3>
-        <h4>sign up for your vegetable share (and any additional shares) here!</h4>
-        <p>
-            Upon completion of this form, you will be prompted to pay with a check or redirected to paypal. please
-            call or email the farm with any questions while doing the form.
-        </p>
-        <p>
-            413-467-7645 | &nbsp;<a href="mailto:thefarmers@redfirefarm.com">thefarmers@redfirefarm.com</a>
-            <br/>
-        </p>
-        <p>
-            <strong>Be a part of building the local food system!</strong>
-        </p>
-    </>;
 }
 
 function SignupBundles() {
@@ -189,7 +192,6 @@ function SignupAddons({season, handleUpdateShares}: SignupAddonsProps) {
                     environment.
                 </div>
                 <div className="ginput_container ginput_container_singleproduct">
-                    <input type="text"/>
                     <span>Price:</span> <span>$65.00</span>
                     <span>Quantity:</span> <input type="text"/>
                 </div>
@@ -651,6 +653,14 @@ type SelectedShare = {
     quantity: number
 }
 type SelectedShares = Record<CsaShareId, SelectedShare>
+type PickupLocationId = string
+type PickupLocationLabel = string
+type PickupLocation = {
+    id: PickupLocationId
+    label: PickupLocationLabel
+}
+type SelectedPickupLocation = PickupLocation
+type PickupLocations = Record<PickupLocationId, PickupLocation>
 function Signup() {
     const seasons: Seasons = {
         "1": {
@@ -706,9 +716,12 @@ function Signup() {
             seasonId: "1"
         },
     }
-    const [selectedRegion, handleChangeRegion] = useState<RegionLabel>()
+    const [selectedRegion, handleChangeRegion] = useState<Region>()
     const [selectedSeasons, handleChangeSeasons] = useState<Seasons>({})
     const [selectedShares, handleChangeSelectedShares] = useState<SelectedShares>({})
+    const [selectedPickupLocation, handleChangeSelectedPickupLocation] = useState<SelectedPickupLocation>()
+    const [selectedPaymentOption, handleChangeSelectedPaymentOption] = useState<any>() // TODO
+    const [contactInfo, handleChangeContactInfo] = useState<any>() // TODO
     let totalPrice: CsaSharePrice = 0.0
     const handleUpdateShares = (share: CsaShare, quantity: number) => {
         handleChangeSelectedShares(selectedShares => ({
@@ -735,26 +748,37 @@ function Signup() {
     return (
         <>
             <SignupWelcomeText/>
-            <SignupRegions regions={regions} selectedRegionId={selectedRegion} handleChangeRegion={handleChangeRegion}/>
-            { selectedRegion ? <SignupSeasons seasons={seasons} selectedSeasons={selectedSeasons} handleChangeSeasons={handleChangeSeasons} /> : '' }
-            { Object.keys(selectedSeasons).map(selectedSeasonId => {
+            <SignupRegions regions={regions} selectedRegion={selectedRegion} handleChangeRegion={handleChangeRegion}/>
+            { selectedRegion ? <SignupSeasons seasons={seasons} handleChangeSeasons={handleChangeSeasons} /> : '' }
+            { selectedRegion ? Object.keys(selectedSeasons).map(selectedSeasonId => {
                 console.log(`regenerating season signup blocks for seasonId ${selectedSeasonId}`)
                 const selectedSeason = seasons[selectedSeasonId]
                 return <div key={selectedSeasonId}>
-                    <SignupSeason shares={shares} season={selectedSeason} handleUpdateShares={handleUpdateShares} />
+                    <SignupSeason shares={shares} selectedRegion={selectedRegion} selectedSeason={selectedSeason} handleUpdateShares={handleUpdateShares} />
                     <SignupAddons season={selectedSeason}  handleUpdateShares={handleUpdateShares} />
                 </div>
-            })}
-            { Object.keys(selectedSeasons).length === Object.keys(seasons).length ? <SignupBundles/> : '' }
-            { totalPrice ?
+            }) : ""}
+            { selectedRegion && Object.keys(selectedSeasons).length === Object.keys(seasons).length ? <SignupBundles/> : '' }
+            { Object.keys(selectedShares).length ?
                 <>
-                    <SignupTotal/>
-                    <SignupPaymentOptions/>
+                    <SignupPickupLocation />
+                </>
+            : "" }
+            { selectedPickupLocation ?
+                <>
+                    <SignupTotal />
+                    <SignupPaymentOptions />
                 </>
             : ''}
-            <SignupPickupLocation />
-            <SignupContactInfo/>
-            <SignupComments />
+            { selectedPaymentOption ?
+                <>
+                    <SignupContactInfo/>
+                    <SignupComments />
+                </>
+            : ""}
+            { contactInfo ?
+                <input type={"submit"} />
+            : ""}
         </>
     )
 }

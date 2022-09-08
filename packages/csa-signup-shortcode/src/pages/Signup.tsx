@@ -40,8 +40,10 @@ const SignupRegions = ({regions, selectedRegion, handleChangeRegion}: SignupRegi
     const regionElements = Object.keys(regions).map(regionId => {
         return (
             <li key={regionId} >
-                <input type="radio" value={regionId} checked={selectedRegionId === regionId} onChange={handleRegionChange}/>
-                <label>{regions[regionId].label}</label>
+                <label>
+                    <input type="radio" value={regionId} checked={selectedRegionId === regionId} onChange={handleRegionChange}/>
+                    {regions[regionId].label}
+                </label>
             </li>
         )
     })
@@ -91,8 +93,10 @@ const SignupSeasons = ({seasons, handleChangeSeasons}: SignupSeasonsProps) => {
                 const season = seasons[seasonId]
                 return (
                     <li key={seasonId}>
-                        <input type="checkbox" value={season.id} id="csa-share-summer-csa" onChange={handleSeasonChange}/>
-                        <label htmlFor="csa-share-summer-csa">{season.label}</label>
+                        <label>
+                            <input type="checkbox" value={season.id} onChange={handleSeasonChange}/>
+                            {season.label}
+                        </label>
                     </li>
                 )
             })}
@@ -104,9 +108,15 @@ interface SignupSeasonProps {
     selectedSeason: Season
     selectedRegion: Region
     shares: CsaShares
-    handleUpdateShares: Function
+    handleUpdateShares: (share: CsaShare, quantity: SelectedShare["quantity"]) => void
 }
 const SignupSeason = ({selectedSeason, selectedRegion, shares, handleUpdateShares}: SignupSeasonProps) => {
+    const handleChangeQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
+        debugger;
+        const shareId: CsaShareId = e.target.getAttribute('data-share-id') || "missing-share-id-from-quantity-input"
+        const quantity: number = parseInt(e.target.value)
+        handleUpdateShares(shares[shareId], quantity)
+    }
     return <>
         <h3>{selectedSeason.label} Shares</h3>
         <ul>
@@ -117,12 +127,16 @@ const SignupSeason = ({selectedSeason, selectedRegion, shares, handleUpdateShare
                 }
                 return (
                     <li key={shareId}>
-                        <label>{share.label}</label>
-                        <div>{share.description}</div>
-                        <div>
-                            <span>Price:</span> <span>{share.price}</span>
-                            <span>Quantity:</span> <input type="text"/>
-                        </div>
+                        <label>
+                            {share.label}
+                            <div>{share.description}</div>
+                            <div>
+                                <span>Price:</span> <span>{Intl.NumberFormat('en-us', {style: "currency", currency:"USD"}).format(share.price)}</span>
+                            </div>
+                            <div>
+                                <span>Quantity:</span> <input type="text" data-share-id={share.id} onChange={handleChangeQuantity}/>
+                            </div>
+                        </label>
                     </li>
                 )
             })}
@@ -130,46 +144,94 @@ const SignupSeason = ({selectedSeason, selectedRegion, shares, handleUpdateShare
     </>
 }
 
+type BundleId = string
+type BundleLabel = string
+type BundleDescription = string
+type Bundle = {
+    id: BundleId
+    label: BundleLabel
+    description: BundleDescription
+    seasons: SeasonId[],
+    region: RegionId,
+    options: BundleOptionId[]
+}
+type Bundles = Record<BundleId, Bundle>
+type BundleOptionId = string
+type BundleOptionLabel = string
+type BundleOptionDescription = string
+type BundleOptionPrice = number
+type BundleOption = {
+    id: BundleOptionId
+    label: BundleOptionLabel
+    description: BundleOptionDescription
+    price: BundleOptionPrice
+}
+type BundleOptions = Record<BundleOptionId, BundleOption>
 function SignupBundles() {
+    const bundles: Bundles = {
+        "1": {
+            id: "1",
+            label: "Summer and Fall Vegetable Bundle (Western MA)",
+            description: "Delicious organic Summer &amp; fall produce bundled into one signup option to save you money! Summer Shares run for 20 weeks (June-October) with Fall Shares beginning after (November-December). much you can afford to pay. Payments over the Regular Price help offset households needing lower priced shares.",
+            seasons: ["1","2"],
+            region: "1",
+            options: ["1","2","3","4","5"]
+        }
+    }
+    const bundleOptions: BundleOptions = {
+        "1": {
+            id: "1",
+            label: "Helping Hands Bundle x 7",
+            description: "Help offset signup costs for up to 7 households needing lower priced shares",
+            price: 1180.00
+        },
+        "2": {
+            id: "2",
+            label: "Helping Hands Bundle",
+            description: "Help offset signup costs for an additional household needing lower priced shares",
+            price: 925.00
+        },
+        "3": {
+            id: "3",
+            label: "Regular Bundle",
+            description: "",
+            price: 885.00
+        },
+        "4": {
+            id: "4",
+            label: "Bundle",
+            description: "",
+            price: 847.00
+        },
+        "5": {
+            id: "5",
+            label: "Bundle",
+            description: "",
+            price: 842.00
+        }
+    }
     return <>
         <h3>Bundles</h3>
-        <ul>
-            <li>
-                <label className="gfield_label">Summer &amp; Fall Vegetable Bundle (Western MA)</label>
-                <div>
-                    Delicious organic Summer &amp; fall produce bundled into one signup option to save you
-                    money! Summer Shares run for 20 weeks (June-October) with Fall Shares
-                    beginning after (November-December). much you can afford to pay. Payments
-                    over the Regular Price help offset households needing lower priced shares.
-                </div>
-                <div>
-                    <ul>
-                        <li><input name="input_116" type="radio" id="choice_35_116_0" />
-                            <label htmlFor="choice_35_116_0" id="label_35_116_0">$1,180 Bundle Helping Hands Bundle'
-                                - Help offset signup costs for up to 7 households needing lower priced
-                                shares</label>
+        {Object.keys(bundles).map(bundleId => {
+            const bundle = bundles[bundleId]
+            return <>
+                <h4>{bundle.label}</h4>
+                <div>{bundle.description}</div>
+                <ul>
+                    {bundle.options.map(optionId => {
+                        const bundleOption = bundleOptions[optionId]
+                        return <li key={optionId}>
+                            <label>
+                                <>
+                                    <input type="radio" /> {Intl.NumberFormat('en-us',{style:"currency", currency:"USD"})} {bundleOption.label}
+                                    <p>{bundleOption.description}</p>
+                                </>
+                            </label>
                         </li>
-                        <li className="gchoice_35_116_1">
-                            <input name="input_116" type="radio" id="choice_35_116_1" />
-                            <label htmlFor="choice_35_116_1" id="label_35_116_1">$925 Bundle 'Helping Hands Bundle'
-                                - Help offset signup costs for a household needing lower priced shares</label>
-                        </li>
-                        <li className="gchoice_35_116_2">
-                            <input name="input_116" type="radio" id="choice_35_116_2" />
-                            <label htmlFor="choice_35_116_2" id="label_35_116_2">$885 Bundle Regular Price</label>
-                        </li>
-                        <li className="gchoice_35_116_3">
-                            <input name="input_116" type="radio" id="choice_35_116_3" />
-                            <label htmlFor="choice_35_116_3" id="label_35_116_3">$847 Bundle</label>
-                        </li>
-                        <li className="gchoice_35_116_4">
-                            <input name="input_116" type="radio" id="choice_35_116_4" />
-                            <label htmlFor="choice_35_116_4" id="label_35_116_4">$842 Bundle</label>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-        </ul>
+                    })}
+                </ul>
+            </>
+        })}
     </>;
 }
 
@@ -179,36 +241,34 @@ interface SignupAddonsProps {
 }
 function SignupAddons({season, handleUpdateShares}: SignupAddonsProps) {
     return <>
-        <h3>Available Add-On Shares For Summer</h3>
-        <p>UPDATE: Please note that Summer Egg Shares are SOLD OUT for the season!</p>
+        <h3>Available Add-On Shares For {season.label}</h3>
         <ul>
-            <li id="field_35_103"
-                className="gfield gfield_price gfield_price_35_103 gfield_product_35_103 field_sublabel_below field_description_above gfield_visibility_visible">
-                <label className="gfield_label" htmlFor="input_35_103_1">Summer Cheese Share (Western MA)</label>
+            <li>
+                <label>Summer Cheese Share (Western MA)</label>
                 <div>
-                    A weekly 6-8
-                    oz package of fresh, locally sourced cheese sourced from local creameries
+                    A weekly 6-8 oz package of fresh, locally sourced cheese sourced from local creameries
                     that are committed to happy, healthy animals and practices that support our
                     environment.
                 </div>
-                <div className="ginput_container ginput_container_singleproduct">
-                    <span>Price:</span> <span>$65.00</span>
-                    <span>Quantity:</span> <input type="text"/>
+                <div>
+                    Price: $65.00
+                </div>
+                <div>
+                    Quantity: <input type="text"/>
                 </div>
             </li>
-            <li id="field_35_119"
-                className="gfield gfield_price gfield_price_35_119 gfield_product_35_119 field_sublabel_below field_description_above gfield_visibility_visible">
-                <label className="gfield_label" htmlFor="input_35_119_1">Summer Cheese Share (Boston &amp; Worcester)</label>
-                <div className="gfield_description" id="gfield_description_35_119">
-                    A weekly 6-8
-                    oz package of fresh, locally sourced cheese sourced from local creameries
+            <li>
+                <label >Summer Cheese Share (Boston &amp; Worcester)</label>
+                <div>
+                    A weekly 6-8 oz package of fresh, locally sourced cheese sourced from local creameries
                     that are committed to happy, healthy animals and practices that support our
                     environment.
                 </div>
-                <div className="ginput_container ginput_container_singleproduct">
-                    <input type="text"/>
-                    <span>Price:</span> <span>$67.00</span>
-                    <span>Quantity:</span> <input type="text"/>
+                <div>
+                    Price: $67.00
+                </div>
+                <div>
+                    Quantity: <input type="text"/>
                 </div>
             </li>
         </ul>
@@ -223,9 +283,9 @@ function SignupPickupLocation() {
             finalized. Thanks for your patience and understanding!
         </p>
         <ul>
-            <li id="field_35_39" className="gfield gfield_contains_required field_sublabel_below field_description_above gfield_visibility_visible">
-                <label className="gfield_label">Choose a Western Massachusetts pickup location for Summer 2022<span className="gfield_required">*</span></label>
-                <div className="gfield_description" id="gfield_description_35_39">
+            <li>
+                <label>Choose a Western Massachusetts pickup location for Summer 2022</label>
+                <div>
                     This will be
                     your pickup location for the duration of your summer farm share. IMPORTANT:
                     Select N/A if you are not purchasing a Fall Share.
@@ -236,16 +296,14 @@ function SignupPickupLocation() {
                 <div>
                     <ul>
                         <li>
-                            <input name="input_39" type="radio" id="choice_35_39_0"/>
-                            <label htmlFor="choice_35_39_0" id="label_35_39_0">N/A - NOT GETTING A SUMMER SHARE</label>
+                            <label>
+                                <input type="radio" /> GRANBY - Wednesdays 2-6:30 p.m. at the farm store (7 Carver Street)
+                            </label>
                         </li>
                         <li>
-                            <input name="input_39" type="radio" id="choice_35_39_0"/>
-                            <label htmlFor="choice_35_39_0" id="label_35_39_0">GRANBY - Wednesdays 2-6:30 p.m. at the farm store (7 Carver Street)</label>
-                        </li>
-                        <li>
-                            <input name="input_39" type="radio" id="choice_35_39_0"/>
-                            <label htmlFor="choice_35_39_0" id="label_35_39_0">HOME DELIVERY - Fridays 10-8 p.m. (NOTE: Flower Shares are NOT ELIGIBLE for home delivery)</label>
+                            <label>
+                                <input type="radio" /> HOME DELIVERY - Fridays 10-8 p.m. (NOTE: Flower Shares are NOT ELIGIBLE for home delivery)
+                            </label>
                         </li>
                     </ul>
                 </div>
@@ -740,10 +798,11 @@ function Signup() {
     }, [selectedSeasons])
     useEffect(() => {
         totalPrice = Object.keys(selectedShares).reduce((previousTotal, _, currentShareKeyIndex, selectedSharesKeys) => {
+            debugger;
             const shareId = selectedSharesKeys[currentShareKeyIndex]
             return previousTotal + (shares[shareId].price * selectedShares[shareId].quantity)
         }, 0.0)
-        console.log("New total is : " + totalPrice)
+        console.log("New total is : " + Intl.NumberFormat('en-us', {style: "currency", currency: "USD"}).format(totalPrice))
     }, [selectedShares])
     return (
         <>

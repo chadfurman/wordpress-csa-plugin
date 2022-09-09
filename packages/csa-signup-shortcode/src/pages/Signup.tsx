@@ -29,12 +29,12 @@ type Regions = Record<RegionId, Region>;
 interface SignupRegionsProps {
     regions: Regions,
     selectedRegion?: Region
-    handleChangeRegion: Function
+    handleChangeSelectedRegion: Function
 }
 
-const SignupRegions = ({regions, selectedRegion, handleChangeRegion}: SignupRegionsProps) => {
+const SignupRegions = ({regions, selectedRegion, handleChangeSelectedRegion}: SignupRegionsProps) => {
     const handleRegionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        handleChangeRegion(regions[e.target.value])
+        handleChangeSelectedRegion(regions[e.target.value])
     }
     const selectedRegionId = selectedRegion ? selectedRegion.id : null
     const regionElements = Object.keys(regions).map(regionId => {
@@ -65,13 +65,13 @@ type Season = {
 type Seasons = Record<SeasonId, Season>
 interface SignupSeasonsProps {
     seasons: Seasons
-    handleChangeSeasons: Function
+    handleChangeSelectedSeasons: Function
 }
-const SignupSeasons = ({seasons, handleChangeSeasons}: SignupSeasonsProps) => {
+const SignupSeasons = ({seasons, handleChangeSelectedSeasons}: SignupSeasonsProps) => {
     const handleSeasonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const seasonId = e.target.value
         const isSelected = e.target.checked
-        handleChangeSeasons((selectedSeasons: Seasons) => {
+        handleChangeSelectedSeasons((selectedSeasons: Seasons) => {
             if (!isSelected) {
                 console.log(`seasionId ${seasonId} is deselected`)
                 delete selectedSeasons[seasonId]
@@ -108,14 +108,13 @@ interface SignupSeasonProps {
     selectedSeason: Season
     selectedRegion: Region
     shares: CsaShares
-    handleUpdateShares: (share: CsaShare, quantity: SelectedShare["quantity"]) => void
+    handleUpdateSelectedShares: (share: CsaShare, quantity: SelectedShare["quantity"]) => void
 }
-const SignupSeason = ({selectedSeason, selectedRegion, shares, handleUpdateShares}: SignupSeasonProps) => {
+const SignupSeason = ({selectedSeason, selectedRegion, shares, handleUpdateSelectedShares}: SignupSeasonProps) => {
     const handleChangeQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
-        debugger;
         const shareId: CsaShareId = e.target.getAttribute('data-share-id') || "missing-share-id-from-quantity-input"
         const quantity: number = parseInt(e.target.value)
-        handleUpdateShares(shares[shareId], quantity)
+        handleUpdateSelectedShares(shares[shareId], quantity)
     }
     return <>
         <h3>{selectedSeason.label} Shares</h3>
@@ -131,6 +130,7 @@ const SignupSeason = ({selectedSeason, selectedRegion, shares, handleUpdateShare
                             {share.label}
                             <div>{share.description}</div>
                             <div>
+                                {/* TODO: share price per region */}
                                 <span>Price:</span> <span>{Intl.NumberFormat('en-us', {style: "currency", currency:"USD"}).format(share.price)}</span>
                             </div>
                             <div>
@@ -167,48 +167,19 @@ type BundleOption = {
     price: BundleOptionPrice
 }
 type BundleOptions = Record<BundleOptionId, BundleOption>
-function SignupBundles() {
-    const bundles: Bundles = {
-        "1": {
-            id: "1",
-            label: "Summer and Fall Vegetable Bundle (Western MA)",
-            description: "Delicious organic Summer &amp; fall produce bundled into one signup option to save you money! Summer Shares run for 20 weeks (June-October) with Fall Shares beginning after (November-December). much you can afford to pay. Payments over the Regular Price help offset households needing lower priced shares.",
-            seasons: ["1","2"],
-            region: "1",
-            options: ["1","2","3","4","5"]
-        }
-    }
-    const bundleOptions: BundleOptions = {
-        "1": {
-            id: "1",
-            label: "Helping Hands Bundle x 7",
-            description: "Help offset signup costs for up to 7 households needing lower priced shares",
-            price: 1180.00
-        },
-        "2": {
-            id: "2",
-            label: "Helping Hands Bundle",
-            description: "Help offset signup costs for an additional household needing lower priced shares",
-            price: 925.00
-        },
-        "3": {
-            id: "3",
-            label: "Regular Bundle",
-            description: "",
-            price: 885.00
-        },
-        "4": {
-            id: "4",
-            label: "Bundle",
-            description: "",
-            price: 847.00
-        },
-        "5": {
-            id: "5",
-            label: "Bundle",
-            description: "",
-            price: 842.00
-        }
+interface SignupBundlesProps {
+    selectedSeasons: Seasons
+    selectedRegion: Region
+    bundles: Bundles
+    bundleOptions: BundleOptions,
+    handleUpdateSelectedBundles: (bundle: Bundle, bundleOption: BundleOption) => void
+}
+function SignupBundles({selectedSeasons, selectedRegion, bundles, bundleOptions, handleUpdateSelectedBundles}: SignupBundlesProps) {
+    const handleChangeBundleOption = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const bundleId: BundleOptionId = e.target.getAttribute('data-bundle-id') || "missing-bundle-option-id-from-bundle-radio"
+        const bundleOptionId: BundleOptionId = e.target.getAttribute('data-bundle-option-id') || "missing-bundle-option-id-from-bundle-radio"
+        const bundleOption: BundleOption = bundleOptions[bundleOptionId]
+        handleUpdateSelectedBundles(bundles[bundleId], bundleOption)
     }
     return <>
         <h3>Bundles</h3>
@@ -223,7 +194,10 @@ function SignupBundles() {
                         return <li key={optionId}>
                             <label>
                                 <>
-                                    <input type="radio" /> {Intl.NumberFormat('en-us',{style:"currency", currency:"USD"})} {bundleOption.label}
+                                    <input type="radio" data-bundle-option-id={bundleOption.id} onClick={(e: React.MouseEvent<HTMLInputElement>) => {
+                                        const target = e.target as HTMLInputElement
+                                        target.setAttribute('checked', !target.getAttribute('checked') + "")
+                                    }} onChange={handleChangeBundleOption} /> {Intl.NumberFormat('en-us',{style:"currency", currency:"USD"}).format(bundleOption.price)} {bundleOption.label}
                                     <p>{bundleOption.description}</p>
                                 </>
                             </label>
@@ -237,9 +211,9 @@ function SignupBundles() {
 
 interface SignupAddonsProps {
     season: Season
-    handleUpdateShares: Function
+    handleUpdateSelectedShares: Function
 }
-function SignupAddons({season, handleUpdateShares}: SignupAddonsProps) {
+function SignupAddons({season, handleUpdateSelectedShares}: SignupAddonsProps) {
     return <>
         <h3>Available Add-On Shares For {season.label}</h3>
         <ul>
@@ -710,6 +684,11 @@ type SelectedShare = {
     shareId: CsaShareId
     quantity: number
 }
+type SelectedBundle = {
+    bundleId: BundleId
+    bundleOptionId: BundleOptionId
+}
+type SelectedBundles = Record<BundleId, SelectedBundle>
 type SelectedShares = Record<CsaShareId, SelectedShare>
 type PickupLocationId = string
 type PickupLocationLabel = string
@@ -774,19 +753,71 @@ function Signup() {
             seasonId: "1"
         },
     }
-    const [selectedRegion, handleChangeRegion] = useState<Region>()
-    const [selectedSeasons, handleChangeSeasons] = useState<Seasons>({})
+    const bundles: Bundles = {
+        "1": {
+            id: "1",
+            label: "Summer and Fall Vegetable Bundle (Western MA)",
+            description: "Delicious organic Summer &amp; fall produce bundled into one signup option to save you money! Summer Shares run for 20 weeks (June-October) with Fall Shares beginning after (November-December). much you can afford to pay. Payments over the Regular Price help offset households needing lower priced shares.",
+            seasons: ["1","2"],
+            region: "1",
+            options: ["1","2","3","4","5"]
+        }
+    }
+    const bundleOptions: BundleOptions = {
+        "1": {
+            id: "1",
+            label: "Helping Hands Bundle x 7",
+            description: "Help offset signup costs for up to 7 households needing lower priced shares",
+            price: 1180.00
+        },
+        "2": {
+            id: "2",
+            label: "Helping Hands Bundle",
+            description: "Help offset signup costs for an additional household needing lower priced shares",
+            price: 925.00
+        },
+        "3": {
+            id: "3",
+            label: "Regular Bundle",
+            description: "",
+            price: 885.00
+        },
+        "4": {
+            id: "4",
+            label: "Bundle",
+            description: "",
+            price: 847.00
+        },
+        "5": {
+            id: "5",
+            label: "Bundle",
+            description: "",
+            price: 842.00
+        }
+    }
+    const [selectedRegion, handleChangeSelectedRegion] = useState<Region>()
+    const [selectedSeasons, handleChangeSelectedSeasons] = useState<Seasons>({})
     const [selectedShares, handleChangeSelectedShares] = useState<SelectedShares>({})
+    const [selectedBundles, handleChangeSelectedBundles] = useState<SelectedBundles>({})
     const [selectedPickupLocation, handleChangeSelectedPickupLocation] = useState<SelectedPickupLocation>()
     const [selectedPaymentOption, handleChangeSelectedPaymentOption] = useState<any>() // TODO
     const [contactInfo, handleChangeContactInfo] = useState<any>() // TODO
     let totalPrice: CsaSharePrice = 0.0
-    const handleUpdateShares = (share: CsaShare, quantity: number) => {
+    const handleUpdateSelectedShares = (share: CsaShare, quantity: number) => {
         handleChangeSelectedShares(selectedShares => ({
             ...selectedShares,
             [share.id]: {
                 shareId: share.id,
                 quantity: quantity
+            }
+        }))
+    }
+    const handleUpdateSelectedBundles = (bundle: Bundle, bundleOption: BundleOption) => {
+        handleChangeSelectedBundles(selectedBundles => ({
+            ...selectedBundles,
+            [bundle.id]: {
+                bundleId: bundle.id,
+                bundleOptionId: bundleOption.id
             }
         }))
     }
@@ -798,26 +829,30 @@ function Signup() {
     }, [selectedSeasons])
     useEffect(() => {
         totalPrice = Object.keys(selectedShares).reduce((previousTotal, _, currentShareKeyIndex, selectedSharesKeys) => {
-            debugger;
             const shareId = selectedSharesKeys[currentShareKeyIndex]
             return previousTotal + (shares[shareId].price * selectedShares[shareId].quantity)
         }, 0.0)
+        totalPrice += Object.keys(selectedBundles).reduce((previousTotal, _, currentBundleKeyIndex, selectedBundlesKeys) => {
+            const bundleId = selectedBundlesKeys[currentBundleKeyIndex]
+            const selectedBundle = selectedBundles[bundleId]
+            return previousTotal + (bundleOptions[selectedBundle.bundleOptionId].price)
+        }, 0.0)
         console.log("New total is : " + Intl.NumberFormat('en-us', {style: "currency", currency: "USD"}).format(totalPrice))
-    }, [selectedShares])
+    }, [selectedShares, selectedBundles])
     return (
         <>
             <SignupWelcomeText/>
-            <SignupRegions regions={regions} selectedRegion={selectedRegion} handleChangeRegion={handleChangeRegion}/>
-            { selectedRegion ? <SignupSeasons seasons={seasons} handleChangeSeasons={handleChangeSeasons} /> : '' }
+            <SignupRegions regions={regions} selectedRegion={selectedRegion} handleChangeSelectedRegion={handleChangeSelectedRegion}/>
+            { selectedRegion ? <SignupSeasons seasons={seasons} handleChangeSelectedSeasons={handleChangeSelectedSeasons} /> : '' }
             { selectedRegion ? Object.keys(selectedSeasons).map(selectedSeasonId => {
                 console.log(`regenerating season signup blocks for seasonId ${selectedSeasonId}`)
                 const selectedSeason = seasons[selectedSeasonId]
                 return <div key={selectedSeasonId}>
-                    <SignupSeason shares={shares} selectedRegion={selectedRegion} selectedSeason={selectedSeason} handleUpdateShares={handleUpdateShares} />
-                    <SignupAddons season={selectedSeason}  handleUpdateShares={handleUpdateShares} />
+                    <SignupSeason shares={shares} selectedRegion={selectedRegion} selectedSeason={selectedSeason} handleUpdateSelectedShares={handleUpdateSelectedShares} />
+                    <SignupAddons season={selectedSeason}  handleUpdateSelectedShares={handleUpdateSelectedShares} />
                 </div>
             }) : ""}
-            { selectedRegion && Object.keys(selectedSeasons).length === Object.keys(seasons).length ? <SignupBundles/> : '' }
+            { selectedRegion && Object.keys(selectedSeasons).length === Object.keys(seasons).length ? <SignupBundles bundles={bundles} bundleOptions={bundleOptions} selectedRegion={selectedRegion} selectedSeasons={selectedSeasons} handleUpdateSelectedBundles={handleUpdateSelectedBundles}/> : '' }
             { Object.keys(selectedShares).length ?
                 <>
                     <SignupPickupLocation />

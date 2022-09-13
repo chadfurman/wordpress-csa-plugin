@@ -73,10 +73,10 @@ const SignupSeasons = ({seasons, handleChangeSelectedSeasons}: SignupSeasonsProp
         const isSelected = e.target.checked
         handleChangeSelectedSeasons((selectedSeasons: Seasons) => {
             if (!isSelected) {
-                console.log(`seasionId ${seasonId} is deselected`)
+                console.log(`seasonId ${seasonId} is deselected`)
                 delete selectedSeasons[seasonId]
             } else if (isSelected) {
-                console.log(`seasionId ${seasonId} is selected`)
+                console.log(`seasonId ${seasonId} is selected`)
                 selectedSeasons[seasonId] = seasons[seasonId]
             }
             console.log({selectedSeasons})
@@ -134,7 +134,7 @@ const SignupSeason = ({selectedSeason, selectedRegion, shares, handleUpdateSelec
                                 <span>Price:</span> <span>{Intl.NumberFormat('en-us', {style: "currency", currency:"USD"}).format(share.price)}</span>
                             </div>
                             <div>
-                                <span>Quantity:</span> <input type="text" data-share-id={share.id} onChange={handleChangeQuantity}/>
+                                <span>Quantity:</span> <input type="number" data-share-id={share.id} onChange={handleChangeQuantity}/>
                             </div>
                         </label>
                     </li>
@@ -170,22 +170,28 @@ type BundleOptions = Record<BundleOptionId, BundleOption>
 interface SignupBundlesProps {
     selectedSeasons: Seasons
     selectedRegion: Region
+    selectedBundle?: SelectedBundle
     bundles: Bundles
     bundleOptions: BundleOptions,
-    handleUpdateSelectedBundles: (bundle: Bundle, bundleOption: BundleOption) => void
+    handleUpdateSelectedBundle: (bundle: Bundle, bundleOption: BundleOption) => void
+    unsetSelectedBundle: () => void
 }
-function SignupBundles({selectedSeasons, selectedRegion, bundles, bundleOptions, handleUpdateSelectedBundles}: SignupBundlesProps) {
-    const handleChangeBundleOption = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const bundleId: BundleOptionId = e.target.getAttribute('data-bundle-id') || "missing-bundle-option-id-from-bundle-radio"
-        const bundleOptionId: BundleOptionId = e.target.getAttribute('data-bundle-option-id') || "missing-bundle-option-id-from-bundle-radio"
+function SignupBundles({selectedSeasons, selectedRegion, bundles, bundleOptions, selectedBundle, handleUpdateSelectedBundle, unsetSelectedBundle}: SignupBundlesProps) {
+    const handleChangeBundleOption = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+        const bundleId: BundleOptionId = e.currentTarget.getAttribute('data-bundle-id') || "missing-bundle-option-id-from-bundle-radio"
+        const bundleOptionId: BundleOptionId = e.currentTarget.getAttribute('data-bundle-option-id') || "missing-bundle-option-id-from-bundle-radio"
         const bundleOption: BundleOption = bundleOptions[bundleOptionId]
-        handleUpdateSelectedBundles(bundles[bundleId], bundleOption)
+        if (selectedBundle && selectedBundle.bundleId === bundleId && selectedBundle.bundleOptionId === bundleOptionId) {
+            unsetSelectedBundle();
+        } else {
+            handleUpdateSelectedBundle(bundles[bundleId], bundleOption)
+        }
     }
     return <>
         <h3>Bundles</h3>
-        {Object.keys(bundles).map(bundleId => {
+        {Object.keys(bundles).map((bundleId: BundleId) => {
             const bundle = bundles[bundleId]
-            return <>
+            return <div key={bundleId}>
                 <h4>{bundle.label}</h4>
                 <div>{bundle.description}</div>
                 <ul>
@@ -194,57 +200,54 @@ function SignupBundles({selectedSeasons, selectedRegion, bundles, bundleOptions,
                         return <li key={optionId}>
                             <label>
                                 <>
-                                    <input type="radio" data-bundle-option-id={bundleOption.id} onClick={(e: React.MouseEvent<HTMLInputElement>) => {
-                                        const target = e.target as HTMLInputElement
-                                        target.setAttribute('checked', !target.getAttribute('checked') + "")
-                                    }} onChange={handleChangeBundleOption} /> {Intl.NumberFormat('en-us',{style:"currency", currency:"USD"}).format(bundleOption.price)} {bundleOption.label}
+                                    <input type="radio" data-bundle-id={bundle.id} data-bundle-option-id={bundleOption.id} checked={selectedBundle && selectedBundle.bundleId === bundle.id && selectedBundle.bundleOptionId === bundleOption.id} onChange={handleChangeBundleOption} onClick={handleChangeBundleOption} /> {Intl.NumberFormat('en-us',{style:"currency", currency:"USD"}).format(bundleOption.price)} {bundleOption.label}
                                     <p>{bundleOption.description}</p>
                                 </>
                             </label>
                         </li>
                     })}
                 </ul>
-            </>
+            </div>
         })}
     </>;
 }
 
 interface SignupAddonsProps {
-    season: Season
-    handleUpdateSelectedShares: Function
+    selectedSeason: Season
+    selectedRegion: Region
+    addonShares: CsaShares
+    handleUpdateSelectedAddonShares: (share: CsaShare, quantity: SelectedShare["quantity"]) => void
 }
-function SignupAddons({season, handleUpdateSelectedShares}: SignupAddonsProps) {
+const SignupAddons = ({selectedSeason, selectedRegion, addonShares, handleUpdateSelectedAddonShares}: SignupAddonsProps) => {
+    const handleChangeQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const shareId: CsaShareId = e.target.getAttribute('data-share-id') || "missing-share-id-from-quantity-input"
+        const quantity: number = parseInt(e.target.value)
+        handleUpdateSelectedAddonShares(addonShares[shareId], quantity)
+    }
     return <>
-        <h3>Available Add-On Shares For {season.label}</h3>
+        <h3>Available Add-On Shares For {selectedSeason.label}</h3>
         <ul>
-            <li>
-                <label>Summer Cheese Share (Western MA)</label>
-                <div>
-                    A weekly 6-8 oz package of fresh, locally sourced cheese sourced from local creameries
-                    that are committed to happy, healthy animals and practices that support our
-                    environment.
-                </div>
-                <div>
-                    Price: $65.00
-                </div>
-                <div>
-                    Quantity: <input type="text"/>
-                </div>
-            </li>
-            <li>
-                <label >Summer Cheese Share (Boston &amp; Worcester)</label>
-                <div>
-                    A weekly 6-8 oz package of fresh, locally sourced cheese sourced from local creameries
-                    that are committed to happy, healthy animals and practices that support our
-                    environment.
-                </div>
-                <div>
-                    Price: $67.00
-                </div>
-                <div>
-                    Quantity: <input type="text"/>
-                </div>
-            </li>
+            {Object.keys(addonShares).map(shareId => {
+                const share = addonShares[shareId]
+                if (share.regionId !== selectedRegion.id) {
+                    return
+                }
+                return (
+                    <li key={shareId}>
+                        <label>
+                            {share.label}
+                            <div>{share.description}</div>
+                            <div>
+                                {/* TODO: share price per region */}
+                                <span>Price:</span> <span>{Intl.NumberFormat('en-us', {style: "currency", currency:"USD"}).format(share.price)}</span>
+                            </div>
+                            <div>
+                                <span>Quantity:</span> <input type="number" data-share-id={share.id} onChange={handleChangeQuantity}/>
+                            </div>
+                        </label>
+                    </li>
+                )
+            })}
         </ul>
     </>;
 }
@@ -252,135 +255,55 @@ function SignupAddons({season, handleUpdateSelectedShares}: SignupAddonsProps) {
 function SignupPickupLocation() {
     return <>
         <h3>Choose Your Share Pick Up Spot:</h3>
-        <p>
-            NOTE: Summer &amp; Fall pickup sites are subject to change once the 2020 list is
-            finalized. Thanks for your patience and understanding!
-        </p>
+        <div>
+            This will be your pickup location for the duration of the season.
+            NOTE: Locations and times are subject to change, so please watch your email.
+        </div>
         <ul>
             <li>
-                <label>Choose a Western Massachusetts pickup location for Summer 2022</label>
-                <div>
-                    This will be
-                    your pickup location for the duration of your summer farm share. IMPORTANT:
-                    Select N/A if you are not purchasing a Fall Share.
-
-                    NOTE: Locations and times are subject to change as we prepare for the
-                    season.
-                </div>
+                <h4>{season.label} Pick Up</h4>
                 <div>
                     <ul>
-                        <li>
-                            <label>
-                                <input type="radio" /> GRANBY - Wednesdays 2-6:30 p.m. at the farm store (7 Carver Street)
-                            </label>
-                        </li>
-                        <li>
-                            <label>
-                                <input type="radio" /> HOME DELIVERY - Fridays 10-8 p.m. (NOTE: Flower Shares are NOT ELIGIBLE for home delivery)
-                            </label>
-                        </li>
+                        {Object.keys(pickupLocations).map(pickupLocationKey => {
+                            const pickupLocation = pickupLocations[key]
+                            return <li key={pickupLocationKey}>
+                                <label>
+                                    <input type="radio" value={pickupLocation.id} /> {pickupLocation.label}
+                                    {pickupLocation.description ?
+                                        <div>
+                                            {pickupLocation.description}
+                                        </div>
+                                    : "" }
+                                </label>
+                            </li>
+                        })}
                     </ul>
-                </div>
-            </li>
-            <li id="field_35_39" className="gfield gfield_contains_required field_sublabel_below field_description_above gfield_visibility_visible">
-                <label className="gfield_label">Choose a Boston Area or Worcester pickup location for Summer 2022</label>
-                <div className="gfield_description" id="gfield_description_35_39">
-                    This will be
-                    your pickup location for the duration of your summer farm share. IMPORTANT:
-                    Select N/A if you are not purchasing a Fall Share.
-
-                    NOTE: Locations and times are subject to change as we prepare for the
-                    season.
-                </div>
-                <div>
-                    <ul>
-                        <li>
-                            <input name="input_39" type="radio" id="choice_35_39_0"/>
-                            <label htmlFor="choice_35_39_0" id="label_35_39_0">N/A - NOT GETTING A SUMMER SHARE</label>
-                        </li>
-                        <li className="gchoice_35_40_1">
-                            <input name="input_40" type="radio" id="choice_35_40_1" />
-                            <label htmlFor="choice_35_40_1" id="label_35_40_1">
-                                WORCESTER - Wednesdays 3-7 p.m. at
-                                the First Unitarian Church (90 Main Street)
-                            </label>
-                        </li>
-                        <li className="gchoice_35_40_2">
-                            <input name="input_40" type="radio" id="choice_35_40_2" />
-                            <label htmlFor="choice_35_40_2" id="label_35_40_2">
-                                CAMBRIDGE - Wednesdays 4-7 p.m. at the East Cambridge Savings Bank in Inman Square (1310 Cambridge Street)
-                            </label>
-                        </li>
-                        <li>
-                            <input name="input_39" type="radio" id="choice_35_39_0"/>
-                            <label htmlFor="choice_35_39_0" id="label_35_39_0">
-                                HOME DELIVERY via Mass
-                                Food Delivery - Wednesdays 10-8 p.m. (Areas NOT ELIGIBLE for
-                                delivery: Cape &amp; Islands, North Shore, South Shore below Rte.
-                                44, Dudley, Webster, Douglas, Uxbridge, Millville, Mendon,
-                                Hopedale &amp; Blackstone)
-                            </label>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li id="field_35_45" className="gfield gfield_price gfield_price_35_45 gfield_product_35_45 field_sublabel_below field_description_above gfield_visibility_visible">
-                <label className="gfield_label" htmlFor="input_35_45_1">Fall Boxing Fee</label>
-                <div className="gfield_description" id="gfield_description_35_45">$2.50/week for boxes (required to cover cost-thanks!)</div>
-                <div className="ginput_container ginput_container_singleproduct">
-                    <input type="hidden" name="input_45.1" className="gform_hidden" />
-                    <span className="ginput_product_price_label">Price:</span> <span className="ginput_product_price" id="input_35_45">$10.00</span>
-                    <input type="hidden" name="input_45.2" id="ginput_base_price_35_45" className="gform_hidden" />
-                    <input type="hidden" name="input_45.3" className="ginput_quantity_35_45 gform_hidden" />
-                </div>
-            </li>
-            <li id="field_35_102" className="gfield gfield_price gfield_price_35_102 gfield_product_35_102 field_sublabel_below field_description_above gfield_visibility_visible">
-                <label className="gfield_label" htmlFor="input_35_102_1">Summer Boxing Fee</label>
-                <div className="gfield_description" id="gfield_description_35_102">$1.50/week for boxes (required to cover cost-thanks!)</div>
-                <div className="ginput_container ginput_container_singleproduct">
-                    <input type="hidden" name="input_102.1" className="gform_hidden" />
-                    <span className="ginput_product_price_label">Price:</span> <span className="ginput_product_price" id="input_35_102">$10.50</span>
-                    <input type="hidden" name="input_102.2" id="ginput_base_price_35_102" className="gform_hidden" />
-                    <input type="hidden" name="input_102.3" className="ginput_quantity_35_102 gform_hidden" />
-                </div>
-            </li>
-            <li id="field_35_100" className="gfield gfield_price gfield_price_35_100 gfield_product_35_100 field_sublabel_below field_description_above gfield_visibility_visible">
-                <label className="gfield_label" htmlFor="input_35_100_1">Fall Home Delivery Fee</label>
-                <div className="gfield_description" id="gfield_description_35_100">$13.75 per week fee for home delivery via Mass Food Delivery.</div>
-                <div className="ginput_container ginput_container_singleproduct">
-                    <input type="hidden" name="input_100.1" className="gform_hidden" />
-                    <span className="ginput_product_price_label">Price:</span> <span className="ginput_product_price" id="input_35_100">$55.00</span>
-                    <input type="hidden" name="input_100.2" id="ginput_base_price_35_100" className="gform_hidden" />
-                    <input type="hidden" name="input_100.3" className="ginput_quantity_35_100 gform_hidden" />
-                </div>
-            </li>
-            <li id="field_35_101" className="gfield gfield_price gfield_price_35_101 gfield_product_35_101 field_sublabel_below field_description_above gfield_visibility_visible">
-                <label className="gfield_label" htmlFor="input_35_101_1">Summer Home Delivery Fee</label>
-                <div className="gfield_description" id="gfield_description_35_101">$13.75 per week fee for home delivery via Mass Food Delivery.</div>
-                <div className="ginput_container ginput_container_singleproduct">
-                    <input type="hidden" name="input_101.1" className="gform_hidden" />
-                    <span className="ginput_product_price_label">Price:</span> <span className="ginput_product_price" id="input_35_101">$96.00</span>
-                    <input type="hidden" name="input_101.2" id="ginput_base_price_35_101" className="gform_hidden" />
-                    <input type="hidden" name="input_101.3" className="ginput_quantity_35_101 gform_hidden" />
                 </div>
             </li>
         </ul>
     </>
 }
 
-function SignupTotal() {
+interface SignupTotalProps {
+    subtotal: number
+    boxingFee: number
+    deliveryFee: number
+}
+function SignupTotal({subtotal, boxingFee, deliveryFee}: SignupTotalProps) {
+    console.log(subtotal, boxingFee, deliveryFee)
     return (
         <>
-        <h3>Total</h3>
-        <ul>
-            <li id="field_35_6" className="gfield gfield_price gfield_price_35_ gfield_total gfield_total_35_ field_sublabel_below field_description_above gfield_visibility_visible">
-                <label className="gfield_label" htmlFor="input_35_6">Total</label>
-                <div className="ginput_container ginput_container_total">
-                    <span className="ginput_total ginput_total_35" aria-live="polite">$0.00</span>
-                    <input type="hidden" name="input_6" id="input_35_6" className="gform_hidden"/>
-                </div>
-            </li>
-        </ul>
+            <h3>Cost</h3>
+            {boxingFee || deliveryFee ?
+                <div>Subtotal: {Intl.NumberFormat('en-us', {style: "currency", currency: "USD"}).format(subtotal)}</div>
+            : "" }
+            {boxingFee ?
+                <div>Boxing Fee: {Intl.NumberFormat('en-us', {style: "currency", currency: "USD"}).format(boxingFee)}</div>
+            : ""}
+            {deliveryFee ?
+                <div>Delivery Fee: {Intl.NumberFormat('en-us', {style: "currency", currency: "USD"}).format(deliveryFee)}</div>
+            : "" }
+            <div>Total: {Intl.NumberFormat('en-us', {style: "currency", currency: "USD"}).format(subtotal + deliveryFee + boxingFee)}</div>
         </>
     )
 }
@@ -670,12 +593,12 @@ function SignupContactInfo() {
 type CsaShareLabel = string
 type CsaShareDescription = string
 type CsaShareId = string
-type CsaSharePrice = number
+type Price = number
 type CsaShare = {
     label: CsaShareLabel,
     description: CsaShareDescription,
     id: CsaShareId
-    price: CsaSharePrice
+    price: Price
     regionId: RegionId,
     seasonId: SeasonId
 }
@@ -688,13 +611,22 @@ type SelectedBundle = {
     bundleId: BundleId
     bundleOptionId: BundleOptionId
 }
-type SelectedBundles = Record<BundleId, SelectedBundle>
 type SelectedShares = Record<CsaShareId, SelectedShare>
 type PickupLocationId = string
 type PickupLocationLabel = string
+type PickupLocationDescription = string
+type PickupLocationBoxingFee = Price
+type PickupLocationDeliveryFee = Price
+type PickupLocationRegionId = RegionId
+type PickupLocationSeasonId = SeasonId
 type PickupLocation = {
     id: PickupLocationId
     label: PickupLocationLabel
+    description?: PickupLocationDescription
+    boxingFee: PickupLocationBoxingFee
+    deliveryFee: PickupLocationDeliveryFee
+    regionId: PickupLocationRegionId
+    seasonId: PickupLocationSeasonId
 }
 type SelectedPickupLocation = PickupLocation
 type PickupLocations = Record<PickupLocationId, PickupLocation>
@@ -708,6 +640,7 @@ function Signup() {
             id: "2",
             label: "Fall"
         }
+
     }
     const regions: Regions = {
         "1": {
@@ -719,6 +652,25 @@ function Signup() {
             label: "Boston Area & Worcester"
         },
     }
+    const addonShares: CsaShares = {
+        "1": {
+            id: "1",
+            label: "Summer Cheese Share (Western MA)",
+            description: "A weekly 6-8 oz package of fresh, locally sourced cheese sourced from local creameries that are committed to happy, healthy animals and practices that support our environment.",
+            price: 65.00,
+            regionId: "1",
+            seasonId: "1"
+        },
+        "2": {
+            id: "2",
+            label: "Summer Cheese Share (Boston &amp; Worcester)",
+            description: "A weekly 6-8 oz package of fresh, locally sourced cheese sourced from local creameries that are committed to happy, healthy animals and practices that support our environment.",
+            price: 67.00,
+            regionId: "2",
+            seasonId: "1"
+        },
+    }
+
     const shares: CsaShares = {
         "1": {
             id: "1",
@@ -795,14 +747,64 @@ function Signup() {
             price: 842.00
         }
     }
+    const pickupLocations: PickupLocations = {
+        "1": {
+            id: "1",
+            label: "GRANBY - Wednesdays 2-6:30 p.m. at the farm store (7 Carver Street)",
+            description: undefined,
+            boxingFee: 0.00,
+            deliveryFee: 0.00,
+            seasonId: "1",
+            regionId: "1"
+        },
+        "2": {
+            id: "2",
+            label: "HOME DELIVERY - Fridays 10-8 p.m. (NOTE: Flower Shares are NOT ELIGIBLE for home delivery)",
+            description: undefined,
+            boxingFee: 0.00,
+            deliveryFee: 10.00,
+            seasonId: "1",
+            regionId: "1"
+        },
+        "3": {
+            id: "3",
+            label: "WORCESTER - Wednesdays 3-7 p.m. at the First Unitarian Church (90 Main Street)",
+            description: undefined,
+            boxingFee: 10.00,
+            deliveryFee: 0.00,
+            seasonId: "1",
+            regionId: "2"
+        },
+        "4": {
+            id: "4",
+            label: "CAMBRIDGE - Wednesdays 4-7 p.m. at the East Cambridge Savings Bank in Inman Square (1310 Cambridge Street)",
+            description: undefined,
+            boxingFee: 10.00,
+            deliveryFee: 0.00,
+            seasonId: "1",
+            regionId: "2"
+        },
+        "5": {
+            id: "5",
+            label: "HOME DELIVERY via Mass Food Delivery - Wednesdays 10-8 p.m.",
+            description: "(Areas NOT ELIGIBLE for delivery: Cape &amp; Islands, North Shore, South Shore below Rte. 44, Dudley, Webster, Douglas, Uxbridge, Millville, Mendon, Hopedale &amp; Blackstone)",
+            boxingFee: 0.00,
+            deliveryFee: 10.00,
+            seasonId: "1",
+            regionId: "2"
+        },
+    }
     const [selectedRegion, handleChangeSelectedRegion] = useState<Region>()
     const [selectedSeasons, handleChangeSelectedSeasons] = useState<Seasons>({})
     const [selectedShares, handleChangeSelectedShares] = useState<SelectedShares>({})
-    const [selectedBundles, handleChangeSelectedBundles] = useState<SelectedBundles>({})
+    const [selectedAddonShares, handleChangeSelectedAddonShares] = useState<SelectedShares>({})
+    const [selectedBundle, handleChangeSelectedBundle] = useState<SelectedBundle>()
     const [selectedPickupLocation, handleChangeSelectedPickupLocation] = useState<SelectedPickupLocation>()
     const [selectedPaymentOption, handleChangeSelectedPaymentOption] = useState<any>() // TODO
     const [contactInfo, handleChangeContactInfo] = useState<any>() // TODO
-    let totalPrice: CsaSharePrice = 0.0
+    const [subtotal, handleChangeSubtotal] = useState<number>(0.0) // TODO
+    const [boxingFee, handleChangeBoxingFee] = useState<number>(0.0) // TODO
+    const [deliveryFee, handleChangeDeliveryFee] = useState<number>(0.0) // TODO
     const handleUpdateSelectedShares = (share: CsaShare, quantity: number) => {
         handleChangeSelectedShares(selectedShares => ({
             ...selectedShares,
@@ -812,14 +814,29 @@ function Signup() {
             }
         }))
     }
-    const handleUpdateSelectedBundles = (bundle: Bundle, bundleOption: BundleOption) => {
-        handleChangeSelectedBundles(selectedBundles => ({
-            ...selectedBundles,
-            [bundle.id]: {
-                bundleId: bundle.id,
-                bundleOptionId: bundleOption.id
+    const handleUpdateSelectedAddonShares = (share: CsaShare, quantity: number) => {
+        handleChangeSelectedAddonShares(selectedShares => ({
+            ...selectedAddonShares,
+            [share.id]: {
+                shareId: share.id,
+                quantity: quantity
             }
         }))
+    }
+    const unsetSelectedBundle = () => {
+        handleChangeSelectedBundle(undefined)
+    }
+    const handleUpdateSelectedBundle = (bundle: Bundle, bundleOption: BundleOption) => {
+        handleChangeSelectedBundle({
+            bundleId: bundle.id,
+            bundleOptionId: bundleOption.id
+        })
+    }
+    const handleUpdateSelectedPickupLocation = (pickupLocation: PickupLocation) => {
+        handleChangeSelectedBundle({
+            bundleId: bundle.id,
+            bundleOptionId: bundleOption.id
+        })
     }
     useEffect(() => {
         console.log("selected region is: " + selectedRegion)
@@ -828,17 +845,22 @@ function Signup() {
         console.log("selected seasons are: ", {selectedSeasons})
     }, [selectedSeasons])
     useEffect(() => {
-        totalPrice = Object.keys(selectedShares).reduce((previousTotal, _, currentShareKeyIndex, selectedSharesKeys) => {
+        let subtotal = Object.keys(selectedShares).reduce((previousTotal, _, currentShareKeyIndex, selectedSharesKeys) => {
             const shareId = selectedSharesKeys[currentShareKeyIndex]
-            return previousTotal + (shares[shareId].price * selectedShares[shareId].quantity)
+            const quantity = isNaN(selectedShares[shareId].quantity) ? 0 : selectedShares[shareId].quantity;
+            return previousTotal + (shares[shareId].price * quantity)
         }, 0.0)
-        totalPrice += Object.keys(selectedBundles).reduce((previousTotal, _, currentBundleKeyIndex, selectedBundlesKeys) => {
-            const bundleId = selectedBundlesKeys[currentBundleKeyIndex]
-            const selectedBundle = selectedBundles[bundleId]
-            return previousTotal + (bundleOptions[selectedBundle.bundleOptionId].price)
+        subtotal += Object.keys(selectedAddonShares).reduce((previousTotal, _, currentShareKeyIndex, selectedSharesKeys) => {
+            const shareId = selectedSharesKeys[currentShareKeyIndex]
+            const quantity = isNaN(selectedAddonShares[shareId].quantity) ? 0 : selectedAddonShares[shareId].quantity;
+            return previousTotal + (addonShares[shareId].price * quantity)
         }, 0.0)
-        console.log("New total is : " + Intl.NumberFormat('en-us', {style: "currency", currency: "USD"}).format(totalPrice))
-    }, [selectedShares, selectedBundles])
+        if (selectedBundle) {
+            subtotal += bundleOptions[selectedBundle.bundleOptionId].price
+        }
+        handleChangeSubtotal(subtotal)
+        console.log("New total is : " + Intl.NumberFormat('en-us', {style: "currency", currency: "USD"}).format(subtotal))
+    }, [selectedShares, selectedBundle])
     return (
         <>
             <SignupWelcomeText/>
@@ -849,18 +871,20 @@ function Signup() {
                 const selectedSeason = seasons[selectedSeasonId]
                 return <div key={selectedSeasonId}>
                     <SignupSeason shares={shares} selectedRegion={selectedRegion} selectedSeason={selectedSeason} handleUpdateSelectedShares={handleUpdateSelectedShares} />
-                    <SignupAddons season={selectedSeason}  handleUpdateSelectedShares={handleUpdateSelectedShares} />
+                    <SignupAddons addonShares={addonShares} selectedRegion={selectedRegion} selectedSeason={selectedSeason} handleUpdateSelectedAddonShares={handleUpdateSelectedAddonShares} />
                 </div>
             }) : ""}
-            { selectedRegion && Object.keys(selectedSeasons).length === Object.keys(seasons).length ? <SignupBundles bundles={bundles} bundleOptions={bundleOptions} selectedRegion={selectedRegion} selectedSeasons={selectedSeasons} handleUpdateSelectedBundles={handleUpdateSelectedBundles}/> : '' }
+            { selectedRegion && Object.keys(selectedSeasons).length === Object.keys(seasons).length ?
+                <SignupBundles bundles={bundles} bundleOptions={bundleOptions} selectedRegion={selectedRegion} selectedSeasons={selectedSeasons} selectedBundle={selectedBundle} handleUpdateSelectedBundle={handleUpdateSelectedBundle} unsetSelectedBundle={unsetSelectedBundle} />
+            : '' }
             { Object.keys(selectedShares).length ?
                 <>
-                    <SignupPickupLocation />
+                    <SignupPickupLocation pickupLocations={pickupLocations} selectedPickupLocation={selectedPickupLocation} handleUpdateSelectedPickupLocation={handleUpdateSelectedPickupLocation} />
                 </>
             : "" }
-            { selectedPickupLocation ?
+            { subtotal ?
                 <>
-                    <SignupTotal />
+                    <SignupTotal subtotal={subtotal} deliveryFee={deliveryFee} boxingFee={boxingFee}/>
                     <SignupPaymentOptions />
                 </>
             : ''}

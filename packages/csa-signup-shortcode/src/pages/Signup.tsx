@@ -252,34 +252,33 @@ const SignupAddons = ({selectedSeason, selectedRegion, addonShares, handleUpdate
     </>;
 }
 
-function SignupPickupLocation() {
+interface SignupPickupLocationProps {
+    season: Season
+    pickupLocations: PickupLocations
+    selectedPickupLocation?: SelectedPickupLocation
+    handleUpdateSelectedPickupLocation: (pickupLocation: PickupLocation) => void
+}
+function SignupPickupLocation({season, pickupLocations, selectedPickupLocation, handleUpdateSelectedPickupLocation}: SignupPickupLocationProps) {
     return <>
-        <h3>Choose Your Share Pick Up Spot:</h3>
+        <h3>Choose Your {season.label} Pick Up Spot:</h3>
         <div>
             This will be your pickup location for the duration of the season.
             NOTE: Locations and times are subject to change, so please watch your email.
         </div>
         <ul>
-            <li>
-                <h4>{season.label} Pick Up</h4>
-                <div>
-                    <ul>
-                        {Object.keys(pickupLocations).map(pickupLocationKey => {
-                            const pickupLocation = pickupLocations[key]
-                            return <li key={pickupLocationKey}>
-                                <label>
-                                    <input type="radio" value={pickupLocation.id} /> {pickupLocation.label}
-                                    {pickupLocation.description ?
-                                        <div>
-                                            {pickupLocation.description}
-                                        </div>
-                                    : "" }
-                                </label>
-                            </li>
-                        })}
-                    </ul>
-                </div>
-            </li>
+            {Object.keys(pickupLocations).map(pickupLocationKey => {
+                const pickupLocation = pickupLocations[pickupLocationKey]
+                return <li key={pickupLocationKey}>
+                    <label>
+                        <input type="radio" value={pickupLocation.id} /> {pickupLocation.label}
+                        {pickupLocation.description ?
+                            <div>
+                                {pickupLocation.description}
+                            </div>
+                        : "" }
+                    </label>
+                </li>
+            })}
         </ul>
     </>
 }
@@ -288,9 +287,10 @@ interface SignupTotalProps {
     subtotal: number
     boxingFee: number
     deliveryFee: number
+    total: number
 }
-function SignupTotal({subtotal, boxingFee, deliveryFee}: SignupTotalProps) {
-    console.log(subtotal, boxingFee, deliveryFee)
+function SignupTotal({subtotal, boxingFee, deliveryFee, total}: SignupTotalProps) {
+    console.log(subtotal, boxingFee, deliveryFee, total)
     return (
         <>
             <h3>Cost</h3>
@@ -303,7 +303,7 @@ function SignupTotal({subtotal, boxingFee, deliveryFee}: SignupTotalProps) {
             {deliveryFee ?
                 <div>Delivery Fee: {Intl.NumberFormat('en-us', {style: "currency", currency: "USD"}).format(deliveryFee)}</div>
             : "" }
-            <div>Total: {Intl.NumberFormat('en-us', {style: "currency", currency: "USD"}).format(subtotal + deliveryFee + boxingFee)}</div>
+            <div>Total: {Intl.NumberFormat('en-us', {style: "currency", currency: "USD"}).format(total)}</div>
         </>
     )
 }
@@ -803,6 +803,7 @@ function Signup() {
     const [selectedPaymentOption, handleChangeSelectedPaymentOption] = useState<any>() // TODO
     const [contactInfo, handleChangeContactInfo] = useState<any>() // TODO
     const [subtotal, handleChangeSubtotal] = useState<number>(0.0) // TODO
+    const [total, handleChangeTotal] = useState<number>(0.0) // TODO
     const [boxingFee, handleChangeBoxingFee] = useState<number>(0.0) // TODO
     const [deliveryFee, handleChangeDeliveryFee] = useState<number>(0.0) // TODO
     const handleUpdateSelectedShares = (share: CsaShare, quantity: number) => {
@@ -833,10 +834,7 @@ function Signup() {
         })
     }
     const handleUpdateSelectedPickupLocation = (pickupLocation: PickupLocation) => {
-        handleChangeSelectedBundle({
-            bundleId: bundle.id,
-            bundleOptionId: bundleOption.id
-        })
+        handleChangeSelectedPickupLocation(pickupLocation)
     }
     useEffect(() => {
         console.log("selected region is: " + selectedRegion)
@@ -859,8 +857,13 @@ function Signup() {
             subtotal += bundleOptions[selectedBundle.bundleOptionId].price
         }
         handleChangeSubtotal(subtotal)
+        if (selectedPickupLocation) {
+            handleChangeBoxingFee(selectedPickupLocation.boxingFee)
+            handleChangeDeliveryFee(selectedPickupLocation.deliveryFee)
+        }
+        handleChangeTotal(subtotal + boxingFee + deliveryFee)
         console.log("New total is : " + Intl.NumberFormat('en-us', {style: "currency", currency: "USD"}).format(subtotal))
-    }, [selectedShares, selectedBundle])
+    }, [selectedShares, selectedBundle, selectedPickupLocation])
     return (
         <>
             <SignupWelcomeText/>
@@ -877,14 +880,18 @@ function Signup() {
             { selectedRegion && Object.keys(selectedSeasons).length === Object.keys(seasons).length ?
                 <SignupBundles bundles={bundles} bundleOptions={bundleOptions} selectedRegion={selectedRegion} selectedSeasons={selectedSeasons} selectedBundle={selectedBundle} handleUpdateSelectedBundle={handleUpdateSelectedBundle} unsetSelectedBundle={unsetSelectedBundle} />
             : '' }
-            { Object.keys(selectedShares).length ?
+            {Object.keys(selectedShares).length && Object.keys(selectedSeasons).length ?
+                Object.keys(selectedSeasons).map(selectedSeasonId => {
+                    console.log(`regenerating season signup blocks for seasonId ${selectedSeasonId}`)
+                    const selectedSeason = seasons[selectedSeasonId]
+                    return <div key={selectedSeasonId}>
+                        <SignupPickupLocation season={selectedSeason} pickupLocations={pickupLocations} selectedPickupLocation={selectedPickupLocation} handleUpdateSelectedPickupLocation={handleUpdateSelectedPickupLocation} />
+                    </div>
+                })
+            : ""}
+            { total ?
                 <>
-                    <SignupPickupLocation pickupLocations={pickupLocations} selectedPickupLocation={selectedPickupLocation} handleUpdateSelectedPickupLocation={handleUpdateSelectedPickupLocation} />
-                </>
-            : "" }
-            { subtotal ?
-                <>
-                    <SignupTotal subtotal={subtotal} deliveryFee={deliveryFee} boxingFee={boxingFee}/>
+                    <SignupTotal subtotal={subtotal} deliveryFee={deliveryFee} boxingFee={boxingFee} total={total} />
                     <SignupPaymentOptions />
                 </>
             : ''}

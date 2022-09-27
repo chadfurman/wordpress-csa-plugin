@@ -796,8 +796,8 @@ function Signup() {
             id: "5",
             label: "HOME DELIVERY via Mass Food Delivery - Wednesdays 10-8 p.m.",
             description: "(Areas NOT ELIGIBLE for delivery: Cape &amp; Islands, North Shore, South Shore below Rte. 44, Dudley, Webster, Douglas, Uxbridge, Millville, Mendon, Hopedale &amp; Blackstone)",
-            boxingFee: 0.00,
-            deliveryFee: 10.00,
+            boxingFee: 10.00,
+            deliveryFee: 13.00,
             seasonId: "1",
             regionId: "2"
         },

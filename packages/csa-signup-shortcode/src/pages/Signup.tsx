@@ -319,96 +319,88 @@ function SignupTotal({subtotal, boxingFee, deliveryFee, total}: SignupTotalProps
 function SignupPaymentOptions() {
     return <>
         <h3>Payment Options</h3>
-            <label className="gfield_label"><span className="gfield_required">*</span></label>
-            <div className="gfield_description" id="gfield_description_35_15">
-                Deposits are
-                non-refundable. We work with people all the time to make payment plans that
-                are viable. Please contact thefarmers@redfirefarm.com to discuss further
-                details!
-            </div>
-            <div className="ginput_container ginput_container_radio">
-                <ul className="gfield_radio" id="input_35_15">
-                    <li className="gchoice_35_15_0">
-                        <input name="input_15" type="radio" id="choice_35_15_0"/>
-                        <label htmlFor="choice_35_15_0" id="label_35_15_0">Full payment today</label>
+        <div>Deposits are non-refundable. We work with people all the time to make payment plans that are viable. Please contact thefarmers@redfirefarm.com to discuss further details!</div>
+            <div>
+                <ul>
+                    <li>
+                        <label>
+                            <input type="radio"/>
+                            Full payment today
+                        </label>
                     </li>
-                    <li className="gchoice_35_15_1">
-                        <input name="input_15" type="radio" id="choice_35_15_1"/>
-                        <label htmlFor="choice_35_15_1" id="label_35_15_1">$100 deposit, with full balance paid
-                            by June 1st</label>
+                    <li>
+                        <label>
+                            <input type="radio"/>
+                            $100 deposit, with full balance paid by June 1st
+                        </label>
                     </li>
-                    <li className="gchoice_35_15_2">
-                        <input name="input_15" type="radio" id="choice_35_15_2"/>
-                        <label htmlFor="choice_35_15_2" id="label_35_15_2">$100 deposit, with three payment
-                            installments on July 1st, August 1st, and September 1st</label>
+                    <li>
+                        <label>
+                            <input type="radio"/>
+                            $100 deposit, with three payment installments on July 1st, August 1st, and September 1st
+                        </label>
                     </li>
                 </ul>
             </div>
         <div>
-            <label className="gfield_label" htmlFor="input_35_46">Amount you will pay today:<span
-                className="gfield_required">*</span></label>
-            <div className="gfield_description" id="gfield_description_35_46">Please enter
-                the amount you commit to paying now.
-            </div>
-            <div className="ginput_container ginput_container_number">
-                <input name="input_46" id="input_35_46" type="text" className="medium" aria-required="true"
-                       aria-invalid="false" aria-describedby="gfield_description_35_46"/>
-            </div>
+            <label>
+                Please enter the amount you commit to paying now.
+                <input type="text" />
+            </label>
         </div>
+    </>;
+}
+
+function SignupPaymentMethods() {
+    return <>
         <h3>Payment Method</h3>
-        <div className="gfield_description" id="gfield_description_35_16">
-            Please choose your payment method. SNAP/EBT available with sign up- please email
-            thefarmers@redfirefarm.com to request SNAP/EBT CSA signup forms
-        </div>
-        <ul className="gfield_radio" id="input_35_16">
-            <li className="gchoice_35_16_0">
-                <input name="input_16" type="radio" id="choice_35_16_0"/>
-                <label htmlFor="choice_35_16_0" id="label_35_16_0">Mail us a check- we love this option!</label>
+        <div>Please choose your payment method. SNAP/EBT available with sign up- please email thefarmers@redfirefarm.com to request SNAP/EBT CSA signup forms</div>
+        <ul>
+            <li>
+                <label>
+                    <input type="radio" />
+                    Mail us a check- we love this option!
+                </label>
             </li>
-            <li className="gchoice_35_16_1">
-                <input name="input_16" type="radio" id="choice_35_16_1"/>
-                <label htmlFor="choice_35_16_1" id="label_35_16_1">PayPal</label>
+            <li>
+                <label>
+                    <input type="radio"/>
+                    PayPal
+                </label>
             </li>
         </ul>
-    </>;
+    </>
 }
 
 function SignupComments() {
     return <>
         <h3>Comments</h3>
-        <textarea name="input_18" id="input_35_18" className="textarea medium" aria-invalid="false" rows={10} cols={50}></textarea>
+        <textarea rows={10} cols={50}></textarea>
         <ul>
             <li>
                 <label>How did you hear about Red Fire Farm?</label>
                 <div>
                     <ul>
                         <li>
-                            <input name="input_19" type="radio" id="choice_35_19_0"/>
-                            <label htmlFor="choice_35_19_0" id="label_35_19_0">I was a member in a previous
-                                season</label>
+                            <label><input type="radio" />I was a member in a previous season</label>
                         </li>
                         <li>
-                            <input name="input_19" type="radio" id="choice_35_19_1"/>
-                            <label htmlFor="choice_35_19_1" id="label_35_19_1">A friend</label>
+                            <label><input type="radio" />A friend</label>
                         </li>
                         <li>
-                            <input name="input_19" type="radio" id="choice_35_19_2"/>
-                            <label htmlFor="choice_35_19_2" id="label_35_19_2">Flyer or brochure</label>
+                            <label><input type="radio" />Flyer or brochure</label>
                         </li>
                         <li>
-                            <input name="input_19" type="radio" id="choice_35_19_3"/>
-                            <label htmlFor="choice_35_19_3" id="label_35_19_3">Online</label>
+                            <label><input type="radio" />Online</label>
                         </li>
                         <li>
-                            <input name="input_19" type="radio" id="choice_35_19_4"/>
-                            <label htmlFor="choice_35_19_4" id="label_35_19_4">Other</label>
+                            <label><input type="radio" />Other</label>
                         </li>
                     </ul>
                 </div>
             </li>
             <li>
-                <label>Did a friend refer you? If so, please enter their name.</label>
-                <input/>
+                <label>Did a friend refer you? If so, please enter their name.<input/></label>
             </li>
         </ul>;
     </>
@@ -417,184 +409,81 @@ function SignupComments() {
 function SignupContactInfo() {
     return <>
         <h3>Contact Info</h3>
-        <ul id="gform_fields_35_2" className="gform_fields top_label form_sublabel_below description_above">
-            <li id="field_35_10"
-                className="gfield gfield_contains_required field_sublabel_below field_description_above gfield_visibility_visible">
-                <label className="gfield_label gfield_label_before_complex">Name<span
-                    className="gfield_required">*</span></label>
-                <div
-                    className="ginput_complex ginput_container no_prefix has_first_name no_middle_name has_last_name no_suffix gf_name_has_2 ginput_container_name"
-                    id="input_35_10">
-                            <span id="input_35_10_3_container" className="name_first">
-                                <input type="text" name="input_10.3" id="input_35_10_3" aria-label="First name"
-                                       aria-required="true" aria-invalid="false"/>
-                                <label htmlFor="input_35_10_3">First</label>
-                            </span>
-                    <span id="input_35_10_6_container" className="name_last">
-                                <input type="text" name="input_10.6" id="input_35_10_6" aria-label="Last name"
-                                       aria-required="true" aria-invalid="false"/>
-                                <label htmlFor="input_35_10_6">Last</label>
-                            </span>
-                </div>
-            </li>
-            <li id="field_35_11"
-                className="gfield gfield_contains_required field_sublabel_below field_description_above gfield_visibility_visible">
-                <label className="gfield_label" htmlFor="input_35_11">Phone<span
-                    className="gfield_required">*</span></label>
-                <div className="ginput_container ginput_container_phone">
-                    <input name="input_11" id="input_35_11" type="text" className="medium"
-                           aria-required="true" aria-invalid="false"/>
-                </div>
-            </li>
-            <li id="field_35_12"
-                className="gfield gfield_contains_required field_sublabel_below field_description_above gfield_visibility_visible">
-                <label className="gfield_label" htmlFor="input_35_12">Email<span
-                    className="gfield_required">*</span></label>
-                <div className="ginput_container ginput_container_email">
-                    <input name="input_12" id="input_35_12" type="text" className="medium"
-                           aria-required="true" aria-invalid="false"/>
-                </div>
-            </li>
-            <li id="field_35_13"
-                className="gfield gfield_contains_required field_sublabel_below field_description_above gfield_visibility_visible">
-                <label className="gfield_label gfield_label_before_complex">Address<span
-                    className="gfield_required">*</span></label>
-                <div>
-                    <input type="text" name="input_13.1" id="input_35_13_1" aria-required="true"/>
-                    <label htmlFor="input_35_13_1" id="input_35_13_1_label">Street Address</label>
-                    <input type="text" name="input_13.2" id="input_35_13_2"/>
-                    <label htmlFor="input_35_13_2" id="input_35_13_2_label">Address Line 2</label>
-                    <input type="text" name="input_13.3" id="input_35_13_3"/>
-                    <label htmlFor="input_35_13_3" id="input_35_13_3_label">City</label>
-                    <select defaultValue={"Massachusetts"}>
-                        <option value=""></option>
-                        <option value="Alabama">Alabama</option>
-                        <option
-                            value="Alaska">Alaska
-                        </option>
-                        <option value="Arizona">Arizona</option>
-                        <option
-                            value="Arkansas">Arkansas
-                        </option>
-                        <option
-                            value="California">California
-                        </option>
-                        <option
-                            value="Colorado">Colorado
-                        </option>
-                        <option
-                            value="Connecticut">Connecticut
-                        </option>
-                        <option
-                            value="Delaware">Delaware
-                        </option>
-                        <option value="District of Columbia">District of Columbia</option>
-                        <option
-                            value="Florida">Florida
-                        </option>
-                        <option value="Georgia">Georgia</option>
-                        <option
-                            value="Hawaii">Hawaii
-                        </option>
-                        <option value="Idaho">Idaho</option>
-                        <option
-                            value="Illinois">Illinois
-                        </option>
-                        <option value="Indiana">Indiana</option>
-                        <option
-                            value="Iowa">Iowa
-                        </option>
-                        <option value="Kansas">Kansas</option>
-                        <option
-                            value="Kentucky">Kentucky
-                        </option>
-                        <option
-                            value="Louisiana">Louisiana
-                        </option>
-                        <option value="Maine">Maine</option>
-                        <option
-                            value="Maryland">Maryland
-                        </option>
-                        <option value="Massachusetts">Massachusetts</option>
-                        <option
-                            value="Michigan">Michigan
-                        </option>
-                        <option
-                            value="Minnesota">Minnesota
-                        </option>
-                        <option
-                            value="Mississippi">Mississippi
-                        </option>
-                        <option
-                            value="Missouri">Missouri
-                        </option>
-                        <option value="Montana">Montana</option>
-                        <option
-                            value="Nebraska">Nebraska
-                        </option>
-                        <option value="Nevada">Nevada</option>
-                        <option
-                            value="New Hampshire">New Hampshire
-                        </option>
-                        <option value="New Jersey">New Jersey</option>
-                        <option
-                            value="New Mexico">New Mexico
-                        </option>
-                        <option
-                            value="New York">New York
-                        </option>
-                        <option value="North Carolina">North Carolina</option>
-                        <option
-                            value="North Dakota">North Dakota
-                        </option>
-                        <option value="Ohio">Ohio</option>
-                        <option
-                            value="Oklahoma">Oklahoma
-                        </option>
-                        <option value="Oregon">Oregon</option>
-                        <option
-                            value="Pennsylvania">Pennsylvania
-                        </option>
-                        <option value="Rhode Island">Rhode Island</option>
-                        <option
-                            value="South Carolina">South Carolina
-                        </option>
-                        <option value="South Dakota">South Dakota</option>
-                        <option
-                            value="Tennessee">Tennessee
-                        </option>
-                        <option value="Texas">Texas</option>
-                        <option
-                            value="Utah">Utah
-                        </option>
-                        <option value="Vermont">Vermont</option>
-                        <option
-                            value="Virginia">Virginia
-                        </option>
-                        <option
-                            value="Washington">Washington
-                        </option>
-                        <option value="West Virginia">West Virginia</option>
-                        <option
-                            value="Wisconsin">Wisconsin
-                        </option>
-                        <option value="Wyoming">Wyoming</option>
-                        <option
-                            value="Armed Forces Americas">Armed Forces Americas
-                        </option>
-                        <option
-                            value="Armed Forces Europe">Armed Forces Europe
-                        </option>
-                        <option
-                            value="Armed Forces Pacific">Armed Forces Pacific
-                        </option>
-                    </select>
-                    <label htmlFor="input_35_13_4" id="input_35_13_4_label">State</label>
-                    <input type="text" name="input_13.5" id="input_35_13_5" aria-required="true"/>
-                    <label htmlFor="input_35_13_5" id="input_35_13_5_label">ZIP Code</label>
-                </div>
-            </li>
-        </ul>
+        <div>
+            <label>First Name: <input type="text" /></label>
+            <label>Last Name: <input type="text" /></label>
+        </div>
+        <div><label>Phone: <input /></label></div>
+        <div><label>Email: <input /></label></div>
+
+        <h4>Address</h4>
+        <div><label>Street Address<input /></label></div>
+        <div><label>Address Line 2<input /></label></div>
+        <div>
+            <label>
+                City
+                <select defaultValue={"Massachusetts"}>
+                    <option value=""></option>
+                    <option value="Alabama">Alabama</option>
+                    <option value="Alaska">Alaska</option>
+                    <option value="Arizona">Arizona</option>
+                    <option value="Arkansas">Arkansas</option>
+                    <option value="California">California</option>
+                    <option value="Colorado">Colorado</option>
+                    <option value="Connecticut">Connecticut</option>
+                    <option value="Delaware">Delaware</option>
+                    <option value="District of Columbia">District of Columbia</option>
+                    <option value="Florida">Florida</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Hawaii">Hawaii</option>
+                    <option value="Idaho">Idaho</option>
+                    <option value="Illinois">Illinois</option>
+                    <option value="Indiana">Indiana</option>
+                    <option value="Iowa">Iowa</option>
+                    <option value="Kansas">Kansas</option>
+                    <option value="Kentucky">Kentucky</option>
+                    <option value="Louisiana">Louisiana</option>
+                    <option value="Maine">Maine</option>
+                    <option value="Maryland">Maryland</option>
+                    <option value="Massachusetts">Massachusetts</option>
+                    <option value="Michigan">Michigan</option>
+                    <option value="Minnesota">Minnesota</option>
+                    <option value="Mississippi">Mississippi</option>
+                    <option value="Missouri">Missouri</option>
+                    <option value="Montana">Montana</option>
+                    <option value="Nebraska">Nebraska</option>
+                    <option value="Nevada">Nevada</option>
+                    <option value="New Hampshire">New Hampshire</option>
+                    <option value="New Jersey">New Jersey</option>
+                    <option value="New Mexico">New Mexico</option>
+                    <option value="New York">New York</option>
+                    <option value="North Carolina">North Carolina</option>
+                    <option value="North Dakota">North Dakota</option>
+                    <option value="Ohio">Ohio</option>
+                    <option value="Oklahoma">Oklahoma</option>
+                    <option value="Oregon">Oregon</option>
+                    <option value="Pennsylvania">Pennsylvania</option>
+                    <option value="Rhode Island">Rhode Island</option>
+                    <option value="South Carolina">South Carolina</option>
+                    <option value="South Dakota">South Dakota</option>
+                    <option value="Tennessee">Tennessee</option>
+                    <option value="Texas">Texas</option>
+                    <option value="Utah">Utah</option>
+                    <option value="Vermont">Vermont</option>
+                    <option value="Virginia">Virginia</option>
+                    <option value="Washington">Washington</option>
+                    <option value="West Virginia">West Virginia</option>
+                    <option value="Wisconsin">Wisconsin</option>
+                    <option value="Wyoming">Wyoming</option>
+                    <option value="Armed Forces Americas">Armed Forces Americas</option>
+                    <option value="Armed Forces Europe">Armed Forces Europe</option>
+                    <option value="Armed Forces Pacific">Armed Forces Pacific</option>
+                </select>
+            </label>
+        </div>
+        <div><label>City<input /></label></div>
+        <div><label>State<input /></label></div>
+        <div><label>Zip<input /></label></div>
     </>
 }
 
@@ -909,6 +798,7 @@ function Signup() {
                 <>
                     <SignupTotal subtotal={subtotal} deliveryFee={deliveryFee} boxingFee={boxingFee} total={total} />
                     <SignupPaymentOptions />
+                    <SignupPaymentMethods />
                 </>
             : ''}
             { selectedPaymentOption ?

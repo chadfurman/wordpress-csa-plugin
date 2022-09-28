@@ -131,7 +131,7 @@ const SignupSeason = ({selectedSeason, selectedRegion, shares, handleUpdateSelec
                                 <span>Price:</span> <span>{Intl.NumberFormat('en-us', {style: "currency", currency:"USD"}).format(share.price)}</span>
                             </div>
                             <div>
-                                <span>Quantity:</span> <input type="number" data-share-id={share.id} onChange={handleChangeQuantity}/>
+                                <span>Quantity:</span> <input type="number" min={0} data-share-id={share.id} onChange={handleChangeQuantity}/>
                             </div>
                         </label>
                     </li>
@@ -239,7 +239,7 @@ const SignupAddons = ({selectedSeason, selectedRegion, addonShares, handleUpdate
                                 <span>Price:</span> <span>{Intl.NumberFormat('en-us', {style: "currency", currency:"USD"}).format(share.price)}</span>
                             </div>
                             <div>
-                                <span>Quantity:</span> <input type="number" data-share-id={share.id} onChange={handleChangeQuantity}/>
+                                <span>Quantity:</span> <input type="number" min={0} data-share-id={share.id} onChange={handleChangeQuantity}/>
                             </div>
                         </label>
                     </li>

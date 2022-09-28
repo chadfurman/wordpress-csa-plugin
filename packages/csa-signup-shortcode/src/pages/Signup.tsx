@@ -316,35 +316,51 @@ function SignupTotal({subtotal, boxingFee, deliveryFee, total}: SignupTotalProps
     )
 }
 
-function SignupPaymentOptions() {
+type PaymentOptionId = string
+type PaymentOptionLabel = string
+type PaymentOption = {
+    id: PaymentOptionId,
+    label: PaymentOptionLabel
+}
+type PaymentOptions = Record<PaymentOptionId, PaymentOption>
+interface SignupPaymentOptionsProps {
+    paymentOptions: PaymentOptions
+    selectedPaymentOption: PaymentOption
+    handleUpdateSelectedPaymentOption: (paymentOption: PaymentOption) => void,
+    unsetSelectedPaymentOption: () => void,
+}
+function SignupPaymentOptions({paymentOptions, selectedPaymentOption, handleUpdateSelectedPaymentOption, unsetSelectedPaymentOption}: SignupPaymentOptionsProps) {
+    const handleChangePaymentOption = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+        const paymentOptionId: PaymentOptionId = e.currentTarget.getAttribute('data-payment-option-id') || "missing-payment-option-id-from-radio"
+        const paymentOption: PaymentOption = paymentOptions[paymentOptionId]
+        console.log("change location", selectedPaymentOption, paymentOption)
+        if (selectedPaymentOption && selectedPaymentOption.id === paymentOptionId) {
+            unsetSelectedPaymentOption();
+        } else {
+            handleUpdateSelectedPaymentOption(paymentOption)
+        }
+    }
     return <>
         <h3>Payment Options</h3>
         <div>Deposits are non-refundable. We work with people all the time to make payment plans that are viable. Please contact thefarmers@redfirefarm.com to discuss further details!</div>
             <div>
                 <ul>
-                    <li>
-                        <label>
-                            <input type="radio"/>
-                            Full payment today
-                        </label>
-                    </li>
-                    <li>
-                        <label>
-                            <input type="radio"/>
-                            $100 deposit, with full balance paid by June 1st
-                        </label>
-                    </li>
-                    <li>
-                        <label>
-                            <input type="radio"/>
-                            $100 deposit, with three payment installments on July 1st, August 1st, and September 1st
-                        </label>
-                    </li>
+                    {Object.keys(paymentOptions).map(paymentOptionId => {
+                        const paymentOption = paymentOptions[paymentOptionId]
+                        return (
+                            <li key={paymentOption.id}>
+                                <label>
+                                    <input data-payment-option-id={paymentOption.id} checked={selectedPaymentOption && selectedPaymentOption.id == paymentOption.id} onChange={handleChangePaymentOption} onClick={handleChangePaymentOption} type="radio"/>
+                                    {paymentOption.label}
+                                </label>
+                            </li>
+                        )
+                    })}
                 </ul>
             </div>
         <div>
             <label>
-                Please enter the amount you commit to paying now.
+                Please enter the amount you commit to paying today.
                 <input type="text" />
             </label>
         </div>
@@ -691,6 +707,20 @@ function Signup() {
             regionId: "2"
         },
     }
+    const paymentOptions: PaymentOptions = {
+        "1": {
+            id: "1",
+            label: "Full Payment"
+        },
+        "2": {
+            id: "2",
+            label: "$100 deposit, with full balance paid by June 1st"
+        },
+        "3": {
+            id: "3",
+            label: "$100 deposit, with three payment installments on July 1st, August 1st, and September 1st"
+        },
+    }
     const [selectedRegion, handleChangeSelectedRegion] = useState<Region>()
     const [selectedSeasons, handleChangeSelectedSeasons] = useState<Seasons>({})
     const [selectedShares, handleChangeSelectedShares] = useState<SelectedShares>({})
@@ -741,6 +771,12 @@ function Signup() {
     }
     const handleUpdateSelectedPickupLocation = (pickupLocation: PickupLocation) => {
         handleChangeSelectedPickupLocation(pickupLocation)
+    }
+    const unsetSelectedPaymentOption = () => {
+        handleChangeSelectedPaymentOption(undefined)
+    }
+    const handleUpdateSelectedPaymentOption = (paymentOption: PaymentOption) => {
+        handleChangeSelectedPaymentOption(paymentOption)
     }
     useEffect(() => {
     }, [selectedRegion])
@@ -797,7 +833,7 @@ function Signup() {
             { total ?
                 <>
                     <SignupTotal subtotal={subtotal} deliveryFee={deliveryFee} boxingFee={boxingFee} total={total} />
-                    <SignupPaymentOptions />
+                    <SignupPaymentOptions paymentOptions={paymentOptions} handleUpdateSelectedPaymentOption={handleUpdateSelectedPaymentOption} selectedPaymentOption={selectedPaymentOption} unsetSelectedPaymentOption={unsetSelectedPaymentOption}/>
                     <SignupPaymentMethods />
                 </>
             : ''}

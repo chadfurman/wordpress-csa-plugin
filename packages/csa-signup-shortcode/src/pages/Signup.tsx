@@ -279,7 +279,7 @@ function SignupPickupLocation({season, pickupLocations, selectedPickupLocation, 
                 const pickupLocation = pickupLocations[pickupLocationKey]
                 return <li key={pickupLocationKey}>
                     <label>
-                        <input type="radio" data-pickup-location-id={pickupLocation.id} checked={selectedPickupLocation && selectedPickupLocation.id === pickupLocation.id} onClick={handleChangePickupLocation} onChange={handleChangePickupLocation}/> {pickupLocation.label}
+                        <input type="radio" data-pickup-location-id={pickupLocation.id} checked={(selectedPickupLocation && selectedPickupLocation.id === pickupLocation.id) || false} onClick={handleChangePickupLocation} onChange={handleChangePickupLocation}/> {pickupLocation.label}
                         {pickupLocation.description ?
                             <div>
                                 {pickupLocation.description}
@@ -323,13 +323,15 @@ type PaymentOption = {
     label: PaymentOptionLabel
 }
 type PaymentOptions = Record<PaymentOptionId, PaymentOption>
+type SelectedPaymentOption = PaymentOption
 interface SignupPaymentOptionsProps {
     paymentOptions: PaymentOptions
-    selectedPaymentOption: PaymentOption
+    selectedPaymentOption?: PaymentOption
     handleUpdateSelectedPaymentOption: (paymentOption: PaymentOption) => void,
     unsetSelectedPaymentOption: () => void,
+    handleUpdateAmountToPay: (amountToPay: Price) => void,
 }
-function SignupPaymentOptions({paymentOptions, selectedPaymentOption, handleUpdateSelectedPaymentOption, unsetSelectedPaymentOption}: SignupPaymentOptionsProps) {
+function SignupPaymentOptions({paymentOptions, selectedPaymentOption, handleUpdateSelectedPaymentOption, unsetSelectedPaymentOption, handleUpdateAmountToPay}: SignupPaymentOptionsProps) {
     const handleChangePaymentOption = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
         const paymentOptionId: PaymentOptionId = e.currentTarget.getAttribute('data-payment-option-id') || "missing-payment-option-id-from-radio"
         const paymentOption: PaymentOption = paymentOptions[paymentOptionId]
@@ -339,6 +341,10 @@ function SignupPaymentOptions({paymentOptions, selectedPaymentOption, handleUpda
         } else {
             handleUpdateSelectedPaymentOption(paymentOption)
         }
+    }
+    const handleChangeAmountToPay = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+        const amountToPay = parseInt(e.currentTarget.value)
+        handleUpdateAmountToPay(amountToPay)
     }
     return <>
         <h3>Payment Options</h3>
@@ -350,7 +356,7 @@ function SignupPaymentOptions({paymentOptions, selectedPaymentOption, handleUpda
                         return (
                             <li key={paymentOption.id}>
                                 <label>
-                                    <input data-payment-option-id={paymentOption.id} checked={selectedPaymentOption && selectedPaymentOption.id == paymentOption.id} onChange={handleChangePaymentOption} onClick={handleChangePaymentOption} type="radio"/>
+                                    <input data-payment-option-id={paymentOption.id} checked={(selectedPaymentOption && selectedPaymentOption.id == paymentOption.id) || false} onChange={handleChangePaymentOption} onClick={handleChangePaymentOption} type="radio"/>
                                     {paymentOption.label}
                                 </label>
                             </li>
@@ -361,17 +367,50 @@ function SignupPaymentOptions({paymentOptions, selectedPaymentOption, handleUpda
         <div>
             <label>
                 Please enter the amount you commit to paying today.
-                <input type="text" />
+                <input type="number" min={0} onChange={handleChangeAmountToPay}/>
             </label>
         </div>
     </>;
 }
 
-function SignupPaymentMethods() {
+type PaymentMethodId = string
+type PaymentMethodLabel = string
+type PaymentMethod = {
+    id: PaymentMethodId,
+    label: PaymentMethodLabel,
+}
+type PaymentMethods = Record<PaymentMethodId, PaymentMethod>
+type SelectedPaymentMethod = PaymentMethod
+interface SignupPaymentMethodsProps {
+    paymentMethods: PaymentMethods,
+    selectedPaymentMethod?: SelectedPaymentMethod,
+    handleUpdateSelectedPaymentMethod: (selectedPaymentMethood: SelectedPaymentMethod) => void,
+    unsetSelectedPaymentMethod: () => void,
+}
+function SignupPaymentMethods({paymentMethods, selectedPaymentMethod, handleUpdateSelectedPaymentMethod, unsetSelectedPaymentMethod}: SignupPaymentMethodsProps) {
+    const handleChangeSelectedPaymentMethod = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+        const paymentMethodId: PaymentMethodId = e.currentTarget.getAttribute('data-payment-option-id') || "missing-payment-option-id-from-radio"
+        const paymentMethod: PaymentMethod = paymentMethods[paymentMethodId]
+        console.log("change location", selectedPaymentMethod, paymentMethod)
+        if (selectedPaymentMethod && selectedPaymentMethod.id === paymentMethodId) {
+            unsetSelectedPaymentMethod();
+        } else {
+            handleUpdateSelectedPaymentMethod(paymentMethod)
+        }
+    }
     return <>
         <h3>Payment Method</h3>
         <div>Please choose your payment method. SNAP/EBT available with sign up- please email thefarmers@redfirefarm.com to request SNAP/EBT CSA signup forms</div>
         <ul>
+            {Object.keys(paymentMethods).map(paymentMethodId => {
+               const paymentMethod = paymentMethods[paymentMethodId]
+                return <li key={paymentMethodId}>
+                    <label>
+                        <input type="radio" checked={(selectedPaymentMethod && selectedPaymentMethod.id == paymentMethodId) || false} onClick={handleChangeSelectedPaymentMethod} onChange={handleChangeSelectedPaymentMethod} />
+                        {paymentMethod.label}
+                    </label>
+                </li>
+            })}
             <li>
                 <label>
                     <input type="radio" />
@@ -721,18 +760,30 @@ function Signup() {
             label: "$100 deposit, with three payment installments on July 1st, August 1st, and September 1st"
         },
     }
+    const paymentMethods: PaymentMethods = {
+        "1": {
+            id: "1",
+            label: "Mail us a check- we love this option!"
+        },
+        "2": {
+            id: "2",
+            label: "PayPal"
+        }
+    }
     const [selectedRegion, handleChangeSelectedRegion] = useState<Region>()
     const [selectedSeasons, handleChangeSelectedSeasons] = useState<Seasons>({})
     const [selectedShares, handleChangeSelectedShares] = useState<SelectedShares>({})
     const [selectedAddonShares, handleChangeSelectedAddonShares] = useState<SelectedShares>({})
     const [selectedBundle, handleChangeSelectedBundle] = useState<SelectedBundle>()
     const [selectedPickupLocation, handleChangeSelectedPickupLocation] = useState<SelectedPickupLocation>()
-    const [selectedPaymentOption, handleChangeSelectedPaymentOption] = useState<any>() // TODO
+    const [selectedPaymentOption, handleChangeSelectedPaymentOption] = useState<SelectedPaymentOption>()
+    const [selectedPaymentMethod, handleChangeSelectedPaymentMethod] = useState<SelectedPaymentMethod>()
+    const [amountToPay, handleChangeAmountToPay] = useState<Price>(0.0)
     const [contactInfo, handleChangeContactInfo] = useState<any>() // TODO
-    const [subtotal, handleChangeSubtotal] = useState<number>(0.0) // TODO
-    const [total, handleChangeTotal] = useState<number>(0.0) // TODO
-    const [boxingFee, handleChangeBoxingFee] = useState<number>(0.0) // TODO
-    const [deliveryFee, handleChangeDeliveryFee] = useState<number>(0.0) // TODO
+    const [subtotal, handleChangeSubtotal] = useState<Price>(0.0) // TODO
+    const [total, handleChangeTotal] = useState<Price>(0.0) // TODO
+    const [boxingFee, handleChangeBoxingFee] = useState<Price>(0.0) // TODO
+    const [deliveryFee, handleChangeDeliveryFee] = useState<Price>(0.0) // TODO
     const handleUpdateSelectedShares = (share: CsaShare, quantity: number) => {
         handleChangeSelectedShares(selectedShares => ({
             ...selectedShares,
@@ -778,6 +829,15 @@ function Signup() {
     const handleUpdateSelectedPaymentOption = (paymentOption: PaymentOption) => {
         handleChangeSelectedPaymentOption(paymentOption)
     }
+    const unsetSelectedPaymentMethod = () => {
+        handleChangeSelectedPaymentMethod(undefined)
+    }
+    const handleUpdateSelectedPaymentMethod = (paymentMethod: PaymentMethod) => {
+        handleChangeSelectedPaymentMethod(paymentMethod)
+    }
+    const handleUpdateAmountToPay = (amountToPay: Price) => {
+        handleChangeAmountToPay(amountToPay)
+    }
     useEffect(() => {
     }, [selectedRegion])
     useEffect(() => {
@@ -807,6 +867,7 @@ function Signup() {
             handleChangeTotal(subtotal)
         }
     }, [selectedShares, selectedAddonShares,  selectedBundle, selectedPickupLocation])
+
     return (
         <>
             <SignupWelcomeText/>
@@ -833,8 +894,8 @@ function Signup() {
             { total ?
                 <>
                     <SignupTotal subtotal={subtotal} deliveryFee={deliveryFee} boxingFee={boxingFee} total={total} />
-                    <SignupPaymentOptions paymentOptions={paymentOptions} handleUpdateSelectedPaymentOption={handleUpdateSelectedPaymentOption} selectedPaymentOption={selectedPaymentOption} unsetSelectedPaymentOption={unsetSelectedPaymentOption}/>
-                    <SignupPaymentMethods />
+                    <SignupPaymentOptions paymentOptions={paymentOptions} handleUpdateSelectedPaymentOption={handleUpdateSelectedPaymentOption} selectedPaymentOption={selectedPaymentOption} unsetSelectedPaymentOption={unsetSelectedPaymentOption} handleUpdateAmountToPay={handleUpdateAmountToPay}/>
+                    <SignupPaymentMethods paymentMethods={paymentMethods} handleUpdateSelectedPaymentMethod={handleUpdateSelectedPaymentMethod} selectedPaymentMethod={selectedPaymentMethod} unsetSelectedPaymentMethod={unsetSelectedPaymentMethod}/>
                 </>
             : ''}
             { selectedPaymentOption ?

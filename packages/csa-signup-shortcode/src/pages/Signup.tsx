@@ -260,14 +260,13 @@ function SignupPickupLocation({season, pickupLocations, selectedPickupLocation, 
     const handleChangePickupLocation = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
         const pickupLocationId: PickupLocationId = e.currentTarget.getAttribute('data-pickup-location-id') || "missing-pickup-location-id-from-radio"
         const pickupLocation: PickupLocation = pickupLocations[pickupLocationId]
-        console.log("change location", selectedPickupLocation, pickupLocation)
+        console.log("change location")
         if (selectedPickupLocation && selectedPickupLocation.id === pickupLocationId) {
             unsetSelectedPickupLocation();
         } else {
             handleUpdateSelectedPickupLocation(pickupLocation)
         }
     }
-    console.log("regen location", selectedPickupLocation)
     return <>
         <h3>Choose Your {season.label} Pick Up Spot:</h3>
         <div>
@@ -335,7 +334,7 @@ function SignupPaymentOptions({paymentOptions, selectedPaymentOption, handleUpda
     const handleChangePaymentOption = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
         const paymentOptionId: PaymentOptionId = e.currentTarget.getAttribute('data-payment-option-id') || "missing-payment-option-id-from-radio"
         const paymentOption: PaymentOption = paymentOptions[paymentOptionId]
-        console.log("change location", selectedPaymentOption, paymentOption)
+        console.log("change option")
         if (selectedPaymentOption && selectedPaymentOption.id === paymentOptionId) {
             unsetSelectedPaymentOption();
         } else {
@@ -344,6 +343,7 @@ function SignupPaymentOptions({paymentOptions, selectedPaymentOption, handleUpda
     }
     const handleChangeAmountToPay = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
         const amountToPay = parseInt(e.currentTarget.value)
+        console.log("change amount")
         handleUpdateAmountToPay(amountToPay)
     }
     return <>
@@ -389,9 +389,9 @@ interface SignupPaymentMethodsProps {
 }
 function SignupPaymentMethods({paymentMethods, selectedPaymentMethod, handleUpdateSelectedPaymentMethod, unsetSelectedPaymentMethod}: SignupPaymentMethodsProps) {
     const handleChangeSelectedPaymentMethod = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
-        const paymentMethodId: PaymentMethodId = e.currentTarget.getAttribute('data-payment-option-id') || "missing-payment-option-id-from-radio"
+        const paymentMethodId: PaymentMethodId = e.currentTarget.getAttribute('data-payment-method-id') || "missing-payment-method-id-from-radio"
         const paymentMethod: PaymentMethod = paymentMethods[paymentMethodId]
-        console.log("change location", selectedPaymentMethod, paymentMethod)
+        console.log("change method")
         if (selectedPaymentMethod && selectedPaymentMethod.id === paymentMethodId) {
             unsetSelectedPaymentMethod();
         } else {
@@ -406,23 +406,11 @@ function SignupPaymentMethods({paymentMethods, selectedPaymentMethod, handleUpda
                const paymentMethod = paymentMethods[paymentMethodId]
                 return <li key={paymentMethodId}>
                     <label>
-                        <input type="radio" checked={(selectedPaymentMethod && selectedPaymentMethod.id == paymentMethodId) || false} onClick={handleChangeSelectedPaymentMethod} onChange={handleChangeSelectedPaymentMethod} />
+                        <input type="radio" data-payment-method-id={paymentMethodId} checked={(selectedPaymentMethod && selectedPaymentMethod.id == paymentMethodId) || false} onClick={handleChangeSelectedPaymentMethod} onChange={handleChangeSelectedPaymentMethod} />
                         {paymentMethod.label}
                     </label>
                 </li>
             })}
-            <li>
-                <label>
-                    <input type="radio" />
-                    Mail us a check- we love this option!
-                </label>
-            </li>
-            <li>
-                <label>
-                    <input type="radio"/>
-                    PayPal
-                </label>
-            </li>
         </ul>
     </>
 }

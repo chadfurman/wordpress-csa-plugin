@@ -415,57 +415,142 @@ function SignupPaymentMethods({paymentMethods, selectedPaymentMethod, handleUpda
     </>
 }
 
-function SignupComments() {
+type SignupCommentsComments = string;
+type SignupCommentsHearAboutUsQuestionId = string;
+type SignupCommentsHearAboutUsQuestionLabel = string;
+type SignupCommentsHearAboutUsQuestion = {
+    id: SignupCommentsHearAboutUsQuestionId
+    label: SignupCommentsHearAboutUsQuestionLabel
+};
+type SelectedHearAboutUsQuestion = SignupCommentsHearAboutUsQuestion
+type SignupCommentsHearAboutUsQuestions = Record<SignupCommentsHearAboutUsQuestionId, SignupCommentsHearAboutUsQuestion>;
+type SignupCommentsReferral = string
+interface SignupCommentsProps {
+    handleUpdateComments: (comments: SignupCommentsComments) => void
+    handleUpdateReferral: (referral: SignupCommentsReferral) => void
+    hearAboutUsQuestions: SignupCommentsHearAboutUsQuestions
+    selectedHearAboutUsQuestion?: SelectedHearAboutUsQuestion
+    handleUpdateSelectedHearAboutUsQuestion: (selectedHearAboutUsQestion: SelectedHearAboutUsQuestion) => void
+    unsetSelectedHearAboutUsQuestion: () => void
+}
+function SignupComments({hearAboutUsQuestions, handleUpdateComments, selectedHearAboutUsQuestion, handleUpdateSelectedHearAboutUsQuestion, unsetSelectedHearAboutUsQuestion, handleUpdateReferral}: SignupCommentsProps) {
+    const handleChangeComments = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const comments = e.currentTarget.value
+        handleUpdateComments(comments)
+    }
+    const handleChangeHearAboutUsQuestion = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+        const hearAboutUsQuestionId: SignupCommentsHearAboutUsQuestionId = e.currentTarget.getAttribute('data-hear-about-us-question-id') || "missing-hear-about-us-question-id-from-radio"
+        const hearAboutUsQuestion: SignupCommentsHearAboutUsQuestion = hearAboutUsQuestions[hearAboutUsQuestionId]
+        console.log("change method")
+        if (selectedHearAboutUsQuestion && selectedHearAboutUsQuestion.id === hearAboutUsQuestionId) {
+            unsetSelectedHearAboutUsQuestion();
+        } else {
+            handleUpdateSelectedHearAboutUsQuestion(hearAboutUsQuestion)
+        }
+    }
+    const handleChangeReferral = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const referral = e.currentTarget.value
+        handleUpdateReferral(referral)
+    }
+
     return <>
         <h3>Comments</h3>
-        <textarea rows={10} cols={50}></textarea>
+        <textarea rows={10} cols={50} onChange={handleChangeComments}></textarea>
         <ul>
             <li>
                 <label>How did you hear about Red Fire Farm?</label>
                 <div>
                     <ul>
-                        <li>
-                            <label><input type="radio" />I was a member in a previous season</label>
-                        </li>
-                        <li>
-                            <label><input type="radio" />A friend</label>
-                        </li>
-                        <li>
-                            <label><input type="radio" />Flyer or brochure</label>
-                        </li>
-                        <li>
-                            <label><input type="radio" />Online</label>
-                        </li>
-                        <li>
-                            <label><input type="radio" />Other</label>
-                        </li>
+                        {Object.keys(hearAboutUsQuestions).map(hearAboutUsQuestionId => {
+                            const hearAboutUsQuestion = hearAboutUsQuestions[hearAboutUsQuestionId]
+                            return <li key={hearAboutUsQuestionId}>
+                                <label><input type="radio" data-hear-about-us-question-id={hearAboutUsQuestionId} checked={(selectedHearAboutUsQuestion && selectedHearAboutUsQuestion.id == hearAboutUsQuestion.id) || false} onClick={handleChangeHearAboutUsQuestion} onChange={handleChangeHearAboutUsQuestion} />{hearAboutUsQuestion.label}</label>
+                            </li>
+                        })}
                     </ul>
                 </div>
             </li>
             <li>
-                <label>Did a friend refer you? If so, please enter their name.<input/></label>
+                <label>Did a friend refer you? If so, please enter their name.<input onChange={handleChangeReferral}/></label>
             </li>
         </ul>;
     </>
 }
 
-function SignupContactInfo() {
+type FirstName = string
+type LastName = string
+type Phone = string
+type Email = string
+type StreetAddress = string
+type City = string
+type State = string
+type Zip = string
+interface ContactInfoProps {
+    setFirstName: (firstName: FirstName) => void
+    setLastName: (lastName: LastName) => void
+    setPhone: (phone: Phone) => void
+    setEmail: (email: Email) => void
+    setAddress1: (streetAddress: StreetAddress) => void
+    setAddress2: (streetAddress: StreetAddress) => void
+    setCity: (city: City) => void
+    setState: (state: State) => void
+    setZip: (zip: Zip) => void
+}
+
+function SignupContactInfo({ setFirstName, setLastName, setPhone, setEmail, setAddress1, setAddress2, setCity, setState, setZip} : ContactInfoProps) {
+    const handleChangeFirstName = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const firstName = e.currentTarget.value
+        setFirstName(firstName)
+    }
+    const handleChangeLastName = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const lastName = e.currentTarget.value
+        setLastName(lastName)
+    }
+    const handleChangePhone = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const phone = e.currentTarget.value
+        setPhone(phone)
+    }
+    const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const email = e.currentTarget.value
+        setEmail(email)
+    }
+    const handleChangeAddress1 = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const address1 = e.currentTarget.value
+        setAddress1(address1)
+    }
+    const handleChangeAddress2 = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const address2 = e.currentTarget.value
+        setAddress2(address2)
+    }
+    const handleChangeCity = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const city = e.currentTarget.value
+        setCity(city)
+    }
+    const handleChangeState = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const state = e.currentTarget.value
+        setState(state)
+    }
+    const handleChangeZip = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const zip = e.currentTarget.value
+        setZip(zip)
+    }
     return <>
         <h3>Contact Info</h3>
         <div>
-            <label>First Name: <input type="text" /></label>
-            <label>Last Name: <input type="text" /></label>
+            <label>First Name: <input type="text" onChange={handleChangeFirstName} /></label>
+            <label>Last Name: <input type="text" onChange={handleChangeLastName}/></label>
         </div>
-        <div><label>Phone: <input /></label></div>
-        <div><label>Email: <input /></label></div>
+        <div><label>Phone: <input type={"phone"} onChange={handleChangePhone}/></label></div>
+        <div><label>Email: <input type={"email"} onChange={handleChangeEmail} /></label></div>
 
         <h4>Address</h4>
-        <div><label>Street Address<input /></label></div>
-        <div><label>Address Line 2<input /></label></div>
+        <div><label>Street Address<input type={"text"} onChange={handleChangeAddress1}/></label></div>
+        <div><label>Address Line 2<input type={"text"} onChange={handleChangeAddress2}/></label></div>
+        <div><label>City<input type={"text"} onChange={handleChangeCity}/></label></div>
         <div>
             <label>
-                City
-                <select defaultValue={"Massachusetts"}>
+                State
+                <select defaultValue={"Massachusetts"} onChange={handleChangeState}>
                     <option value=""></option>
                     <option value="Alabama">Alabama</option>
                     <option value="Alaska">Alaska</option>
@@ -524,10 +609,9 @@ function SignupContactInfo() {
                 </select>
             </label>
         </div>
-        <div><label>City<input /></label></div>
-        <div><label>State<input /></label></div>
-        <div><label>Zip<input /></label></div>
+        <div><label>Zip<input type={"text"} onChange={handleChangeZip}/></label></div>
     </>
+    // TODO: address text fields?  Best way to configure them?  Types or rels or something?
 }
 
 type CsaShareLabel = string
@@ -758,6 +842,28 @@ function Signup() {
             label: "PayPal"
         }
     }
+    const hearAboutUsQuestions : SignupCommentsHearAboutUsQuestions = {
+        "1": {
+            id: "1",
+            label: "I was a member in a previous season"
+        },
+        "2": {
+            id: "2",
+            label: "A friend"
+        },
+        "3": {
+            id: "3",
+            label: "Flyer or brochure"
+        },
+        "4": {
+            id: "4",
+            label: "Online"
+        },
+        "5": {
+            id: "5",
+            label: "Other"
+        },
+    }
     const [selectedRegion, handleChangeSelectedRegion] = useState<Region>()
     const [selectedSeasons, handleChangeSelectedSeasons] = useState<Seasons>({})
     const [selectedShares, handleChangeSelectedShares] = useState<SelectedShares>({})
@@ -767,11 +873,22 @@ function Signup() {
     const [selectedPaymentOption, handleChangeSelectedPaymentOption] = useState<SelectedPaymentOption>()
     const [selectedPaymentMethod, handleChangeSelectedPaymentMethod] = useState<SelectedPaymentMethod>()
     const [amountToPay, handleChangeAmountToPay] = useState<Price>(0.0)
-    const [contactInfo, handleChangeContactInfo] = useState<any>() // TODO
-    const [subtotal, handleChangeSubtotal] = useState<Price>(0.0) // TODO
-    const [total, handleChangeTotal] = useState<Price>(0.0) // TODO
-    const [boxingFee, handleChangeBoxingFee] = useState<Price>(0.0) // TODO
-    const [deliveryFee, handleChangeDeliveryFee] = useState<Price>(0.0) // TODO
+    const [subtotal, handleChangeSubtotal] = useState<Price>(0.0)
+    const [total, handleChangeTotal] = useState<Price>(0.0)
+    const [boxingFee, handleChangeBoxingFee] = useState<Price>(0.0)
+    const [deliveryFee, handleChangeDeliveryFee] = useState<Price>(0.0)
+    const [comments, handleChangeComments] = useState<SignupCommentsComments>('')
+    const [selectedHearAboutUsQuestion, handleChangeSelectedHearAboutUsQuestion] = useState<SelectedHearAboutUsQuestion>()
+    const [referral, handleChangeReferral] = useState<SignupCommentsReferral>('')
+    const [firstName, setFirstName] = useState<FirstName>()
+    const [lastName, setLastName] = useState<LastName>()
+    const [phone, setPhone] = useState<Phone>()
+    const [email, setEmail] = useState<Email>()
+    const [address1, setAddress1] = useState<StreetAddress>()
+    const [address2, setAddress2] = useState<StreetAddress>()
+    const [city, setCity] = useState<City>()
+    const [state, setState] = useState<State>("Massachusettes")
+    const [zip, setZip] = useState<Zip>()
     const handleUpdateSelectedShares = (share: CsaShare, quantity: number) => {
         handleChangeSelectedShares(selectedShares => ({
             ...selectedShares,
@@ -826,6 +943,15 @@ function Signup() {
     const handleUpdateAmountToPay = (amountToPay: Price) => {
         handleChangeAmountToPay(amountToPay)
     }
+    const handleUpdateComments = (comments: SignupCommentsComments) => {
+        handleChangeComments(comments)
+    }
+    const handleUpdateSelectedHearAboutUsQuestion = (selectedHearAboutUsQuestion: SelectedHearAboutUsQuestion) => {
+        handleChangeSelectedHearAboutUsQuestion(selectedHearAboutUsQuestion)
+    }
+    const unsetSelectedHearAboutUsQuestion = () => {
+        handleChangeSelectedHearAboutUsQuestion(undefined)
+    }
     useEffect(() => {
     }, [selectedRegion])
     useEffect(() => {
@@ -855,6 +981,37 @@ function Signup() {
             handleChangeTotal(subtotal)
         }
     }, [selectedShares, selectedAddonShares,  selectedBundle, selectedPickupLocation])
+
+    const handleSubmission = () => {
+        const formData = {
+            selectedRegion,
+            selectedSeasons,
+            selectedShares,
+            selectedAddonShares,
+            selectedBundle,
+            selectedPickupLocation,
+            selectedPaymentOption,
+            selectedPaymentMethod,
+            amountToPay,
+            subtotal,
+            total,
+            boxingFee,
+            deliveryFee,
+            comments,
+            selectedHearAboutUsQuestion,
+            referral,
+            firstName,
+            lastName,
+            phone,
+            email,
+            address1,
+            address2,
+            city,
+            state,
+            zip,
+        }
+        console.log("Submission Data:", formData)
+    }
 
     return (
         <>
@@ -888,12 +1045,12 @@ function Signup() {
             : ''}
             { selectedPaymentOption ?
                 <>
-                    <SignupContactInfo/>
-                    <SignupComments />
+                    <SignupComments hearAboutUsQuestions={hearAboutUsQuestions} selectedHearAboutUsQuestion={selectedHearAboutUsQuestion} handleUpdateComments={handleUpdateComments} handleUpdateSelectedHearAboutUsQuestion={handleUpdateSelectedHearAboutUsQuestion} unsetSelectedHearAboutUsQuestion={unsetSelectedHearAboutUsQuestion} handleUpdateReferral={handleChangeReferral}/>
+                    <SignupContactInfo setAddress1={setAddress1} setAddress2={setAddress2} setFirstName={setFirstName} setLastName={setLastName} setCity={setCity} setEmail={setEmail} setZip={setZip} setPhone={setPhone} setState={setState}/>
                 </>
             : ""}
-            { contactInfo ?
-                <input type={"submit"} />
+            { (address1 || city || state || zip || firstName || lastName) ?
+                <input type={"submit"} onClick={handleSubmission}/>
             : ""}
         </>
     )

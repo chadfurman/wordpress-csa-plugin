@@ -4,7 +4,7 @@
   "description": "A WordPress plugin for managing the Red Fire Farm CSA",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"no tests\" && exit 0",
     "build": "wp-scripts build",
     "start": "wp-scripts start"
   },

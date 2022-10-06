@@ -1,23 +1,6 @@
 import * as React from 'react'
 import {useEffect, useState} from 'react'
-
-function SignupWelcomeText() {
-    return <>
-        <h3>Welcome to our share sign up page! Hello!</h3>
-        <h4>sign up for your vegetable share (and any additional shares) here!</h4>
-        <p>
-            Upon completion of this form, you will be prompted to pay with a check or redirected to paypal. please
-            call or email the farm with any questions while doing the form.
-        </p>
-        <p>
-            413-467-7645 | &nbsp;<a href="mailto:thefarmers@redfirefarm.com">thefarmers@redfirefarm.com</a>
-            <br/>
-        </p>
-        <p>
-            <strong>Be a part of building the local food system!</strong>
-        </p>
-    </>;
-}
+import WelcomeText from "../components/Signup/WelcomeText";
 
 type RegionId = string
 type RegionLabel = string
@@ -864,6 +847,21 @@ function Signup() {
             label: "Other"
         },
     }
+    const welcomeText = `
+        <h3>Welcome to our share sign up page! Hello!</h3>
+    <h4>sign up for your vegetable share (and any additional shares) here!</h4>
+    <p>
+        Upon completion of this form, you will be prompted to pay with a check or redirected to paypal. please
+        call or email the farm with any questions while doing the form.
+    </p>
+    <p>
+        413-467-7645 | &nbsp;<a href="mailto:thefarmers@redfirefarm.com">thefarmers@redfirefarm.com</a>
+        <br/>
+    </p>
+    <p>
+        <strong>Be a part of building the local food system!</strong>
+    </p>`
+
     const [selectedRegion, handleChangeSelectedRegion] = useState<Region>()
     const [selectedSeasons, handleChangeSelectedSeasons] = useState<Seasons>({})
     const [selectedShares, handleChangeSelectedShares] = useState<SelectedShares>({})
@@ -1015,7 +1013,7 @@ function Signup() {
 
     return (
         <>
-            <SignupWelcomeText/>
+            <WelcomeText welcomeTextWithHtml={welcomeText}/>
             <SignupRegions regions={regions} selectedRegion={selectedRegion} handleChangeSelectedRegion={handleChangeSelectedRegion}/>
             { selectedRegion ? <SignupSeasons seasons={seasons} handleChangeSelectedSeasons={handleChangeSelectedSeasons} /> : '' }
             { selectedRegion ? Object.keys(selectedSeasons).map(selectedSeasonId => {

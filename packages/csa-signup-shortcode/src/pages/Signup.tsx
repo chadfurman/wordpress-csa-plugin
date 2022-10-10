@@ -2,151 +2,8 @@ import * as React from 'react'
 import {useEffect, useState} from 'react'
 import WelcomeText from "../components/Signup/WelcomeText";
 
-type RegionId = string
-type RegionLabel = string
-type Region = {
-    id: RegionId,
-    label: RegionLabel,
-}
-type Regions = Record<RegionId, Region>;
-interface SignupRegionsProps {
-    regions: Regions,
-    selectedRegion?: Region
-    handleChangeSelectedRegion: Function
-}
 
-const SignupRegions = ({regions, selectedRegion, handleChangeSelectedRegion}: SignupRegionsProps) => {
-    const handleRegionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        handleChangeSelectedRegion(regions[e.target.value])
-    }
-    const selectedRegionId = selectedRegion ? selectedRegion.id : null
-    const regionElements = Object.keys(regions).map(regionId => {
-        return (
-            <li key={regionId} >
-                <label>
-                    <input type="radio" value={regionId} checked={selectedRegionId === regionId} onChange={handleRegionChange}/>
-                    {regions[regionId].label}
-                </label>
-            </li>
-        )
-    })
-    return <>
-        <h3>Start by choosing your farm share area:</h3>
-        <p>Where you would like to get a share? [answer reveals pricing and pickup locations.]</p>
-        <ul>
-            {regionElements}
-        </ul>
-    </>;
-}
 
-type SeasonId = string
-type SeasonLabel = string
-type Season = {
-    id: SeasonId,
-    label: SeasonLabel
-}
-type Seasons = Record<SeasonId, Season>
-interface SignupSeasonsProps {
-    seasons: Seasons
-    handleChangeSelectedSeasons: Function
-}
-const SignupSeasons = ({seasons, handleChangeSelectedSeasons}: SignupSeasonsProps) => {
-    const handleSeasonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const seasonId = e.target.value
-        const isSelected = e.target.checked
-        handleChangeSelectedSeasons((selectedSeasons: Seasons) => {
-            if (!isSelected) {
-                delete selectedSeasons[seasonId]
-            } else if (isSelected) {
-                selectedSeasons[seasonId] = seasons[seasonId]
-            }
-            return {
-                ...selectedSeasons
-            }
-        })
-    }
-
-    return <>
-        <h3>Which Seasons are you interested in?</h3>
-        <ul>
-            {Object.keys(seasons).map(seasonId => {
-                const season = seasons[seasonId]
-                return (
-                    <li key={seasonId}>
-                        <label>
-                            <input type="checkbox" value={season.id} onChange={handleSeasonChange}/>
-                            {season.label}
-                        </label>
-                    </li>
-                )
-            })}
-        </ul>
-    </>;
-}
-
-interface SignupSeasonProps {
-    selectedSeason: Season
-    selectedRegion: Region
-    shares: CsaShares
-    handleUpdateSelectedShares: (share: CsaShare, quantity: SelectedShare["quantity"]) => void
-}
-const SignupSeason = ({selectedSeason, selectedRegion, shares, handleUpdateSelectedShares}: SignupSeasonProps) => {
-    const handleChangeQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const shareId: CsaShareId = e.target.getAttribute('data-share-id') || "missing-share-id-from-quantity-input"
-        const quantity: number = parseInt(e.target.value)
-        handleUpdateSelectedShares(shares[shareId], quantity)
-    }
-    return <>
-        <h3>{selectedSeason.label} Shares</h3>
-        <ul>
-            {Object.keys(shares).map(shareId => {
-                const share = shares[shareId]
-                if (share.regionId !== selectedRegion.id) {
-                    return
-                }
-                return (
-                    <li key={shareId}>
-                        <label>
-                            {share.label}
-                            <div>{share.description}</div>
-                            <div>
-                                {/* TODO: share price per region */}
-                                <span>Price:</span> <span>{Intl.NumberFormat('en-us', {style: "currency", currency:"USD"}).format(share.price)}</span>
-                            </div>
-                            <div>
-                                <span>Quantity:</span> <input type="number" min={0} data-share-id={share.id} onChange={handleChangeQuantity}/>
-                            </div>
-                        </label>
-                    </li>
-                )
-            })}
-        </ul>
-    </>
-}
-
-type BundleId = string
-type BundleLabel = string
-type BundleDescription = string
-type Bundle = {
-    id: BundleId
-    label: BundleLabel
-    description: BundleDescription
-    seasons: SeasonId[],
-    region: RegionId,
-    options: BundleOptionId[]
-}
-type Bundles = Record<BundleId, Bundle>
-type BundleOptionId = string
-type BundleOptionLabel = string
-type BundleOptionDescription = string
-type BundleOptionPrice = number
-type BundleOption = {
-    id: BundleOptionId
-    label: BundleOptionLabel
-    description: BundleOptionDescription
-    price: BundleOptionPrice
-}
-type BundleOptions = Record<BundleOptionId, BundleOption>
 interface SignupBundlesProps {
     selectedSeasons: Seasons
     selectedRegion: Region
@@ -195,12 +52,12 @@ function SignupBundles({selectedSeasons, selectedRegion, bundles, bundleOptions,
 interface SignupAddonsProps {
     selectedSeason: Season
     selectedRegion: Region
-    addonShares: CsaShares
-    handleUpdateSelectedAddonShares: (share: CsaShare, quantity: SelectedShare["quantity"]) => void
+    addonShares: Shares
+    handleUpdateSelectedAddonShares: (share: Share, quantity: SelectedShare["quantity"]) => void
 }
 const SignupAddons = ({selectedSeason, selectedRegion, addonShares, handleUpdateSelectedAddonShares}: SignupAddonsProps) => {
     const handleChangeQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const shareId: CsaShareId = e.target.getAttribute('data-share-id') || "missing-share-id-from-quantity-input"
+        const shareId: ShareId = e.target.getAttribute('data-share-id') || "missing-share-id-from-quantity-input"
         const quantity: number = parseInt(e.target.value)
         handleUpdateSelectedAddonShares(addonShares[shareId], quantity)
     }
@@ -298,14 +155,6 @@ function SignupTotal({subtotal, boxingFee, deliveryFee, total}: SignupTotalProps
     )
 }
 
-type PaymentOptionId = string
-type PaymentOptionLabel = string
-type PaymentOption = {
-    id: PaymentOptionId,
-    label: PaymentOptionLabel
-}
-type PaymentOptions = Record<PaymentOptionId, PaymentOption>
-type SelectedPaymentOption = PaymentOption
 interface SignupPaymentOptionsProps {
     paymentOptions: PaymentOptions
     selectedPaymentOption?: PaymentOption
@@ -356,14 +205,6 @@ function SignupPaymentOptions({paymentOptions, selectedPaymentOption, handleUpda
     </>;
 }
 
-type PaymentMethodId = string
-type PaymentMethodLabel = string
-type PaymentMethod = {
-    id: PaymentMethodId,
-    label: PaymentMethodLabel,
-}
-type PaymentMethods = Record<PaymentMethodId, PaymentMethod>
-type SelectedPaymentMethod = PaymentMethod
 interface SignupPaymentMethodsProps {
     paymentMethods: PaymentMethods,
     selectedPaymentMethod?: SelectedPaymentMethod,
@@ -398,20 +239,10 @@ function SignupPaymentMethods({paymentMethods, selectedPaymentMethod, handleUpda
     </>
 }
 
-type SignupCommentsComments = string;
-type SignupCommentsHearAboutUsQuestionId = string;
-type SignupCommentsHearAboutUsQuestionLabel = string;
-type SignupCommentsHearAboutUsQuestion = {
-    id: SignupCommentsHearAboutUsQuestionId
-    label: SignupCommentsHearAboutUsQuestionLabel
-};
-type SelectedHearAboutUsQuestion = SignupCommentsHearAboutUsQuestion
-type SignupCommentsHearAboutUsQuestions = Record<SignupCommentsHearAboutUsQuestionId, SignupCommentsHearAboutUsQuestion>;
-type SignupCommentsReferral = string
 interface SignupCommentsProps {
-    handleUpdateComments: (comments: SignupCommentsComments) => void
-    handleUpdateReferral: (referral: SignupCommentsReferral) => void
-    hearAboutUsQuestions: SignupCommentsHearAboutUsQuestions
+    handleUpdateComments: (comments: Comments) => void
+    handleUpdateReferral: (referral: Referral) => void
+    hearAboutUsQuestions: HearAboutUsQuestions
     selectedHearAboutUsQuestion?: SelectedHearAboutUsQuestion
     handleUpdateSelectedHearAboutUsQuestion: (selectedHearAboutUsQestion: SelectedHearAboutUsQuestion) => void
     unsetSelectedHearAboutUsQuestion: () => void
@@ -422,8 +253,8 @@ function SignupComments({hearAboutUsQuestions, handleUpdateComments, selectedHea
         handleUpdateComments(comments)
     }
     const handleChangeHearAboutUsQuestion = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
-        const hearAboutUsQuestionId: SignupCommentsHearAboutUsQuestionId = e.currentTarget.getAttribute('data-hear-about-us-question-id') || "missing-hear-about-us-question-id-from-radio"
-        const hearAboutUsQuestion: SignupCommentsHearAboutUsQuestion = hearAboutUsQuestions[hearAboutUsQuestionId]
+        const hearAboutUsQuestionId: HearAboutUsQuestionId = e.currentTarget.getAttribute('data-hear-about-us-question-id') || "missing-hear-about-us-question-id-from-radio"
+        const hearAboutUsQuestion: HearAboutUsQuestion = hearAboutUsQuestions[hearAboutUsQuestionId]
         console.log("change method")
         if (selectedHearAboutUsQuestion && selectedHearAboutUsQuestion.id === hearAboutUsQuestionId) {
             unsetSelectedHearAboutUsQuestion();
@@ -460,14 +291,6 @@ function SignupComments({hearAboutUsQuestions, handleUpdateComments, selectedHea
     </>
 }
 
-type FirstName = string
-type LastName = string
-type Phone = string
-type Email = string
-type StreetAddress = string
-type City = string
-type State = string
-type Zip = string
 interface ContactInfoProps {
     setFirstName: (firstName: FirstName) => void
     setLastName: (lastName: LastName) => void
@@ -597,256 +420,7 @@ function SignupContactInfo({ setFirstName, setLastName, setPhone, setEmail, setA
     // TODO: address text fields?  Best way to configure them?  Types or rels or something?
 }
 
-type CsaShareLabel = string
-type CsaShareDescription = string
-type CsaShareId = string
-type Price = number
-type CsaShare = {
-    label: CsaShareLabel,
-    description: CsaShareDescription,
-    id: CsaShareId
-    price: Price
-    regionId: RegionId,
-    seasonId: SeasonId
-}
-type CsaShares = Record<CsaShareId, CsaShare>
-type SelectedShare = {
-    shareId: CsaShareId
-    quantity: number
-}
-type SelectedBundle = {
-    bundleId: BundleId
-    bundleOptionId: BundleOptionId
-}
-type SelectedShares = Record<CsaShareId, SelectedShare>
-type PickupLocationId = string
-type PickupLocationLabel = string
-type PickupLocationDescription = string
-type PickupLocationBoxingFee = Price
-type PickupLocationDeliveryFee = Price
-type PickupLocationRegionId = RegionId
-type PickupLocationSeasonId = SeasonId
-type PickupLocation = {
-    id: PickupLocationId
-    label: PickupLocationLabel
-    description?: PickupLocationDescription
-    boxingFee: PickupLocationBoxingFee
-    deliveryFee: PickupLocationDeliveryFee
-    regionId: PickupLocationRegionId
-    seasonId: PickupLocationSeasonId
-}
-type SelectedPickupLocation = PickupLocation
-type PickupLocations = Record<PickupLocationId, PickupLocation>
 function Signup() {
-    const seasons: Seasons = {
-        "1": {
-            id: "1",
-            label: "Summer"
-        },
-        "2": {
-            id: "2",
-            label: "Fall"
-        }
-
-    }
-    const regions: Regions = {
-        "1": {
-            id: "1",
-            label: "Western Massachusetts"
-        },
-        "2": {
-            id: "2",
-            label: "Boston Area & Worcester"
-        },
-    }
-    const addonShares: CsaShares = {
-        "1": {
-            id: "1",
-            label: "Summer Cheese Share (Western MA)",
-            description: "A weekly 6-8 oz package of fresh, locally sourced cheese sourced from local creameries that are committed to happy, healthy animals and practices that support our environment.",
-            price: 65.00,
-            regionId: "1",
-            seasonId: "1"
-        },
-        "2": {
-            id: "2",
-            label: "Summer Cheese Share (Boston &amp; Worcester)",
-            description: "A weekly 6-8 oz package of fresh, locally sourced cheese sourced from local creameries that are committed to happy, healthy animals and practices that support our environment.",
-            price: 67.00,
-            regionId: "2",
-            seasonId: "1"
-        },
-    }
-
-    const shares: CsaShares = {
-        "1": {
-            id: "1",
-            label: "Regular Summer CSA Share (Western MA)",
-            description: "Great for 2-4 people who cook 3 times per week. Enjoy all the crops and varieties RFF has to offer. Weekly shares through mid-October. Comes with full PYO privileges.",
-            price: 247.00,
-            regionId: "1",
-            seasonId: "1"
-        },
-        "2": {
-            id: "2",
-            label: "Regular Summer CSA Share (Boston & Worcester)",
-            description: "Great for 2-4 people who cook 3 times per week. Enjoy all the crops and varieties RFF has to offer. Weekly shares through mid-October. Comes with full PYO privileges.",
-            price: 278.00,
-            regionId: "2",
-            seasonId: "1"
-        },
-        "3": {
-            id: "3",
-            label: "Small Summer CSA Share (Western MA)",
-            description: "Great for 1-2 people who cook 3 times per week. Not all items or varieties may be available with the small share. PYO availability is half of the regular share.",
-            price: 192.00,
-            regionId: "1",
-            seasonId: "1"
-        },
-        "4": {
-            id: "4",
-            label: "Small Summer CSA Share (Boston & Worcester)",
-            description: "Great for 1-2 people who cook 3 times per week. Not all items or varieties may be available with the small share. PYO availability is half of the regular share.",
-            price: 219.00,
-            regionId: "2",
-            seasonId: "1"
-        },
-    }
-    const bundles: Bundles = {
-        "1": {
-            id: "1",
-            label: "Summer and Fall Vegetable Bundle (Western MA)",
-            description: "Delicious organic Summer &amp; fall produce bundled into one signup option to save you money! Summer Shares run for 20 weeks (June-October) with Fall Shares beginning after (November-December). much you can afford to pay. Payments over the Regular Price help offset households needing lower priced shares.",
-            seasons: ["1","2"],
-            region: "1",
-            options: ["1","2","3","4","5"]
-        }
-    }
-    const bundleOptions: BundleOptions = {
-        "1": {
-            id: "1",
-            label: "Helping Hands Bundle x 7",
-            description: "Help offset signup costs for up to 7 households needing lower priced shares",
-            price: 1180.00
-        },
-        "2": {
-            id: "2",
-            label: "Helping Hands Bundle",
-            description: "Help offset signup costs for an additional household needing lower priced shares",
-            price: 925.00
-        },
-        "3": {
-            id: "3",
-            label: "Regular Bundle",
-            description: "",
-            price: 885.00
-        },
-        "4": {
-            id: "4",
-            label: "Bundle",
-            description: "",
-            price: 847.00
-        },
-        "5": {
-            id: "5",
-            label: "Bundle",
-            description: "",
-            price: 842.00
-        }
-    }
-    const pickupLocations: PickupLocations = {
-        "1": {
-            id: "1",
-            label: "GRANBY - Wednesdays 2-6:30 p.m. at the farm store (7 Carver Street)",
-            description: undefined,
-            boxingFee: 0.00,
-            deliveryFee: 0.00,
-            seasonId: "1",
-            regionId: "1"
-        },
-        "2": {
-            id: "2",
-            label: "HOME DELIVERY - Fridays 10-8 p.m. (NOTE: Flower Shares are NOT ELIGIBLE for home delivery)",
-            description: undefined,
-            boxingFee: 0.00,
-            deliveryFee: 10.00,
-            seasonId: "1",
-            regionId: "1"
-        },
-        "3": {
-            id: "3",
-            label: "WORCESTER - Wednesdays 3-7 p.m. at the First Unitarian Church (90 Main Street)",
-            description: undefined,
-            boxingFee: 10.00,
-            deliveryFee: 0.00,
-            seasonId: "1",
-            regionId: "2"
-        },
-        "4": {
-            id: "4",
-            label: "CAMBRIDGE - Wednesdays 4-7 p.m. at the East Cambridge Savings Bank in Inman Square (1310 Cambridge Street)",
-            description: undefined,
-            boxingFee: 10.00,
-            deliveryFee: 0.00,
-            seasonId: "1",
-            regionId: "2"
-        },
-        "5": {
-            id: "5",
-            label: "HOME DELIVERY via Mass Food Delivery - Wednesdays 10-8 p.m.",
-            description: "(Areas NOT ELIGIBLE for delivery: Cape &amp; Islands, North Shore, South Shore below Rte. 44, Dudley, Webster, Douglas, Uxbridge, Millville, Mendon, Hopedale &amp; Blackstone)",
-            boxingFee: 10.00,
-            deliveryFee: 13.00,
-            seasonId: "1",
-            regionId: "2"
-        },
-    }
-    const paymentOptions: PaymentOptions = {
-        "1": {
-            id: "1",
-            label: "Full Payment"
-        },
-        "2": {
-            id: "2",
-            label: "$100 deposit, with full balance paid by June 1st"
-        },
-        "3": {
-            id: "3",
-            label: "$100 deposit, with three payment installments on July 1st, August 1st, and September 1st"
-        },
-    }
-    const paymentMethods: PaymentMethods = {
-        "1": {
-            id: "1",
-            label: "Mail us a check- we love this option!"
-        },
-        "2": {
-            id: "2",
-            label: "PayPal"
-        }
-    }
-    const hearAboutUsQuestions : SignupCommentsHearAboutUsQuestions = {
-        "1": {
-            id: "1",
-            label: "I was a member in a previous season"
-        },
-        "2": {
-            id: "2",
-            label: "A friend"
-        },
-        "3": {
-            id: "3",
-            label: "Flyer or brochure"
-        },
-        "4": {
-            id: "4",
-            label: "Online"
-        },
-        "5": {
-            id: "5",
-            label: "Other"
-        },
-    }
     const welcomeText = `
         <h3>Welcome to our share sign up page! Hello!</h3>
     <h4>sign up for your vegetable share (and any additional shares) here!</h4>
@@ -875,9 +449,9 @@ function Signup() {
     const [total, handleChangeTotal] = useState<Price>(0.0)
     const [boxingFee, handleChangeBoxingFee] = useState<Price>(0.0)
     const [deliveryFee, handleChangeDeliveryFee] = useState<Price>(0.0)
-    const [comments, handleChangeComments] = useState<SignupCommentsComments>('')
+    const [comments, handleChangeComments] = useState<Comments>('')
     const [selectedHearAboutUsQuestion, handleChangeSelectedHearAboutUsQuestion] = useState<SelectedHearAboutUsQuestion>()
-    const [referral, handleChangeReferral] = useState<SignupCommentsReferral>('')
+    const [referral, handleChangeReferral] = useState<Referral>('')
     const [firstName, setFirstName] = useState<FirstName>()
     const [lastName, setLastName] = useState<LastName>()
     const [phone, setPhone] = useState<Phone>()
@@ -887,7 +461,7 @@ function Signup() {
     const [city, setCity] = useState<City>()
     const [state, setState] = useState<State>("Massachusettes")
     const [zip, setZip] = useState<Zip>()
-    const handleUpdateSelectedShares = (share: CsaShare, quantity: number) => {
+    const handleUpdateSelectedShares = (share: Share, quantity: number) => {
         handleChangeSelectedShares(selectedShares => ({
             ...selectedShares,
             [share.id]: {
@@ -896,7 +470,7 @@ function Signup() {
             }
         }))
     }
-    const handleUpdateSelectedAddonShares = (share: CsaShare, quantity: number) => {
+    const handleUpdateSelectedAddonShares = (share: Share, quantity: number) => {
         handleChangeSelectedAddonShares(selectedShares => ({
             ...selectedAddonShares,
             [share.id]: {
@@ -941,7 +515,7 @@ function Signup() {
     const handleUpdateAmountToPay = (amountToPay: Price) => {
         handleChangeAmountToPay(amountToPay)
     }
-    const handleUpdateComments = (comments: SignupCommentsComments) => {
+    const handleUpdateComments = (comments: Comments) => {
         handleChangeComments(comments)
     }
     const handleUpdateSelectedHearAboutUsQuestion = (selectedHearAboutUsQuestion: SelectedHearAboutUsQuestion) => {
@@ -1014,12 +588,12 @@ function Signup() {
     return (
         <>
             <WelcomeText welcomeTextWithHtml={welcomeText}/>
-            <SignupRegions regions={regions} selectedRegion={selectedRegion} handleChangeSelectedRegion={handleChangeSelectedRegion}/>
-            { selectedRegion ? <SignupSeasons seasons={seasons} handleChangeSelectedSeasons={handleChangeSelectedSeasons} /> : '' }
+            <SelectRegion regions={regions} selectedRegion={selectedRegion} handleChangeSelectedRegion={handleChangeSelectedRegion}/>
+            { selectedRegion ? <SignupSeasons seasons={seasons} handleSelect={handleChangeSelectedSeasons} /> : '' }
             { selectedRegion ? Object.keys(selectedSeasons).map(selectedSeasonId => {
                 const selectedSeason = seasons[selectedSeasonId]
                 return <div key={selectedSeasonId}>
-                    <SignupSeason shares={shares} selectedRegion={selectedRegion} selectedSeason={selectedSeason} handleUpdateSelectedShares={handleUpdateSelectedShares} />
+                    <SelectShares shares={shares} selectedRegion={selectedRegion} season={selectedSeason} handleSelect={handleUpdateSelectedShares} />
                     <SignupAddons addonShares={addonShares} selectedRegion={selectedRegion} selectedSeason={selectedSeason} handleUpdateSelectedAddonShares={handleUpdateSelectedAddonShares} />
                 </div>
             }) : ""}

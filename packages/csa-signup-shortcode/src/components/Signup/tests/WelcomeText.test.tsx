@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import WelcomeText from './WelcomeText'
+import WelcomeText from '../WelcomeText'
 
 describe("WelcomeText component", () => {
     it("should accept the welcome text as a parameter and display the text", () => {

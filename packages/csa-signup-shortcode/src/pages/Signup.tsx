@@ -1,431 +1,37 @@
 import * as React from 'react'
 import {useEffect, useState} from 'react'
 import WelcomeText from "../components/Signup/WelcomeText";
-
-
-
-interface SignupBundlesProps {
-    selectedSeasons: Seasons
-    selectedRegion: Region
-    selectedBundle?: SelectedBundle
-    bundles: Bundles
-    bundleOptions: BundleOptions,
-    handleUpdateSelectedBundle: (bundle: Bundle, bundleOption: BundleOption) => void
-    unsetSelectedBundle: () => void
-}
-function SignupBundles({selectedSeasons, selectedRegion, bundles, bundleOptions, selectedBundle, handleUpdateSelectedBundle, unsetSelectedBundle}: SignupBundlesProps) {
-    const handleChangeBundleOption = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
-        const bundleId: BundleOptionId = e.currentTarget.getAttribute('data-bundle-id') || "missing-bundle-option-id-from-bundle-radio"
-        const bundleOptionId: BundleOptionId = e.currentTarget.getAttribute('data-bundle-option-id') || "missing-bundle-option-id-from-bundle-radio"
-        const bundleOption: BundleOption = bundleOptions[bundleOptionId]
-        if (selectedBundle && selectedBundle.bundleId === bundleId && selectedBundle.bundleOptionId === bundleOptionId) {
-            unsetSelectedBundle();
-        } else {
-            handleUpdateSelectedBundle(bundles[bundleId], bundleOption)
-        }
-    }
-    return <>
-        <h3>Bundles</h3>
-        {Object.keys(bundles).map((bundleId: BundleId) => {
-            const bundle = bundles[bundleId]
-            return <div key={bundleId}>
-                <h4>{bundle.label}</h4>
-                <div>{bundle.description}</div>
-                <ul>
-                    {bundle.options.map(optionId => {
-                        const bundleOption = bundleOptions[optionId]
-                        return <li key={optionId}>
-                            <label>
-                                <>
-                                    <input type="radio" data-bundle-id={bundle.id} data-bundle-option-id={bundleOption.id} checked={selectedBundle && selectedBundle.bundleId === bundle.id && selectedBundle.bundleOptionId === bundleOption.id} onChange={handleChangeBundleOption} onClick={handleChangeBundleOption} /> {Intl.NumberFormat('en-us',{style:"currency", currency:"USD"}).format(bundleOption.price)} {bundleOption.label}
-                                    <p>{bundleOption.description}</p>
-                                </>
-                            </label>
-                        </li>
-                    })}
-                </ul>
-            </div>
-        })}
-    </>;
-}
-
-interface SignupAddonsProps {
-    selectedSeason: Season
-    selectedRegion: Region
-    addonShares: Shares
-    handleUpdateSelectedAddonShares: (share: Share, quantity: SelectedShare["quantity"]) => void
-}
-const SignupAddons = ({selectedSeason, selectedRegion, addonShares, handleUpdateSelectedAddonShares}: SignupAddonsProps) => {
-    const handleChangeQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const shareId: ShareId = e.target.getAttribute('data-share-id') || "missing-share-id-from-quantity-input"
-        const quantity: number = parseInt(e.target.value)
-        handleUpdateSelectedAddonShares(addonShares[shareId], quantity)
-    }
-    return <>
-        <h3>Available Add-On Shares For {selectedSeason.label}</h3>
-        <ul>
-            {Object.keys(addonShares).map(shareId => {
-                const share = addonShares[shareId]
-                if (share.regionId !== selectedRegion.id) {
-                    return
-                }
-                return (
-                    <li key={shareId}>
-                        <label>
-                            {share.label}
-                            <div>{share.description}</div>
-                            <div>
-                                {/* TODO: share price per region */}
-                                <span>Price:</span> <span>{Intl.NumberFormat('en-us', {style: "currency", currency:"USD"}).format(share.price)}</span>
-                            </div>
-                            <div>
-                                <span>Quantity:</span> <input type="number" min={0} data-share-id={share.id} onChange={handleChangeQuantity}/>
-                            </div>
-                        </label>
-                    </li>
-                )
-            })}
-        </ul>
-    </>;
-}
-
-interface SignupPickupLocationProps {
-    season: Season
-    pickupLocations: PickupLocations
-    selectedPickupLocation?: SelectedPickupLocation
-    handleUpdateSelectedPickupLocation: (pickupLocation: PickupLocation) => void
-    unsetSelectedPickupLocation: () => void
-}
-function SignupPickupLocation({season, pickupLocations, selectedPickupLocation, handleUpdateSelectedPickupLocation, unsetSelectedPickupLocation}: SignupPickupLocationProps) {
-    const handleChangePickupLocation = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
-        const pickupLocationId: PickupLocationId = e.currentTarget.getAttribute('data-pickup-location-id') || "missing-pickup-location-id-from-radio"
-        const pickupLocation: PickupLocation = pickupLocations[pickupLocationId]
-        console.log("change location")
-        if (selectedPickupLocation && selectedPickupLocation.id === pickupLocationId) {
-            unsetSelectedPickupLocation();
-        } else {
-            handleUpdateSelectedPickupLocation(pickupLocation)
-        }
-    }
-    return <>
-        <h3>Choose Your {season.label} Pick Up Spot:</h3>
-        <div>
-            This will be your pickup location for the duration of the season.
-            NOTE: Locations and times are subject to change, so please watch your email.
-        </div>
-        <ul>
-            {Object.keys(pickupLocations).map(pickupLocationKey => {
-                const pickupLocation = pickupLocations[pickupLocationKey]
-                return <li key={pickupLocationKey}>
-                    <label>
-                        <input type="radio" data-pickup-location-id={pickupLocation.id} checked={(selectedPickupLocation && selectedPickupLocation.id === pickupLocation.id) || false} onClick={handleChangePickupLocation} onChange={handleChangePickupLocation}/> {pickupLocation.label}
-                        {pickupLocation.description ?
-                            <div>
-                                {pickupLocation.description}
-                            </div>
-                        : "" }
-                    </label>
-                </li>
-            })}
-        </ul>
-    </>
-}
-
-interface SignupTotalProps {
-    subtotal: number
-    boxingFee: number
-    deliveryFee: number
-    total: number
-}
-function SignupTotal({subtotal, boxingFee, deliveryFee, total}: SignupTotalProps) {
-    return (
-        <>
-            <h3>Cost</h3>
-            {boxingFee || deliveryFee ?
-                <div>Subtotal: {Intl.NumberFormat('en-us', {style: "currency", currency: "USD"}).format(subtotal)}</div>
-            : "" }
-            {boxingFee ?
-                <div>Boxing Fee: {Intl.NumberFormat('en-us', {style: "currency", currency: "USD"}).format(boxingFee)}</div>
-            : ""}
-            {deliveryFee ?
-                <div>Delivery Fee: {Intl.NumberFormat('en-us', {style: "currency", currency: "USD"}).format(deliveryFee)}</div>
-            : "" }
-            <div>Total: {Intl.NumberFormat('en-us', {style: "currency", currency: "USD"}).format(total)}</div>
-        </>
-    )
-}
-
-interface SignupPaymentOptionsProps {
-    paymentOptions: PaymentOptions
-    selectedPaymentOption?: PaymentOption
-    handleUpdateSelectedPaymentOption: (paymentOption: PaymentOption) => void,
-    unsetSelectedPaymentOption: () => void,
-    handleUpdateAmountToPay: (amountToPay: Price) => void,
-}
-function SignupPaymentOptions({paymentOptions, selectedPaymentOption, handleUpdateSelectedPaymentOption, unsetSelectedPaymentOption, handleUpdateAmountToPay}: SignupPaymentOptionsProps) {
-    const handleChangePaymentOption = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
-        const paymentOptionId: PaymentOptionId = e.currentTarget.getAttribute('data-payment-option-id') || "missing-payment-option-id-from-radio"
-        const paymentOption: PaymentOption = paymentOptions[paymentOptionId]
-        console.log("change option")
-        if (selectedPaymentOption && selectedPaymentOption.id === paymentOptionId) {
-            unsetSelectedPaymentOption();
-        } else {
-            handleUpdateSelectedPaymentOption(paymentOption)
-        }
-    }
-    const handleChangeAmountToPay = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
-        const amountToPay = parseInt(e.currentTarget.value)
-        console.log("change amount")
-        handleUpdateAmountToPay(amountToPay)
-    }
-    return <>
-        <h3>Payment Options</h3>
-        <div>Deposits are non-refundable. We work with people all the time to make payment plans that are viable. Please contact thefarmers@redfirefarm.com to discuss further details!</div>
-            <div>
-                <ul>
-                    {Object.keys(paymentOptions).map(paymentOptionId => {
-                        const paymentOption = paymentOptions[paymentOptionId]
-                        return (
-                            <li key={paymentOption.id}>
-                                <label>
-                                    <input data-payment-option-id={paymentOption.id} checked={(selectedPaymentOption && selectedPaymentOption.id == paymentOption.id) || false} onChange={handleChangePaymentOption} onClick={handleChangePaymentOption} type="radio"/>
-                                    {paymentOption.label}
-                                </label>
-                            </li>
-                        )
-                    })}
-                </ul>
-            </div>
-        <div>
-            <label>
-                Please enter the amount you commit to paying today.
-                <input type="number" min={0} onChange={handleChangeAmountToPay}/>
-            </label>
-        </div>
-    </>;
-}
-
-interface SignupPaymentMethodsProps {
-    paymentMethods: PaymentMethods,
-    selectedPaymentMethod?: SelectedPaymentMethod,
-    handleUpdateSelectedPaymentMethod: (selectedPaymentMethood: SelectedPaymentMethod) => void,
-    unsetSelectedPaymentMethod: () => void,
-}
-function SignupPaymentMethods({paymentMethods, selectedPaymentMethod, handleUpdateSelectedPaymentMethod, unsetSelectedPaymentMethod}: SignupPaymentMethodsProps) {
-    const handleChangeSelectedPaymentMethod = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
-        const paymentMethodId: PaymentMethodId = e.currentTarget.getAttribute('data-payment-method-id') || "missing-payment-method-id-from-radio"
-        const paymentMethod: PaymentMethod = paymentMethods[paymentMethodId]
-        console.log("change method")
-        if (selectedPaymentMethod && selectedPaymentMethod.id === paymentMethodId) {
-            unsetSelectedPaymentMethod();
-        } else {
-            handleUpdateSelectedPaymentMethod(paymentMethod)
-        }
-    }
-    return <>
-        <h3>Payment Method</h3>
-        <div>Please choose your payment method. SNAP/EBT available with sign up- please email thefarmers@redfirefarm.com to request SNAP/EBT CSA signup forms</div>
-        <ul>
-            {Object.keys(paymentMethods).map(paymentMethodId => {
-               const paymentMethod = paymentMethods[paymentMethodId]
-                return <li key={paymentMethodId}>
-                    <label>
-                        <input type="radio" data-payment-method-id={paymentMethodId} checked={(selectedPaymentMethod && selectedPaymentMethod.id == paymentMethodId) || false} onClick={handleChangeSelectedPaymentMethod} onChange={handleChangeSelectedPaymentMethod} />
-                        {paymentMethod.label}
-                    </label>
-                </li>
-            })}
-        </ul>
-    </>
-}
-
-interface SignupCommentsProps {
-    handleUpdateComments: (comments: Comments) => void
-    handleUpdateReferral: (referral: Referral) => void
-    hearAboutUsQuestions: HearAboutUsQuestions
-    selectedHearAboutUsQuestion?: SelectedHearAboutUsQuestion
-    handleUpdateSelectedHearAboutUsQuestion: (selectedHearAboutUsQestion: SelectedHearAboutUsQuestion) => void
-    unsetSelectedHearAboutUsQuestion: () => void
-}
-function SignupComments({hearAboutUsQuestions, handleUpdateComments, selectedHearAboutUsQuestion, handleUpdateSelectedHearAboutUsQuestion, unsetSelectedHearAboutUsQuestion, handleUpdateReferral}: SignupCommentsProps) {
-    const handleChangeComments = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const comments = e.currentTarget.value
-        handleUpdateComments(comments)
-    }
-    const handleChangeHearAboutUsQuestion = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
-        const hearAboutUsQuestionId: HearAboutUsQuestionId = e.currentTarget.getAttribute('data-hear-about-us-question-id') || "missing-hear-about-us-question-id-from-radio"
-        const hearAboutUsQuestion: HearAboutUsQuestion = hearAboutUsQuestions[hearAboutUsQuestionId]
-        console.log("change method")
-        if (selectedHearAboutUsQuestion && selectedHearAboutUsQuestion.id === hearAboutUsQuestionId) {
-            unsetSelectedHearAboutUsQuestion();
-        } else {
-            handleUpdateSelectedHearAboutUsQuestion(hearAboutUsQuestion)
-        }
-    }
-    const handleChangeReferral = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const referral = e.currentTarget.value
-        handleUpdateReferral(referral)
-    }
-
-    return <>
-        <h3>Comments</h3>
-        <textarea rows={10} cols={50} onChange={handleChangeComments}></textarea>
-        <ul>
-            <li>
-                <label>How did you hear about Red Fire Farm?</label>
-                <div>
-                    <ul>
-                        {Object.keys(hearAboutUsQuestions).map(hearAboutUsQuestionId => {
-                            const hearAboutUsQuestion = hearAboutUsQuestions[hearAboutUsQuestionId]
-                            return <li key={hearAboutUsQuestionId}>
-                                <label><input type="radio" data-hear-about-us-question-id={hearAboutUsQuestionId} checked={(selectedHearAboutUsQuestion && selectedHearAboutUsQuestion.id == hearAboutUsQuestion.id) || false} onClick={handleChangeHearAboutUsQuestion} onChange={handleChangeHearAboutUsQuestion} />{hearAboutUsQuestion.label}</label>
-                            </li>
-                        })}
-                    </ul>
-                </div>
-            </li>
-            <li>
-                <label>Did a friend refer you? If so, please enter their name.<input onChange={handleChangeReferral}/></label>
-            </li>
-        </ul>;
-    </>
-}
-
-interface ContactInfoProps {
-    setFirstName: (firstName: FirstName) => void
-    setLastName: (lastName: LastName) => void
-    setPhone: (phone: Phone) => void
-    setEmail: (email: Email) => void
-    setAddress1: (streetAddress: StreetAddress) => void
-    setAddress2: (streetAddress: StreetAddress) => void
-    setCity: (city: City) => void
-    setState: (state: State) => void
-    setZip: (zip: Zip) => void
-}
-
-function SignupContactInfo({ setFirstName, setLastName, setPhone, setEmail, setAddress1, setAddress2, setCity, setState, setZip} : ContactInfoProps) {
-    const handleChangeFirstName = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const firstName = e.currentTarget.value
-        setFirstName(firstName)
-    }
-    const handleChangeLastName = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const lastName = e.currentTarget.value
-        setLastName(lastName)
-    }
-    const handleChangePhone = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const phone = e.currentTarget.value
-        setPhone(phone)
-    }
-    const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const email = e.currentTarget.value
-        setEmail(email)
-    }
-    const handleChangeAddress1 = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const address1 = e.currentTarget.value
-        setAddress1(address1)
-    }
-    const handleChangeAddress2 = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const address2 = e.currentTarget.value
-        setAddress2(address2)
-    }
-    const handleChangeCity = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const city = e.currentTarget.value
-        setCity(city)
-    }
-    const handleChangeState = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const state = e.currentTarget.value
-        setState(state)
-    }
-    const handleChangeZip = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const zip = e.currentTarget.value
-        setZip(zip)
-    }
-    return <>
-        <h3>Contact Info</h3>
-        <div>
-            <label>First Name: <input type="text" onChange={handleChangeFirstName} /></label>
-            <label>Last Name: <input type="text" onChange={handleChangeLastName}/></label>
-        </div>
-        <div><label>Phone: <input type={"phone"} onChange={handleChangePhone}/></label></div>
-        <div><label>Email: <input type={"email"} onChange={handleChangeEmail} /></label></div>
-
-        <h4>Address</h4>
-        <div><label>Street Address<input type={"text"} onChange={handleChangeAddress1}/></label></div>
-        <div><label>Address Line 2<input type={"text"} onChange={handleChangeAddress2}/></label></div>
-        <div><label>City<input type={"text"} onChange={handleChangeCity}/></label></div>
-        <div>
-            <label>
-                State
-                <select defaultValue={"Massachusetts"} onChange={handleChangeState}>
-                    <option value=""></option>
-                    <option value="Alabama">Alabama</option>
-                    <option value="Alaska">Alaska</option>
-                    <option value="Arizona">Arizona</option>
-                    <option value="Arkansas">Arkansas</option>
-                    <option value="California">California</option>
-                    <option value="Colorado">Colorado</option>
-                    <option value="Connecticut">Connecticut</option>
-                    <option value="Delaware">Delaware</option>
-                    <option value="District of Columbia">District of Columbia</option>
-                    <option value="Florida">Florida</option>
-                    <option value="Georgia">Georgia</option>
-                    <option value="Hawaii">Hawaii</option>
-                    <option value="Idaho">Idaho</option>
-                    <option value="Illinois">Illinois</option>
-                    <option value="Indiana">Indiana</option>
-                    <option value="Iowa">Iowa</option>
-                    <option value="Kansas">Kansas</option>
-                    <option value="Kentucky">Kentucky</option>
-                    <option value="Louisiana">Louisiana</option>
-                    <option value="Maine">Maine</option>
-                    <option value="Maryland">Maryland</option>
-                    <option value="Massachusetts">Massachusetts</option>
-                    <option value="Michigan">Michigan</option>
-                    <option value="Minnesota">Minnesota</option>
-                    <option value="Mississippi">Mississippi</option>
-                    <option value="Missouri">Missouri</option>
-                    <option value="Montana">Montana</option>
-                    <option value="Nebraska">Nebraska</option>
-                    <option value="Nevada">Nevada</option>
-                    <option value="New Hampshire">New Hampshire</option>
-                    <option value="New Jersey">New Jersey</option>
-                    <option value="New Mexico">New Mexico</option>
-                    <option value="New York">New York</option>
-                    <option value="North Carolina">North Carolina</option>
-                    <option value="North Dakota">North Dakota</option>
-                    <option value="Ohio">Ohio</option>
-                    <option value="Oklahoma">Oklahoma</option>
-                    <option value="Oregon">Oregon</option>
-                    <option value="Pennsylvania">Pennsylvania</option>
-                    <option value="Rhode Island">Rhode Island</option>
-                    <option value="South Carolina">South Carolina</option>
-                    <option value="South Dakota">South Dakota</option>
-                    <option value="Tennessee">Tennessee</option>
-                    <option value="Texas">Texas</option>
-                    <option value="Utah">Utah</option>
-                    <option value="Vermont">Vermont</option>
-                    <option value="Virginia">Virginia</option>
-                    <option value="Washington">Washington</option>
-                    <option value="West Virginia">West Virginia</option>
-                    <option value="Wisconsin">Wisconsin</option>
-                    <option value="Wyoming">Wyoming</option>
-                    <option value="Armed Forces Americas">Armed Forces Americas</option>
-                    <option value="Armed Forces Europe">Armed Forces Europe</option>
-                    <option value="Armed Forces Pacific">Armed Forces Pacific</option>
-                </select>
-            </label>
-        </div>
-        <div><label>Zip<input type={"text"} onChange={handleChangeZip}/></label></div>
-    </>
-    // TODO: address text fields?  Best way to configure them?  Types or rels or something?
-}
+import {
+    Bundle,
+    BundleOption, City,
+    Email,
+    FirstName, LastName, PaymentMethod,
+    PaymentOption,
+    Phone, PickupLocation, Price, Referral, Region,
+    Seasons,
+    SelectedBundle, SelectedHearAboutUsQuestion, SelectedPaymentMethod,
+    SelectedPaymentOption, SelectedPickupLocation, SelectedShares, Share, State, StreetAddress,
+    Zip
+} from "../types";
+import {
+    addonShares, bundleOptions,
+    bundles,
+    hearAboutUsQuestions,
+    paymentMethods,
+    paymentOptions,
+    pickupLocations,
+    regions, seasons,
+    shares
+} from "../data/constants";
+import SelectShares from "../components/Signup/SelectShares";
+import SelectRegion from "../components/Signup/SelectRegion";
 
 function Signup() {
     const welcomeText = `
         <h3>Welcome to our share sign up page! Hello!</h3>
     <h4>sign up for your vegetable share (and any additional shares) here!</h4>
     <p>
-        Upon completion of this form, you will be prompted to pay with a check or redirected to paypal. please
+        Upon completion of this form, you will be prompted to pay with a check or redirected to PayPal. please
         call or email the farm with any questions while doing the form.
     </p>
     <p>
@@ -459,7 +65,7 @@ function Signup() {
     const [address1, setAddress1] = useState<StreetAddress>()
     const [address2, setAddress2] = useState<StreetAddress>()
     const [city, setCity] = useState<City>()
-    const [state, setState] = useState<State>("Massachusettes")
+    const [state, setState] = useState<State>("Massachusetts")
     const [zip, setZip] = useState<Zip>()
     const handleUpdateSelectedShares = (share: Share, quantity: number) => {
         handleChangeSelectedShares(selectedShares => ({
@@ -588,7 +194,7 @@ function Signup() {
     return (
         <>
             <WelcomeText welcomeTextWithHtml={welcomeText}/>
-            <SelectRegion regions={regions} selectedRegion={selectedRegion} handleChangeSelectedRegion={handleChangeSelectedRegion}/>
+            <SelectRegion regions={regions} handleSelect={handleChangeSelectedRegion}/>
             { selectedRegion ? <SignupSeasons seasons={seasons} handleSelect={handleChangeSelectedSeasons} /> : '' }
             { selectedRegion ? Object.keys(selectedSeasons).map(selectedSeasonId => {
                 const selectedSeason = seasons[selectedSeasonId]
@@ -610,15 +216,15 @@ function Signup() {
             : ""}
             { total ?
                 <>
-                    <SignupTotal subtotal={subtotal} deliveryFee={deliveryFee} boxingFee={boxingFee} total={total} />
+                    <Total subtotal={subtotal} deliveryFee={deliveryFee} boxingFee={boxingFee} total={total} />
                     <SignupPaymentOptions paymentOptions={paymentOptions} handleUpdateSelectedPaymentOption={handleUpdateSelectedPaymentOption} selectedPaymentOption={selectedPaymentOption} unsetSelectedPaymentOption={unsetSelectedPaymentOption} handleUpdateAmountToPay={handleUpdateAmountToPay}/>
                     <SignupPaymentMethods paymentMethods={paymentMethods} handleUpdateSelectedPaymentMethod={handleUpdateSelectedPaymentMethod} selectedPaymentMethod={selectedPaymentMethod} unsetSelectedPaymentMethod={unsetSelectedPaymentMethod}/>
                 </>
             : ''}
             { selectedPaymentOption ?
                 <>
-                    <SignupComments hearAboutUsQuestions={hearAboutUsQuestions} selectedHearAboutUsQuestion={selectedHearAboutUsQuestion} handleUpdateComments={handleUpdateComments} handleUpdateSelectedHearAboutUsQuestion={handleUpdateSelectedHearAboutUsQuestion} unsetSelectedHearAboutUsQuestion={unsetSelectedHearAboutUsQuestion} handleUpdateReferral={handleChangeReferral}/>
-                    <SignupContactInfo setAddress1={setAddress1} setAddress2={setAddress2} setFirstName={setFirstName} setLastName={setLastName} setCity={setCity} setEmail={setEmail} setZip={setZip} setPhone={setPhone} setState={setState}/>
+                    <Comments hearAboutUsQuestions={hearAboutUsQuestions} selectedHearAboutUsQuestion={selectedHearAboutUsQuestion} handleUpdateComments={handleUpdateComments} handleUpdateSelectedHearAboutUsQuestion={handleUpdateSelectedHearAboutUsQuestion} unsetSelectedHearAboutUsQuestion={unsetSelectedHearAboutUsQuestion} handleUpdateReferral={handleChangeReferral}/>
+                    <ContactInfo setAddress1={setAddress1} setAddress2={setAddress2} setFirstName={setFirstName} setLastName={setLastName} setCity={setCity} setEmail={setEmail} setZip={setZip} setPhone={setPhone} setState={setState}/>
                 </>
             : ""}
             { (address1 || city || state || zip || firstName || lastName) ?

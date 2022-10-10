@@ -1,4 +1,5 @@
 import {useState} from "react";
+import {Seasons} from "../../types";
 
 interface SelectSeasons {
     seasons: Seasons

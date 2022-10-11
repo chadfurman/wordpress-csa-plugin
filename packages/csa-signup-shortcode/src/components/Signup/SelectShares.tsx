@@ -1,7 +1,6 @@
 import {Season, SelectedShare, Share, ShareId, Shares} from "../../types";
 
 interface SelectSharesProps {
-    season: Season
     shares: Shares
     handleSelect: (share: Share, quantity: SelectedShare["quantity"]) => void
 }

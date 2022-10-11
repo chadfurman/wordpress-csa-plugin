@@ -7,22 +7,22 @@ interface SelectRegionsProps {
 }
 
 const SelectRegion = ({regions, handleSelect}: SelectRegionsProps) => {
-    const [selectedRegion, setSelectedRegion] = useState<Region>()
+    const [selected, setSelected] = useState<Region>()
     const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement>) => {
-        const selection = regions[e.currentTarget.value]
-        if (selectedRegion && selectedRegion.id == selection.id) {
-            setSelectedRegion(undefined)
+        const current = regions[e.currentTarget.value]
+        if (selected && selected.id == current.id) {
+            setSelected(undefined)
             handleSelect(undefined)
         } else {
-            setSelectedRegion(selection)
-            handleSelect(selection)
+            setSelected(current)
+            handleSelect(current)
         }
     }
     const regionElements = Object.keys(regions).map(regionId => {
         return (
             <li key={regionId} >
                 <label>
-                    <input type="radio" value={regionId} checked={selectedRegion && selectedRegion.id === regionId} onClick={handleChange} onChange={handleChange}/>
+                    <input type="radio" value={regionId} checked={selected && selected.id === regionId} onClick={handleChange} onChange={handleChange}/>
                     {regions[regionId].label}
                 </label>
             </li>

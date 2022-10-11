@@ -2,13 +2,13 @@ import {Region, Season, SelectedShare, Share, ShareId, Shares} from "../../types
 
 interface SelectAddonsProps {
     addonShares: Shares
-    handleUpdateSelectedAddonShares: (share: Share, quantity: SelectedShare["quantity"]) => void
+    handleSelect: (share: Share, quantity: SelectedShare["quantity"]) => void
 }
-const SelectAddons = ({addonShares, handleUpdateSelectedAddonShares}: SelectAddonsProps) => {
+const SelectAddons = ({addonShares, handleSelect}: SelectAddonsProps) => {
     const handleChangeQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
         const shareId: ShareId = e.target.getAttribute('data-share-id') || "missing-share-id-from-quantity-input"
         const quantity: number = parseInt(e.target.value)
-        handleUpdateSelectedAddonShares(addonShares[shareId], quantity)
+        handleSelect(addonShares[shareId], quantity)
     }
     return <>
         <ul>

@@ -1,26 +1,23 @@
 import {PickupLocation, PickupLocationId, PickupLocations, Season, SelectedPickupLocation} from "../../types";
+import {useState} from "react";
 
 interface SelectPickupLocationProps {
     pickupLocations: PickupLocations
-    handleUpdateSelectedPickupLocation: (pickupLocation: PickupLocation) => void
+    handleSelect: (pickupLocation?: PickupLocation) => void
 }
-function SelectPickupLocation({pickupLocations, handleUpdateSelectedPickupLocation}: SelectPickupLocationProps) {
-    const handleChangePickupLocation = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
-        const pickupLocationId: PickupLocationId = e.currentTarget.getAttribute('data-pickup-location-id') || "missing-pickup-location-id-from-radio"
-        const pickupLocation: PickupLocation = pickupLocations[pickupLocationId]
-        console.log("change location")
-        if (selectedPickupLocation && selectedPickupLocation.id === pickupLocationId) {
-            unsetSelectedPickupLocation();
+function SelectPickupLocation({pickupLocations, handleSelect}: SelectPickupLocationProps) {
+    const [selected, setSelected] = useState<PickupLocation>()
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement>) => {
+        const current = pickupLocations[e.currentTarget.value]
+        if (selected && selected.id == current.id) {
+            setSelected(undefined)
+            handleSelect(undefined)
         } else {
-            handleUpdateSelectedPickupLocation(pickupLocation)
+            setSelected(current)
+            handleSelect(current)
         }
     }
     return <>
-        <h3>Choose Your {season.label} Pick Up Spot:</h3>
-        <div>
-            This will be your pickup location for the duration of the season.
-            NOTE: Locations and times are subject to change, so please watch your email.
-        </div>
         <ul>
             {Object.keys(pickupLocations).map(pickupLocationKey => {
                 const pickupLocation = pickupLocations[pickupLocationKey]

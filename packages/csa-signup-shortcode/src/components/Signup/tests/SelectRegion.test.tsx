@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import SelectRegion from '../SelectRegion'
-import {regions} from "./constants";
+import {regions} from "../../../data/constants";
 
 describe('SelectRegion', () => {
     it("Allows you to select a region", () => {

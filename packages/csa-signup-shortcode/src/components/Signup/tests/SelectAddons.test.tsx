@@ -1,11 +1,14 @@
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+
 describe("SelectAddons", () => {
     it("Allows us to specify a quantity of an addon share", () => {
-        expect(false)
+        expect(true).toBe(false)
     })
     it("Allows us to un-specify a quantity of an addon share", () => {
-        expect(false)
+        expect(true).toBe(false)
     })
     it("Allows us to specify a quantity of multiple addon shares", () => {
-        expect(false)
+        expect(true).toBe(false)
     })
 })

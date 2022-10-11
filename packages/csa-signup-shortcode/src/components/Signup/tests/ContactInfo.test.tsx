@@ -1,29 +1,32 @@
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+
 describe("ContactInfo", () => {
     it("lets us enter our first name", () => {
-        expect(false)
+        expect(true).toBe(false)
     })
     it("lets us enter our last name", () => {
-        expect(false)
+        expect(true).toBe(false)
     })
     it("lets us enter our city", () => {
-        expect(false)
+        expect(true).toBe(false)
     })
     it("lets us enter our state", () => {
-        expect(false)
+        expect(true).toBe(false)
     })
     it("lets us enter our zipcode", () => {
-        expect(false)
+        expect(true).toBe(false)
     })
     it("lets us enter our street address", () => {
-        expect(false)
+        expect(true).toBe(false)
     })
     it("lets us enter a second street address", () => {
-        expect(false)
+        expect(true).toBe(false)
     })
     it("lets us enter an email", () => {
-        expect(false)
+        expect(true).toBe(false)
     })
     it("lets us enter a phone number", () => {
-        expect(false)
+        expect(true).toBe(false)
     })
 })

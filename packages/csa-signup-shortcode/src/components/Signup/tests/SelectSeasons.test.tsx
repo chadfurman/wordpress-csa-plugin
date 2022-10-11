@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import SelectSeasons from '../SelectSeasons'
-import {seasons} from "./constants";
+import { seasons } from '../../../data/constants';
 
 describe('SelectSeasons', () => {
     it("Allows you to select a season", () => {

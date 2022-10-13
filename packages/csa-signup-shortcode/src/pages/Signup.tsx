@@ -29,6 +29,8 @@ import SelectRegion from "../components/Signup/SelectRegion";
 import SelectPickupLocation from "../components/Signup/SelectPIckupLocation";
 import SelectAddons from "../components/Signup/SelectAddons";
 import selectRegion from "../components/Signup/SelectRegion";
+import SelectSeasons from "../components/Signup/SelectSeasons";
+import SelectBundle from "../components/Signup/SelectBundle";
 
 function Signup() {
     const welcomeText = `
@@ -103,12 +105,6 @@ function Signup() {
     }
     const unsetDeliveryFee = () => {
         handleChangeDeliveryFee(0)
-    }
-    const unsetSelectedPickupLocation = () => {
-        handleChangeSelectedPickupLocation(undefined)
-    }
-    const handleUpdateSelectedPickupLocation = (pickupLocation: PickupLocation) => {
-        handleChangeSelectedPickupLocation(pickupLocation)
     }
     const unsetSelectedPaymentOption = () => {
         handleChangeSelectedPaymentOption(undefined)
@@ -199,7 +195,7 @@ function Signup() {
         <>
             <WelcomeText welcomeTextWithHtml={welcomeText}/>
             <SelectRegion regions={regions} handleSelect={handleChangeSelectedRegion}/>
-            { selectedRegion ? <SignupSeasons seasons={seasons} handleSelect={handleChangeSelectedSeasons} /> : '' }
+            { selectedRegion ? <SelectSeasons seasons={seasons} handleSelect={handleChangeSelectedSeasons} /> : '' }
             { selectedRegion ? Object.keys(selectedSeasons).map(selectedSeasonId => {
                 const selectedSeason = seasons[selectedSeasonId]
                 const filteredShares = Object.keys(shares).reduce<Shares>((filtered, shareId) => {
@@ -223,7 +219,7 @@ function Signup() {
                 </div>
             }) : ""}
             { selectedRegion && Object.keys(selectedSeasons).length === Object.keys(seasons).length ?
-                <SignupBundles bundles={bundles} bundleOptions={bundleOptions} selectedRegion={selectedRegion} selectedSeasons={selectedSeasons} selectedBundle={selectedBundle} handleUpdateSelectedBundle={handleUpdateSelectedBundle} unsetSelectedBundle={unsetSelectedBundle} />
+                <SelectBundle bundles={bundles} bundleOptions={bundleOptions} handleSelect={handleChangeSelectedBundle} />
             : '' }
             {Object.keys(selectedShares).length && Object.keys(selectedSeasons).length ?
                 Object.keys(selectedSeasons).map(selectedSeasonId => {
@@ -234,7 +230,7 @@ function Signup() {
                             This will be your pickup location for the duration of the season.
                             NOTE: Locations and times are subject to change, so please watch your email.
                         </div>
-                        <SelectPickupLocation pickupLocations={pickupLocations} handleSelect={handleUpdateSelectedPickupLocation} />
+                        <SelectPickupLocation pickupLocations={pickupLocations} handleSelect={handleChangeSelectedPickupLocation} />
                     </div>
                 })
             : ""}

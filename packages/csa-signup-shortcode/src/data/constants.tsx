@@ -89,9 +89,9 @@ export const bundles: Bundles = {
         id: "1",
         label: "Summer and Fall Vegetable Bundle (Western MA)",
         description: "Delicious organic Summer &amp; fall produce bundled into one signup option to save you money! Summer Shares run for 20 weeks (June-October) with Fall Shares beginning after (November-December). much you can afford to pay. Payments over the Regular Price help offset households needing lower priced shares.",
-        seasons: ["1","2"],
-        region: "1",
-        options: ["1","2","3","4","5"]
+        season_ids: ["1","2"],
+        region_id: "1",
+        bundle_option_ids: ["1","2","3","4","5"]
     }
 }
 export const bundleOptions: BundleOptions = {

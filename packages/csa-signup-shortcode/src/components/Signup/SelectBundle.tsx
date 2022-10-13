@@ -8,21 +8,24 @@ import {
     Seasons,
     SelectedBundle
 } from "../../types";
+import {useState} from "react";
 
 interface SelectBundleProps {
     bundles: Bundles
     bundleOptions: BundleOptions,
-    handleUpdateSelectedBundle: (bundle: Bundle, bundleOption: BundleOption) => void
+    handleSelect: (bundleOption?: BundleOption) => void
 }
-function SelectBundle({bundles, bundleOptions, handleUpdateSelectedBundle}: SelectBundleProps) {
+function SelectBundleOption({bundleOptions, handleSelect}: SelectBundleProps) {
+    const [selectedBundleOption, setSelectedBundleOption] = useState<BundleOption>()
     const handleChangeBundleOption = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
-        const bundleId: BundleOptionId = e.currentTarget.getAttribute('data-bundle-id') || "missing-bundle-option-id-from-bundle-radio"
         const bundleOptionId: BundleOptionId = e.currentTarget.getAttribute('data-bundle-option-id') || "missing-bundle-option-id-from-bundle-radio"
         const bundleOption: BundleOption = bundleOptions[bundleOptionId]
-        if (selectedBundle && selectedBundle.bundleId === bundleId && selectedBundle.bundleOptionId === bundleOptionId) {
-            unsetSelectedBundle();
+        if (selectedBundleOption && selectedBundleOption.id === bundleOptionId) {
+            setSelectedBundleOption(undefined);
+            handleSelect(undefined)
         } else {
-            handleUpdateSelectedBundle(bundles[bundleId], bundleOption)
+            setSelectedBundleOption(bundleOption);
+            handleSelect(bundleOption)
         }
     }
     return <>

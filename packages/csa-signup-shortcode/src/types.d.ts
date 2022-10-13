@@ -57,9 +57,8 @@ export type Bundle = {
     id: BundleId
     label: BundleLabel
     description: BundleDescription
-    seasons: SeasonId[],
-    region: RegionId,
-    options: BundleOptionId[]
+    season_ids: SeasonId[],
+    region_id: RegionId,
 }
 export type Bundles = Record<BundleId, Bundle>
 export type BundleOptionId = string
@@ -68,6 +67,7 @@ export type BundleOptionDescription = string
 export type BundleOptionPrice = number
 export type BundleOption = {
     id: BundleOptionId
+    bundle_id: BundleId
     label: BundleOptionLabel
     description: BundleOptionDescription
     price: BundleOptionPrice

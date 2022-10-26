@@ -8,7 +8,8 @@ interface SelectPickupLocationProps {
 function SelectPickupLocation({pickupLocations, handleSelect}: SelectPickupLocationProps) {
     const [selected, setSelected] = useState<PickupLocation>()
     const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement>) => {
-        const current = pickupLocations[e.currentTarget.value]
+        const location = e.currentTarget.value
+        const current = pickupLocations[location]
         if (selected && selected.id == current.id) {
             setSelected(undefined)
             handleSelect(undefined)
@@ -23,7 +24,7 @@ function SelectPickupLocation({pickupLocations, handleSelect}: SelectPickupLocat
                 const pickupLocation = pickupLocations[pickupLocationKey]
                 return <li key={pickupLocationKey}>
                     <label>
-                        <input type="radio" data-pickup-location-id={pickupLocation.id} checked={(selectedPickupLocation && selectedPickupLocation.id === pickupLocation.id) || false} onClick={handleChangePickupLocation} onChange={handleChangePickupLocation}/> {pickupLocation.label}
+                        <input type="radio" data-pickup-location-id={pickupLocation.id} checked={(selected && selected.id === pickupLocation.id) || false} onClick={handleChange} onChange={handleChange}/> {pickupLocation.label}
                         {pickupLocation.description ?
                             <div>
                                 {pickupLocation.description}

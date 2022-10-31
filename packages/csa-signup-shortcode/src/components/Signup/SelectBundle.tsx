@@ -53,4 +53,4 @@ function SelectBundleOption({bundleOptions, handleSelect}: SelectBundleProps) {
     </>;
 }
 
-export default SelectBundle
+export default SelectBundleOption

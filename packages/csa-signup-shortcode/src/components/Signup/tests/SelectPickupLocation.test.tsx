@@ -5,7 +5,7 @@ import {pickupLocations} from "../../../data/constants";
 
 describe("SelectPickupLocation", () => {
     it("Allows us to specify a pickup location", () => {
-        render(<SelectPickupLocation pickupLocations={pickupLocations} handleSelect={})
+        render(<SelectPickupLocation pickupLocations={pickupLocations} handleSelect={() => {}} ></SelectPickupLocation>)
         expect(true).toBe(false)
     })
     it("Allows us to un-specify pickup location", () => {

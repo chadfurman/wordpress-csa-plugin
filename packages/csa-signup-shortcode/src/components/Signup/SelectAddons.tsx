@@ -23,7 +23,6 @@ const SelectAddons = ({addonShares, handleSelect}: SelectAddonsProps) => {
                             {share.label}
                             <div>{share.description}</div>
                             <div>
-                                {/* TODO: share price per region */}
                                 <span>Price:</span> <span>{Intl.NumberFormat('en-us', {style: "currency", currency:"USD"}).format(share.price)}</span>
                             </div>
                             <div>

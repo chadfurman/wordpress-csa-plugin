@@ -124,7 +124,6 @@ function ContactInfo({ setFirstName, setLastName, setPhone, setEmail, setAddress
         </div>
         <div><label>Zip<input type={"text"} onChange={handleChangeZip}/></label></div>
     </>
-    // TODO: address text fields?  Best way to configure them?  Types or rels or something?
 }
 
 export default ContactInfo

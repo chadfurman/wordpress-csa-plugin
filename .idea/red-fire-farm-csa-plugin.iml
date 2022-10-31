@@ -6,7 +6,9 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" packagePrefix="RedFireFarm\CsaPlugin\" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/plugin-settings-page/build" />
     </content>
+    <content url="file:///opt/lampp/htdocs/wordpress/wp-content/plugins/red-fire-farm-csa-plugin" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>

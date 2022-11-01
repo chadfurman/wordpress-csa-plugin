@@ -1,0 +1,15 @@
+{
+  "projects": [
+    {
+      "verbose": true,
+      "testEnvironment": "jsdom",
+      "setupFilesAfterEnv": [
+        "<rootDir>/lib/settings/setupTests.ts"
+      ],
+      "displayName": "csa-signup-shortcode",
+      "testMatch": [
+        "<rootDir>/packages/csa-signup-shortcode/src/**/*.test.(t|j)s?(x)"
+      ]
+    }
+  ]
+}

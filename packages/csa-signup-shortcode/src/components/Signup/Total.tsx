@@ -1,5 +1,7 @@
 import {Price} from "../../types";
 
+export const CURRENCY_FORMATTER = Intl.NumberFormat('en-us', {style: "currency", currency: "USD"})
+
 interface TotalProps {
     subtotal: Price
     boxingFee: Price
@@ -11,15 +13,15 @@ function Total({subtotal, boxingFee, deliveryFee, total}: TotalProps) {
         <>
             <h3>Cost</h3>
             {boxingFee || deliveryFee ?
-                <div>Subtotal: {Intl.NumberFormat('en-us', {style: "currency", currency: "USD"}).format(subtotal)}</div>
+                <div>Subtotal: {CURRENCY_FORMATTER.format(subtotal)}</div>
                 : "" }
             {boxingFee ?
-                <div>Boxing Fee: {Intl.NumberFormat('en-us', {style: "currency", currency: "USD"}).format(boxingFee)}</div>
+                <div>Boxing Fee: {CURRENCY_FORMATTER.format(boxingFee)}</div>
                 : ""}
             {deliveryFee ?
-                <div>Delivery Fee: {Intl.NumberFormat('en-us', {style: "currency", currency: "USD"}).format(deliveryFee)}</div>
+                <div>Delivery Fee: {CURRENCY_FORMATTER.format(deliveryFee)}</div>
                 : "" }
-            <div>Total: {Intl.NumberFormat('en-us', {style: "currency", currency: "USD"}).format(total)}</div>
+            <div>Total: {CURRENCY_FORMATTER.format(total)}</div>
         </>
     )
 }

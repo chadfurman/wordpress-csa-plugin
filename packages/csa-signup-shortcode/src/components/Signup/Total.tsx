@@ -4,8 +4,8 @@ export const CURRENCY_FORMATTER = Intl.NumberFormat('en-us', {style: "currency",
 
 interface TotalProps {
     subtotal: Price
-    boxingFee: Price
-    deliveryFee: Price
+    boxingFee?: Price
+    deliveryFee?: Price
     total: Price
 }
 function Total({subtotal, boxingFee, deliveryFee, total}: TotalProps) {

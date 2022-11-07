@@ -1,3 +1,5 @@
+import {City, Email, FirstName, LastName, Phone, State, StreetAddress, Zip } from "../../types"
+
 interface ContactInfoProps {
     setFirstName: (firstName: FirstName) => void
     setLastName: (lastName: LastName) => void
@@ -50,8 +52,8 @@ function ContactInfo({ setFirstName, setLastName, setPhone, setEmail, setAddress
     return <>
         <h3>Contact Info</h3>
         <div>
-            <label>First Name: <input type="text" onChange={handleChangeFirstName} /></label>
-            <label>Last Name: <input type="text" onChange={handleChangeLastName}/></label>
+            <label>First Name: <input placeholder="First Name" type="text" onChange={handleChangeFirstName} /></label>
+            <label>Last Name: <input placeholder="Last Name" type="text" onChange={handleChangeLastName}/></label>
         </div>
         <div><label>Phone: <input type={"phone"} onChange={handleChangePhone}/></label></div>
         <div><label>Email: <input type={"email"} onChange={handleChangeEmail} /></label></div>

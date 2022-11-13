@@ -35,36 +35,65 @@ describe("ContactInfo", () => {
     it("lets us enter our first name", () => {
         const fakeFirstname = "Thomas"
         const {mockSetFirstName} = renderContactInfoComponent()
-        const firstNameText = screen.getByPlaceholderText(/First Name/)
+        const firstNameText = screen.getByLabelText(/First Name/)
         userEvent.type(firstNameText, fakeFirstname)
         expect(mockSetFirstName).toHaveBeenCalledWith(fakeFirstname)
     })
     it("lets us enter our last name", () => {
         const fakeLastname = "Benjamin"
         const {mockSetLastName} = renderContactInfoComponent()
-        const lastNameText = screen.getByPlaceholderText(/Last Name/)
+        const lastNameText = screen.getByLabelText(/Last Name/)
         userEvent.type(lastNameText, fakeLastname)
         expect(mockSetLastName).toHaveBeenCalledWith(fakeLastname)
     })
     it("lets us enter our city", () => {
-        expect(true).toBe(false)
+        const fakeCity = "New York"
+        const {mockSetCity} = renderContactInfoComponent()
+        const cityText = screen.getByLabelText(/City/)
+        userEvent.type(cityText, fakeCity)
+        expect(mockSetCity).toHaveBeenCalledWith(fakeCity)
     })
     it("lets us enter our state", () => {
-        expect(true).toBe(false)
+        const fake = "New York"
+        const {mockSetState} = renderContactInfoComponent()
+        const select = screen.getByLabelText(/State/)
+        userEvent.selectOptions(select, fake)
+        expect((screen.getByText(fake) as HTMLOptionElement).selected).toBeTruthy()
+        expect((screen.getByText("Massachusetts") as HTMLOptionElement).selected).toBeFalsy()
     })
     it("lets us enter our zipcode", () => {
-        expect(true).toBe(false)
+        const fake = "12345"
+        const {mockSetZip} = renderContactInfoComponent()
+        const text = screen.getByLabelText(/Zip/)
+        userEvent.type(text, fake)
+        expect(mockSetZip).toHaveBeenCalledWith(fake)
     })
     it("lets us enter our street address", () => {
-        expect(true).toBe(false)
+        const fake = "New York Street1"
+        const {mockSetAddress1} = renderContactInfoComponent()
+        const text = screen.getByLabelText(/Street Address/)
+        userEvent.type(text, fake)
+        expect(mockSetAddress1).toHaveBeenCalledWith(fake)
     })
     it("lets us enter a second street address", () => {
-        expect(true).toBe(false)
+        const fake = "New York Street2"
+        const {mockSetAddress2} = renderContactInfoComponent()
+        const text = screen.getByLabelText(/Address Line 2/)
+        userEvent.type(text, fake)
+        expect(mockSetAddress2).toHaveBeenCalledWith(fake)
     })
     it("lets us enter an email", () => {
-        expect(true).toBe(false)
+        const fake = "me@example.com"
+        const {mockSetEmail} = renderContactInfoComponent()
+        const text = screen.getByLabelText(/Email/)
+        userEvent.type(text, fake)
+        expect(mockSetEmail).toHaveBeenCalledWith(fake)
     })
     it("lets us enter a phone number", () => {
-        expect(true).toBe(false)
+        const fake = "555-555-1212"
+        const {mockSetPhone} = renderContactInfoComponent()
+        const text = screen.getByLabelText(/Phone/)
+        userEvent.type(text, fake)
+        expect(mockSetPhone).toHaveBeenCalledWith(fake)
     })
 })

@@ -55,13 +55,13 @@ function ContactInfo({ setFirstName, setLastName, setPhone, setEmail, setAddress
             <label>First Name: <input placeholder="First Name" type="text" onChange={handleChangeFirstName} /></label>
             <label>Last Name: <input placeholder="Last Name" type="text" onChange={handleChangeLastName}/></label>
         </div>
-        <div><label>Phone: <input type={"phone"} onChange={handleChangePhone}/></label></div>
-        <div><label>Email: <input type={"email"} onChange={handleChangeEmail} /></label></div>
+        <div><label>Phone: <input placeholder="Phone" type={"phone"} onChange={handleChangePhone}/></label></div>
+        <div><label>Email: <input placeholder="Email" type={"email"} onChange={handleChangeEmail} /></label></div>
 
         <h4>Address</h4>
-        <div><label>Street Address<input type={"text"} onChange={handleChangeAddress1}/></label></div>
-        <div><label>Address Line 2<input type={"text"} onChange={handleChangeAddress2}/></label></div>
-        <div><label>City<input type={"text"} onChange={handleChangeCity}/></label></div>
+        <div><label>Street Address<input placeholder="Street Address 1" type={"text"} onChange={handleChangeAddress1}/></label></div>
+        <div><label>Address Line 2<input placeholder="Street Address 2" type={"text"} onChange={handleChangeAddress2}/></label></div>
+        <div><label>City<input placeholder="City" type={"text"} onChange={handleChangeCity}/></label></div>
         <div>
             <label>
                 State
@@ -124,7 +124,7 @@ function ContactInfo({ setFirstName, setLastName, setPhone, setEmail, setAddress
                 </select>
             </label>
         </div>
-        <div><label>Zip<input type={"text"} onChange={handleChangeZip}/></label></div>
+        <div><label>Zip<input placeholder="Zipcode" type={"text"} onChange={handleChangeZip}/></label></div>
     </>
 }
 

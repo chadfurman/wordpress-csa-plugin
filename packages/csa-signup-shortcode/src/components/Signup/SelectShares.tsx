@@ -7,7 +7,7 @@ interface SelectSharesProps {
 const SelectShares = ({shares, handleSelect}: SelectSharesProps) => {
     const handleChangeQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
         const shareId: ShareId = e.target.getAttribute('data-share-id') || "missing-share-id-from-quantity-input"
-        const quantity: number = parseInt(e.target.value)
+        const quantity: number = parseInt(e.target.value) || 0
         handleSelect(shares[shareId], quantity)
     }
     return <>
@@ -23,7 +23,9 @@ const SelectShares = ({shares, handleSelect}: SelectSharesProps) => {
                                 <span>Price:</span> <span>{Intl.NumberFormat('en-us', {style: "currency", currency:"USD"}).format(share.price)}</span>
                             </div>
                             <div>
-                                <span>Quantity:</span> <input type="number" min={0} data-share-id={share.id} onChange={handleChangeQuantity}/>
+                                <label>
+                                    <span>Quantity:</span> <input type="number" min={0} data-share-id={share.id} onChange={handleChangeQuantity}/>
+                                </label>
                             </div>
                         </label>
                     </li>

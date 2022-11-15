@@ -35,7 +35,10 @@ function Comments({hearAboutUsQuestions, handleUpdateComments, handleUpdateSelec
 
     return <>
         <h3>Comments</h3>
-        <textarea rows={10} cols={50} onChange={handleChangeComments}></textarea>
+        <label>
+            Additional Thoughts
+            <textarea rows={10} cols={50} onChange={handleChangeComments}></textarea>
+        </label>
         <ul>
             <li>
                 <label>How did you hear about Red Fire Farm?</label>

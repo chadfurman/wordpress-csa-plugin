@@ -26,7 +26,7 @@ import {
 } from "../data/constants";
 import SelectShares from "../components/Signup/SelectShares";
 import SelectRegion from "../components/Signup/SelectRegion";
-import SelectPickupLocation from "../components/Signup/SelectPIckupLocation";
+import SelectPickupLocation from "../components/Signup/SelectPickupLocation";
 import SelectAddons from "../components/Signup/SelectAddons";
 import selectRegion from "../components/Signup/SelectRegion";
 import SelectSeasons from "../components/Signup/SelectSeasons";

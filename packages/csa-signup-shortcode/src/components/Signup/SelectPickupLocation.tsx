@@ -8,12 +8,15 @@ interface SelectPickupLocationProps {
 function SelectPickupLocation({pickupLocations, handleSelect}: SelectPickupLocationProps) {
     const [selected, setSelected] = useState<PickupLocation>()
     const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement>) => {
-        const location = e.currentTarget.value
+        const location = e.currentTarget.getAttribute("data-pickup-location-id")
+        console.log(location)
         const current = pickupLocations[location]
         if (selected && selected.id == current.id) {
+            console.log('unselected: ' + current)
             setSelected(undefined)
             handleSelect(undefined)
         } else {
+            console.log('selected: ' + current)
             setSelected(current)
             handleSelect(current)
         }

@@ -59,6 +59,7 @@ export type Bundle = {
     description: BundleDescription
     season_ids: SeasonId[],
     region_id: RegionId,
+    bundle_option_ids: BundleOptionId[]
 }
 export type Bundles = Record<BundleId, Bundle>
 export type BundleOptionId = string
@@ -67,7 +68,6 @@ export type BundleOptionDescription = string
 export type BundleOptionPrice = number
 export type BundleOption = {
     id: BundleOptionId
-    bundle_id: BundleId
     label: BundleOptionLabel
     description: BundleOptionDescription
     price: BundleOptionPrice
@@ -89,7 +89,7 @@ export type StreetAddress = string
 export type City = string
 export type State = string
 export type Zip = string
-export type Comments = string;
+export type CommentsType = string;
 export type HearAboutUsQuestionId = string;
 export type HearAboutUsQuestionLabel = string;
 export type HearAboutUsQuestion = {

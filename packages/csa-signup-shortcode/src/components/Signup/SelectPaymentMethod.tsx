@@ -1,17 +1,21 @@
+import { useState } from "react";
 import {PaymentMethod, PaymentMethodId, PaymentMethods, SelectedPaymentMethod} from "../../types";
 
 interface SelectPaymentMethodProps {
     paymentMethods: PaymentMethods,
-    handleUpdateSelectedPaymentMethod: (selectedPaymentMethood: SelectedPaymentMethod) => void,
+    handleUpdateSelectedPaymentMethod: (selectedPaymentMethood?: SelectedPaymentMethod) => void,
 }
-function SelectPaymentMethod({paymentMethods, selectedPaymentMethod, handleUpdateSelectedPaymentMethod, unsetSelectedPaymentMethod}: SelectPaymentMethodProps) {
+function SelectPaymentMethod({paymentMethods, handleUpdateSelectedPaymentMethod}: SelectPaymentMethodProps) {
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<SelectedPaymentMethod>()
     const handleChangeSelectedPaymentMethod = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
         const paymentMethodId: PaymentMethodId = e.currentTarget.getAttribute('data-payment-method-id') || "missing-payment-method-id-from-radio"
         const paymentMethod: PaymentMethod = paymentMethods[paymentMethodId]
-        console.log("change method")
+        console.debug("change method")
         if (selectedPaymentMethod && selectedPaymentMethod.id === paymentMethodId) {
-            unsetSelectedPaymentMethod();
+            setSelectedPaymentMethod(undefined)
+            handleUpdateSelectedPaymentMethod(undefined)
         } else {
+            setSelectedPaymentMethod(paymentMethod)
             handleUpdateSelectedPaymentMethod(paymentMethod)
         }
     }

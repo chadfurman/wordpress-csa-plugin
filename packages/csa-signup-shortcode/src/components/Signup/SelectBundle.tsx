@@ -4,28 +4,28 @@ import {
     BundleOption,
     BundleOptionId,
     BundleOptions, Bundles,
-    Region,
-    Seasons,
-    SelectedBundle
 } from "../../types";
 import {useState} from "react";
 
 interface SelectBundleProps {
     bundles: Bundles
     bundleOptions: BundleOptions,
-    handleSelect: (bundleOption?: BundleOption) => void
+    handleSelect: (bundle?: Bundle, bundleOption?: BundleOption) => void
 }
-function SelectBundleOption({bundleOptions, handleSelect}: SelectBundleProps) {
+function SelectBundleOption({bundles, bundleOptions, handleSelect}: SelectBundleProps) {
     const [selectedBundleOption, setSelectedBundleOption] = useState<BundleOption>()
+    const [selectedBundle, setSelectedBundle] = useState<Bundle>()
     const handleChangeBundleOption = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+        const bundleId: BundleId = e.currentTarget.getAttribute('data-bundle-id') || "missing-bundle-id-from-bundle-radio"
+        const bundle: Bundle = bundles[bundleId]
         const bundleOptionId: BundleOptionId = e.currentTarget.getAttribute('data-bundle-option-id') || "missing-bundle-option-id-from-bundle-radio"
         const bundleOption: BundleOption = bundleOptions[bundleOptionId]
         if (selectedBundleOption && selectedBundleOption.id === bundleOptionId) {
             setSelectedBundleOption(undefined);
-            handleSelect(undefined)
+            handleSelect(undefined, undefined)
         } else {
             setSelectedBundleOption(bundleOption);
-            handleSelect(bundleOption)
+            handleSelect(bundle, bundleOption)
         }
     }
     return <>
@@ -36,12 +36,12 @@ function SelectBundleOption({bundleOptions, handleSelect}: SelectBundleProps) {
                 <h4>{bundle.label}</h4>
                 <div>{bundle.description}</div>
                 <ul>
-                    {bundle.options.map(optionId => {
+                    {bundle.bundle_option_ids.map(optionId => {
                         const bundleOption = bundleOptions[optionId]
                         return <li key={optionId}>
                             <label>
                                 <>
-                                    <input type="radio" data-bundle-id={bundle.id} data-bundle-option-id={bundleOption.id} checked={selectedBundle && selectedBundle.bundleId === bundle.id && selectedBundle.bundleOptionId === bundleOption.id} onChange={handleChangeBundleOption} onClick={handleChangeBundleOption} /> {Intl.NumberFormat('en-us',{style:"currency", currency:"USD"}).format(bundleOption.price)} {bundleOption.label}
+                                    <input type="radio" data-bundle-id={bundle.id} data-bundle-option-id={bundleOption.id} checked={selectedBundle && selectedBundle.id === bundle.id && selectedBundleOption && selectedBundleOption.id === bundleOption.id} onChange={handleChangeBundleOption} onClick={handleChangeBundleOption} /> {Intl.NumberFormat('en-us',{style:"currency", currency:"USD"}).format(bundleOption.price)} {bundleOption.label}
                                     <p>{bundleOption.description}</p>
                                 </>
                             </label>

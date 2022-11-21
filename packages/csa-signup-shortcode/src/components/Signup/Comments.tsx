@@ -1,5 +1,6 @@
+import { useState } from "react";
 import {
-    Comments,
+    CommentsType,
     HearAboutUsQuestion,
     HearAboutUsQuestionId,
     HearAboutUsQuestions,
@@ -8,12 +9,13 @@ import {
 } from "../../types";
 
 interface CommentsProps {
-    handleUpdateComments: (comments: Comments) => void
+    handleUpdateComments: (comments: CommentsType) => void
     handleUpdateReferral: (referral: Referral) => void
-    handleUpdateSelectedHearAboutUsQuestion: (selectedHearAboutUsQestion: SelectedHearAboutUsQuestion) => void
+    handleUpdateSelectedHearAboutUsQuestion: (selectedHearAboutUsQestion?: SelectedHearAboutUsQuestion) => void
     hearAboutUsQuestions: HearAboutUsQuestions
 }
 function Comments({hearAboutUsQuestions, handleUpdateComments, handleUpdateSelectedHearAboutUsQuestion, handleUpdateReferral}: CommentsProps) {
+    const [selectedHearAboutUsQuestion, setSelectedHearAboutUsQuestion] = useState<SelectedHearAboutUsQuestion>()
     const handleChangeComments = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const comments = e.currentTarget.value
         handleUpdateComments(comments)
@@ -23,8 +25,10 @@ function Comments({hearAboutUsQuestions, handleUpdateComments, handleUpdateSelec
         const hearAboutUsQuestion: HearAboutUsQuestion = hearAboutUsQuestions[hearAboutUsQuestionId]
         console.log("change method")
         if (selectedHearAboutUsQuestion && selectedHearAboutUsQuestion.id === hearAboutUsQuestionId) {
-            unsetSelectedHearAboutUsQuestion();
+            setSelectedHearAboutUsQuestion(undefined);
+            handleUpdateSelectedHearAboutUsQuestion(undefined)
         } else {
+            setSelectedHearAboutUsQuestion(hearAboutUsQuestion);
             handleUpdateSelectedHearAboutUsQuestion(hearAboutUsQuestion)
         }
     }

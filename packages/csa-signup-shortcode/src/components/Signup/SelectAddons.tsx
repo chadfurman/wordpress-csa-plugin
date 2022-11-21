@@ -1,4 +1,4 @@
-import {Region, Season, SelectedShare, Share, ShareId, Shares} from "../../types";
+import {SelectedShare, Share, ShareId, Shares} from "../../types";
 
 interface SelectAddonsProps {
     addonShares: Shares
@@ -14,9 +14,6 @@ const SelectAddons = ({addonShares, handleSelect}: SelectAddonsProps) => {
         <ul>
             {Object.keys(addonShares).map(shareId => {
                 const share = addonShares[shareId]
-                if (share.regionId !== selectedRegion.id) {
-                    return
-                }
                 return (
                     <li key={shareId}>
                         <label>

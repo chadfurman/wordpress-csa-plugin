@@ -7,19 +7,15 @@ import {
     Email,
     FirstName, LastName, PaymentMethod,
     PaymentOption,
-    Phone, PickupLocation, Price, Referral, Region,
+    Phone, Price, Referral, Region,
     Seasons,
     Shares,
     SelectedBundle, SelectedHearAboutUsQuestion, SelectedPaymentMethod,
     SelectedPaymentOption, SelectedPickupLocation, SelectedShares, Share, State, StreetAddress,
-    Zip
+    Zip, CommentsType
 } from "../types";
 import {
     addonShares, bundleOptions,
-    bundles,
-    hearAboutUsQuestions,
-    paymentMethods,
-    paymentOptions,
     pickupLocations,
     regions, seasons,
     shares
@@ -61,7 +57,7 @@ function Signup() {
     const [total, handleChangeTotal] = useState<Price>(0.0)
     const [boxingFee, handleChangeBoxingFee] = useState<Price>(0.0)
     const [deliveryFee, handleChangeDeliveryFee] = useState<Price>(0.0)
-    const [comments, handleChangeComments] = useState<Comments>('')
+    const [comments, handleChangeComments] = useState<CommentsType>('')
     const [selectedHearAboutUsQuestion, handleChangeSelectedHearAboutUsQuestion] = useState<SelectedHearAboutUsQuestion>()
     const [referral, handleChangeReferral] = useState<Referral>('')
     const [firstName, setFirstName] = useState<FirstName>()
@@ -121,7 +117,7 @@ function Signup() {
     const handleUpdateAmountToPay = (amountToPay: Price) => {
         handleChangeAmountToPay(amountToPay)
     }
-    const handleUpdateComments = (comments: Comments) => {
+    const handleUpdateComments = (comments: CommentsType) => {
         handleChangeComments(comments)
     }
     const handleUpdateSelectedHearAboutUsQuestion = (selectedHearAboutUsQuestion: SelectedHearAboutUsQuestion) => {
@@ -188,7 +184,7 @@ function Signup() {
             state,
             zip,
         }
-        console.log("Submission Data:", formData)
+        console.debug("Submission Data:", formData)
     }
 
     return (
@@ -218,9 +214,9 @@ function Signup() {
                     <SelectAddons addonShares={filteredAddons} handleSelect={handleUpdateSelectedAddonShares} />
                 </div>
             }) : ""}
-            { selectedRegion && Object.keys(selectedSeasons).length === Object.keys(seasons).length ?
-                <SelectBundle bundles={bundles} bundleOptions={bundleOptions} handleSelect={handleChangeSelectedBundle} />
-            : '' }
+            {/*{ selectedRegion && Object.keys(selectedSeasons).length === Object.keys(seasons).length ?*/}
+            {/*    <SelectBundle bundles={bundles} bundleOptions={bundleOptions} handleSelect={handleChangeSelectedBundle} />*/}
+            {/*: '' }*/}
             {Object.keys(selectedShares).length && Object.keys(selectedSeasons).length ?
                 Object.keys(selectedSeasons).map(selectedSeasonId => {
                     const selectedSeason = seasons[selectedSeasonId]
@@ -236,15 +232,15 @@ function Signup() {
             : ""}
             { total ?
                 <>
-                    <Total subtotal={subtotal} deliveryFee={deliveryFee} boxingFee={boxingFee} total={total} />
-                    <SignupPaymentOptions paymentOptions={paymentOptions} handleUpdateSelectedPaymentOption={handleUpdateSelectedPaymentOption} selectedPaymentOption={selectedPaymentOption} unsetSelectedPaymentOption={unsetSelectedPaymentOption} handleUpdateAmountToPay={handleUpdateAmountToPay}/>
-                    <SignupPaymentMethods paymentMethods={paymentMethods} handleUpdateSelectedPaymentMethod={handleUpdateSelectedPaymentMethod} selectedPaymentMethod={selectedPaymentMethod} unsetSelectedPaymentMethod={unsetSelectedPaymentMethod}/>
+                    {/*<Total subtotal={subtotal} deliveryFee={deliveryFee} boxingFee={boxingFee} total={total} />*/}
+                    {/*<SignupPaymentOptions paymentOptions={paymentOptions} handleUpdateSelectedPaymentOption={handleUpdateSelectedPaymentOption} selectedPaymentOption={selectedPaymentOption} unsetSelectedPaymentOption={unsetSelectedPaymentOption} handleUpdateAmountToPay={handleUpdateAmountToPay}/>*/}
+                    {/*<SignupPaymentMethods paymentMethods={paymentMethods} handleUpdateSelectedPaymentMethod={handleUpdateSelectedPaymentMethod} selectedPaymentMethod={selectedPaymentMethod} unsetSelectedPaymentMethod={unsetSelectedPaymentMethod}/>*/}
                 </>
             : ''}
             { selectedPaymentOption ?
                 <>
-                    <Comments hearAboutUsQuestions={hearAboutUsQuestions} selectedHearAboutUsQuestion={selectedHearAboutUsQuestion} handleUpdateComments={handleUpdateComments} handleUpdateSelectedHearAboutUsQuestion={handleUpdateSelectedHearAboutUsQuestion} unsetSelectedHearAboutUsQuestion={unsetSelectedHearAboutUsQuestion} handleUpdateReferral={handleChangeReferral}/>
-                    <ContactInfo setAddress1={setAddress1} setAddress2={setAddress2} setFirstName={setFirstName} setLastName={setLastName} setCity={setCity} setEmail={setEmail} setZip={setZip} setPhone={setPhone} setState={setState}/>
+                    {/*<Comments hearAboutUsQuestions={hearAboutUsQuestions} selectedHearAboutUsQuestion={selectedHearAboutUsQuestion} handleUpdateComments={handleUpdateComments} handleUpdateSelectedHearAboutUsQuestion={handleUpdateSelectedHearAboutUsQuestion} unsetSelectedHearAboutUsQuestion={unsetSelectedHearAboutUsQuestion} handleUpdateReferral={handleChangeReferral}/>*/}
+                    {/*<ContactInfo setAddress1={setAddress1} setAddress2={setAddress2} setFirstName={setFirstName} setLastName={setLastName} setCity={setCity} setEmail={setEmail} setZip={setZip} setPhone={setPhone} setState={setState}/>*/}
                 </>
             : ""}
             { (address1 || city || state || zip || firstName || lastName) ?

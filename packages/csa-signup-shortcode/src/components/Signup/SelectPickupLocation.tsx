@@ -1,4 +1,4 @@
-import {PickupLocation, PickupLocationId, PickupLocations, Season, SelectedPickupLocation} from "../../types";
+import {PickupLocation, PickupLocationId, PickupLocations} from "../../types";
 import {useState} from "react";
 
 interface SelectPickupLocationProps {
@@ -8,15 +8,18 @@ interface SelectPickupLocationProps {
 function SelectPickupLocation({pickupLocations, handleSelect}: SelectPickupLocationProps) {
     const [selected, setSelected] = useState<PickupLocation>()
     const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement>) => {
-        const location = e.currentTarget.getAttribute("data-pickup-location-id")
-        console.log(location)
-        const current = pickupLocations[location]
+        const locationIdAttr = e.currentTarget.getAttribute("data-pickup-location-id")
+        if (!locationIdAttr) {
+            return
+        }
+        const locationId: PickupLocationId = locationIdAttr
+        const current = pickupLocations[locationId]
         if (selected && selected.id == current.id) {
-            console.log('unselected: ' + current)
+            console.debug('unselected location: ' + current)
             setSelected(undefined)
             handleSelect(undefined)
         } else {
-            console.log('selected: ' + current)
+            console.debug('selected location: ' + current)
             setSelected(current)
             handleSelect(current)
         }

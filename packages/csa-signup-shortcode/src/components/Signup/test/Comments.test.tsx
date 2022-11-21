@@ -30,7 +30,11 @@ describe("Comments", () => {
         expect(mockHandleUpdateComments).toHaveBeenCalledWith(comments)
     })
     it("lets us answer how we heard about the CSA", () => {
-        expect(true).toBe(false)
+        const {mockHandleUpdateSelectedHearAboutUsQuestion} = renderCommentsComponent()
+        const match = new RegExp(hearAboutUsQuestions["0"].label)
+        const question = screen.getByLabelText(match)
+        userEvent.click(question)
+        expect(mockHandleUpdateSelectedHearAboutUsQuestion).toHaveBeenCalledWith(question)
     })
     it("lets us un-answer how we heard about the CSA", () => {
         expect(true).toBe(false)

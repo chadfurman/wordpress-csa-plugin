@@ -1,24 +1,28 @@
+import { useState } from "react";
 import {PaymentOption, PaymentOptionId, PaymentOptions, Price} from "../../types";
 
 interface SelectPaymentOptionProps {
     paymentOptions: PaymentOptions
-    handleUpdateSelectedPaymentOption: (paymentOption: PaymentOption) => void,
+    handleUpdateSelectedPaymentOption: (paymentOption?: PaymentOption) => void,
     handleUpdateAmountToPay: (amountToPay: Price) => void,
 }
 function SelectPaymentOption({paymentOptions, handleUpdateSelectedPaymentOption, handleUpdateAmountToPay}: SelectPaymentOptionProps) {
+    const [selectedPaymentOption, setSelectedPaymentOption] = useState<PaymentOption>()
     const handleChangePaymentOption = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
         const paymentOptionId: PaymentOptionId = e.currentTarget.getAttribute('data-payment-option-id') || "missing-payment-option-id-from-radio"
         const paymentOption: PaymentOption = paymentOptions[paymentOptionId]
-        console.log("change option")
+        console.debug("change option")
         if (selectedPaymentOption && selectedPaymentOption.id === paymentOptionId) {
-            unsetSelectedPaymentOption();
+            setSelectedPaymentOption(undefined)
+            handleUpdateSelectedPaymentOption(undefined)
         } else {
+            setSelectedPaymentOption(paymentOption)
             handleUpdateSelectedPaymentOption(paymentOption)
         }
     }
     const handleChangeAmountToPay = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
         const amountToPay = parseInt(e.currentTarget.value)
-        console.log("change amount")
+        console.debug("change amount")
         handleUpdateAmountToPay(amountToPay)
     }
     return <>

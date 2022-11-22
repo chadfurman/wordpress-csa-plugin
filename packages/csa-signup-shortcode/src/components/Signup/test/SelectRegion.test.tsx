@@ -24,7 +24,7 @@ describe('SelectRegion', () => {
         const secondRegion = regions[secondRegionId]
         const secondRegionElement = screen.getByText(secondRegion.label)
         secondRegionElement.click()
-        expect(fakeSelectRegion).toBeCalledWith(secondRegion)
+        expect(fakeSelectRegion).toHaveBeenLastCalledWith(secondRegion)
     })
     it("Allows you to unselect your region", () => {
         const fakeSelectRegion = jest.fn()
@@ -34,6 +34,6 @@ describe('SelectRegion', () => {
         const firstRegionElement = screen.getByText(firstRegion.label)
         firstRegionElement.click()
         firstRegionElement.click()
-        expect(fakeSelectRegion).toBeCalledWith(undefined)
+        expect(fakeSelectRegion).toHaveBeenLastCalledWith(undefined)
     })
 })

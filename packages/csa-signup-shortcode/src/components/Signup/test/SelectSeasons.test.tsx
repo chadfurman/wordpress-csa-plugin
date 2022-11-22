@@ -19,7 +19,8 @@ describe('SelectSeasons', () => {
         const seasonButton = screen.getByText(season.label)
         seasonButton.click()
         seasonButton.click()
-        expect(fakeSelectHandler).toHaveBeenCalledWith({})
+        expect(fakeSelectHandler).toHaveBeenLastCalledWith({})
+        expect(false).toBeTruthy() // should be undefined not empty set
     })
     it("Allows you to select multiple seasons", () => {
         const fakeSelectHandler = jest.fn()

@@ -23,7 +23,7 @@ describe("SelectAddons", () => {
         const shareOption = screen.getByLabelText(new RegExp(escapeRegex(share.label)))
         userEvent.type(shareOption, quantity)
         userEvent.clear(shareOption)
-        expect(mockHandleSelect).toHaveBeenCalledWith(share, 0)
+        expect(mockHandleSelect).toHaveBeenLastCalledWith(share, 0)
     })
     it("Allows us to specify a quantity of multiple addon shares", () => {
         const mockHandleSelect = jest.fn()

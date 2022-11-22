@@ -21,7 +21,7 @@ describe("SelectShares", () => {
         userEvent.type(share, "5")
         expect(mockHandleSelect).toBeCalledWith(shares[1], 5)
         userEvent.clear(share)
-        expect(mockHandleSelect).toBeCalledWith(shares[1], 0)
+        expect(mockHandleSelect).toHaveBeenLastCalledWith(shares[1], 0)
     })
     it("Allows us to specify a quantity of multiple shares", () => {
         const mockHandleSelect = jest.fn()

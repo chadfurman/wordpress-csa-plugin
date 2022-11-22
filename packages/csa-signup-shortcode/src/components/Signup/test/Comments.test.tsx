@@ -42,7 +42,7 @@ describe("Comments", () => {
         const question = screen.getByLabelText(match)
         userEvent.click(question)
         userEvent.click(question)
-        expect(mockHandleUpdateSelectedHearAboutUsQuestion).toHaveBeenCalledWith(undefined)
+        expect(mockHandleUpdateSelectedHearAboutUsQuestion).toHaveBeenLastCalledWith(undefined)
     })
     it("lets us answer how we heard about the CSA only once", () => {
         const {mockHandleUpdateSelectedHearAboutUsQuestion} = renderCommentsComponent()
@@ -52,7 +52,7 @@ describe("Comments", () => {
         const question2 = screen.getByLabelText(match2)
         userEvent.click(question1)
         userEvent.click(question2)
-        expect(mockHandleUpdateSelectedHearAboutUsQuestion).toHaveBeenCalledWith(hearAboutUsQuestions["2"])
+        expect(mockHandleUpdateSelectedHearAboutUsQuestion).toHaveBeenLastCalledWith(hearAboutUsQuestions["2"])
     })
     it("lets us say who referred us, if anyone", () => {
         const referer = "Mock Referal"

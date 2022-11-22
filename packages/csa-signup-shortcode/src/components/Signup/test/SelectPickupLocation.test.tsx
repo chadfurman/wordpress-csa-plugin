@@ -12,6 +12,7 @@ describe("SelectPickupLocation", () => {
         const option = screen.getByLabelText(targetOption.label)
         userEvent.click(option)
         expect((option as HTMLInputElement).checked).toBeTruthy()
+        expect(false).toBeTruthy() // this test should test the handlers are called
     })
     it("Allows us to un-specify pickup location", () => {
         const mockHandler = jest.fn()
@@ -21,6 +22,7 @@ describe("SelectPickupLocation", () => {
         userEvent.click(option)
         userEvent.click(option)
         expect((option as HTMLInputElement).checked).not.toBeTruthy()
+        expect(false).toBeTruthy() // this test should test the handlers are called
     })
     it("Allows us to specify only one pickup location", () => {
         const mockHandler = jest.fn()
@@ -33,5 +35,6 @@ describe("SelectPickupLocation", () => {
         userEvent.click(option2)
         expect((option1 as HTMLInputElement).checked).not.toBeTruthy()
         expect((option2 as HTMLInputElement).checked).toBeTruthy()
+        expect(false).toBeTruthy() // this test should test the handlers are called
     })
 })

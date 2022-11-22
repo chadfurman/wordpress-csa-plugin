@@ -7,7 +7,7 @@ interface SelectAddonsProps {
 const SelectAddons = ({addonShares, handleSelect}: SelectAddonsProps) => {
     const handleChangeQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
         const shareId: ShareId = e.target.getAttribute('data-share-id') || "missing-share-id-from-quantity-input"
-        const quantity: number = parseInt(e.target.value)
+        const quantity: number = parseInt(e.target.value) || 0
         handleSelect(addonShares[shareId], quantity)
     }
     return <>

@@ -20,7 +20,7 @@ describe('SelectRegion', () => {
         const firstRegion = regions[firstRegionId]
         const firstRegionElement = screen.getByText(firstRegion.label)
         firstRegionElement.click()
-        const secondRegionId = Object.keys(regions)[0]
+        const secondRegionId = Object.keys(regions)[1]
         const secondRegion = regions[secondRegionId]
         const secondRegionElement = screen.getByText(secondRegion.label)
         secondRegionElement.click()

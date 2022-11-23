@@ -8,33 +8,29 @@ describe("SelectPickupLocation", () => {
     it("Allows us to specify a pickup location", () => {
         const mockHandler = jest.fn()
         const targetOption = pickupLocations["1"]
-        render(<SelectPickupLocation pickupLocations={pickupLocations} handleSelect={() => {}} ></SelectPickupLocation>)
+        render(<SelectPickupLocation pickupLocations={pickupLocations} handleSelect={mockHandler} />)
         const option = screen.getByLabelText(targetOption.label)
         userEvent.click(option)
-        expect((option as HTMLInputElement).checked).toBeTruthy()
-        expect(false).toBeTruthy() // this test should test the handlers are called
+        expect(mockHandler).toHaveBeenCalledWith(targetOption)
     })
     it("Allows us to un-specify pickup location", () => {
         const mockHandler = jest.fn()
         const targetOption = pickupLocations["1"]
-        render(<SelectPickupLocation pickupLocations={pickupLocations} handleSelect={() => {}} ></SelectPickupLocation>)
+        render(<SelectPickupLocation pickupLocations={pickupLocations} handleSelect={mockHandler} />)
         const option = screen.getByLabelText(targetOption.label)
         userEvent.click(option)
         userEvent.click(option)
-        expect((option as HTMLInputElement).checked).not.toBeTruthy()
-        expect(false).toBeTruthy() // this test should test the handlers are called
+        expect(mockHandler).toHaveBeenCalledWith(undefined)
     })
     it("Allows us to specify only one pickup location", () => {
         const mockHandler = jest.fn()
         const targetOption1 = pickupLocations["1"]
         const targetOption2 = pickupLocations["2"]
-        render(<SelectPickupLocation pickupLocations={pickupLocations} handleSelect={() => {}} ></SelectPickupLocation>)
+        render(<SelectPickupLocation pickupLocations={pickupLocations} handleSelect={mockHandler} />)
         const option1 = screen.getByLabelText(targetOption1.label)
         const option2 = screen.getByLabelText(targetOption2.label)
         userEvent.click(option1)
         userEvent.click(option2)
-        expect((option1 as HTMLInputElement).checked).not.toBeTruthy()
-        expect((option2 as HTMLInputElement).checked).toBeTruthy()
-        expect(false).toBeTruthy() // this test should test the handlers are called
+        expect(mockHandler).toHaveBeenLastCalledWith(targetOption2)
     })
 })

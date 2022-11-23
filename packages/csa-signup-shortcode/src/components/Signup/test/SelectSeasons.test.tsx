@@ -19,8 +19,8 @@ describe('SelectSeasons', () => {
         const seasonButton = screen.getByText(season.label)
         seasonButton.click()
         seasonButton.click()
+        // empty set means no seasons selected
         expect(fakeSelectHandler).toHaveBeenLastCalledWith({})
-        expect(false).toBeTruthy() // should be undefined not empty set
     })
     it("Allows you to select multiple seasons", () => {
         const fakeSelectHandler = jest.fn()

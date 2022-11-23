@@ -30,7 +30,7 @@ function SelectPickupLocation({pickupLocations, handleSelect}: SelectPickupLocat
                 const pickupLocation = pickupLocations[pickupLocationKey]
                 return <li key={pickupLocationKey}>
                     <label>
-                        <input type="radio" data-pickup-location-id={pickupLocation.id} checked={(selected && selected.id === pickupLocation.id) || false} onClick={handleChange} onChange={handleChange}/> {pickupLocation.label}
+                        <input type="radio" data-pickup-location-id={pickupLocation.id} checked={(selected && selected.id === pickupLocation.id) || false} onClick={handleChange}/> {pickupLocation.label}
                         {pickupLocation.description ?
                             <div>
                                 {pickupLocation.description}

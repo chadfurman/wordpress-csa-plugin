@@ -51,7 +51,7 @@ function Comments({hearAboutUsQuestions, handleUpdateComments, handleUpdateSelec
                         {Object.keys(hearAboutUsQuestions).map(hearAboutUsQuestionId => {
                             const hearAboutUsQuestion = hearAboutUsQuestions[hearAboutUsQuestionId]
                             return <li key={hearAboutUsQuestionId}>
-                                <label><input type="radio" data-hear-about-us-question-id={hearAboutUsQuestionId} checked={(selectedHearAboutUsQuestion && selectedHearAboutUsQuestion.id == hearAboutUsQuestion.id) || false} onClick={handleChangeHearAboutUsQuestion} onChange={handleChangeHearAboutUsQuestion} />{hearAboutUsQuestion.label}</label>
+                                <label><input type="radio" data-hear-about-us-question-id={hearAboutUsQuestionId} checked={(selectedHearAboutUsQuestion && selectedHearAboutUsQuestion.id == hearAboutUsQuestion.id) || false} onClick={handleChangeHearAboutUsQuestion} />{hearAboutUsQuestion.label}</label>
                             </li>
                         })}
                     </ul>

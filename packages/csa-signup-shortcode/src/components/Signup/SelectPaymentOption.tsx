@@ -35,7 +35,7 @@ function SelectPaymentOption({paymentOptions, handleUpdateSelectedPaymentOption,
                     return (
                         <li key={paymentOption.id}>
                             <label>
-                                <input data-payment-option-id={paymentOption.id} checked={(selectedPaymentOption && selectedPaymentOption.id == paymentOption.id) || false} onChange={handleChangePaymentOption} onClick={handleChangePaymentOption} type="radio"/>
+                                <input data-payment-option-id={paymentOption.id} defaultChecked={(selectedPaymentOption && selectedPaymentOption.id == paymentOption.id) || false} onClick={handleChangePaymentOption} type="radio"/>
                                 {paymentOption.label}
                             </label>
                         </li>

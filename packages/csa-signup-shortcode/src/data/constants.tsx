@@ -92,6 +92,14 @@ export const bundles: Bundles = {
         season_ids: ["1","2"],
         region_id: "1",
         bundle_option_ids: ["1","2","3","4","5"]
+    },
+    "2": {
+        id: "2",
+        label: "Summer and Fall Vegetable Bundle (Boston Area & Worcester)",
+        description: "Delicious organic Summer &amp; fall produce bundled into one signup option to save you money! Summer Shares run for 20 weeks (June-October) with Fall Shares beginning after (November-December). much you can afford to pay. Payments over the Regular Price help offset households needing lower priced shares.",
+        season_ids: ["1","2"],
+        region_id: "2",
+        bundle_option_ids: ["1","2","3","4","5"]
     }
 }
 export const bundleOptions: BundleOptions = {
@@ -124,6 +132,36 @@ export const bundleOptions: BundleOptions = {
         label: "Bundle",
         description: "",
         price: 842.00
+    },
+    "6": {
+        id: "6",
+        label: "Helping Hands Bundle x 7",
+        description: "Help offset signup costs for up to 7 households needing lower priced shares",
+        price: 1280.00
+    },
+    "7": {
+        id: "7",
+        label: "Helping Hands Bundle",
+        description: "Help offset signup costs for an additional household needing lower priced shares",
+        price: 1025.00
+    },
+    "8": {
+        id: "8",
+        label: "Regular Bundle",
+        description: "",
+        price: 985.00
+    },
+    "9": {
+        id: "9",
+        label: "Bundle",
+        description: "",
+        price: 947.00
+    },
+    "10": {
+        id: "10",
+        label: "Bundle",
+        description: "",
+        price: 942.00
     }
 }
 export const pickupLocations: PickupLocations = {

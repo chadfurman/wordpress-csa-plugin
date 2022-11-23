@@ -20,10 +20,12 @@ function SelectBundleOption({bundles, bundleOptions, handleSelect}: SelectBundle
         const bundle: Bundle = bundles[bundleId]
         const bundleOptionId: BundleOptionId = e.currentTarget.getAttribute('data-bundle-option-id') || "missing-bundle-option-id-from-bundle-radio"
         const bundleOption: BundleOption = bundleOptions[bundleOptionId]
-        if (selectedBundleOption && selectedBundleOption.id === bundleOptionId) {
+        if (selectedBundle && selectedBundle.id == bundleId && selectedBundleOption && selectedBundleOption.id === bundleOptionId) {
+            setSelectedBundle(undefined);
             setSelectedBundleOption(undefined);
             handleSelect(undefined, undefined)
         } else {
+            setSelectedBundle(bundle);
             setSelectedBundleOption(bundleOption);
             handleSelect(bundle, bundleOption)
         }
@@ -41,7 +43,7 @@ function SelectBundleOption({bundles, bundleOptions, handleSelect}: SelectBundle
                         return <li key={optionId}>
                             <label>
                                 <>
-                                    <input type="radio" data-bundle-id={bundle.id} data-bundle-option-id={bundleOption.id} checked={selectedBundle && selectedBundle.id === bundle.id && selectedBundleOption && selectedBundleOption.id === bundleOption.id} onChange={handleChangeBundleOption} onClick={handleChangeBundleOption} /> {Intl.NumberFormat('en-us',{style:"currency", currency:"USD"}).format(bundleOption.price)} {bundleOption.label}
+                                    <input type="radio" data-testid={bundle.id+'-'+bundleOption.id} data-bundle-id={bundle.id} data-bundle-option-id={bundleOption.id} checked={selectedBundle && selectedBundle.id === bundle.id && selectedBundleOption && selectedBundleOption.id === bundleOption.id} onClick={handleChangeBundleOption} /> {Intl.NumberFormat('en-us',{style:"currency", currency:"USD"}).format(bundleOption.price)} {bundleOption.label}
                                     <p>{bundleOption.description}</p>
                                 </>
                             </label>

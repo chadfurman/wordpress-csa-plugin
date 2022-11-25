@@ -3,32 +3,64 @@ import {useEffect, useState} from 'react'
 import WelcomeText from "../components/Signup/WelcomeText";
 import {
     Bundle,
-    BundleOption, City,
+    BundleOption,
+    BundleOptions,
+    Bundles,
+    City,
+    CommentsType,
     Email,
-    FirstName, LastName, PaymentMethod,
+    FirstName,
+    LastName,
+    PaymentMethod,
+    PaymentMethods,
     PaymentOption,
-    Phone, Price, Referral, Region,
+    Phone,
+    PickupLocations,
+    Price,
+    Referral,
+    Region,
+    Regions,
     Seasons,
+    SelectedBundle,
+    SelectedHearAboutUsQuestion,
+    SelectedPaymentMethod,
+    SelectedPaymentOption,
+    SelectedPickupLocation,
+    SelectedShares,
+    Share,
     Shares,
-    SelectedBundle, SelectedHearAboutUsQuestion, SelectedPaymentMethod,
-    SelectedPaymentOption, SelectedPickupLocation, SelectedShares, Share, State, StreetAddress,
-    Zip, CommentsType
+    State,
+    StreetAddress,
+    Zip
 } from "../types";
-import {
-    addonShares, bundleOptions,
-    pickupLocations,
-    regions, seasons,
-    shares
-} from "../data/constants";
 import SelectShares from "../components/Signup/SelectShares";
 import SelectRegion from "../components/Signup/SelectRegion";
 import SelectPickupLocation from "../components/Signup/SelectPickupLocation";
 import SelectAddons from "../components/Signup/SelectAddons";
-import selectRegion from "../components/Signup/SelectRegion";
 import SelectSeasons from "../components/Signup/SelectSeasons";
 import SelectBundle from "../components/Signup/SelectBundle";
 
-function Signup() {
+interface SignupProperties {
+    addonShares: Shares,
+    bundleOptions: BundleOptions,
+    bundles: Bundles,
+    pickupLocations: PickupLocations,
+    regions: Regions,
+    shares: Shares,
+    seasons: Seasons,
+    paymentMethods: PaymentMethods,
+}
+
+function Signup({
+                    addonShares,
+                    bundleOptions,
+                    bundles,
+                    pickupLocations,
+                    regions,
+                    shares,
+                    seasons,
+                    paymentMethods
+                }: SignupProperties) {
     const welcomeText = `
         <h3>Welcome to our share sign up page! Hello!</h3>
     <h4>sign up for your vegetable share (and any additional shares) here!</h4>
@@ -154,7 +186,7 @@ function Signup() {
             unsetBoxingFee()
             handleChangeTotal(subtotal)
         }
-    }, [selectedShares, selectedAddonShares,  selectedBundle, selectedPickupLocation])
+    }, [selectedShares, selectedAddonShares, selectedBundle, selectedPickupLocation])
 
     const handleSubmission = () => {
         const formData = {
@@ -191,8 +223,8 @@ function Signup() {
         <>
             <WelcomeText welcomeTextWithHtml={welcomeText}/>
             <SelectRegion regions={regions} handleSelect={handleChangeSelectedRegion}/>
-            { selectedRegion ? <SelectSeasons seasons={seasons} handleSelect={handleChangeSelectedSeasons} /> : '' }
-            { selectedRegion ? Object.keys(selectedSeasons).map(selectedSeasonId => {
+            {selectedRegion ? <SelectSeasons seasons={seasons} handleSelect={handleChangeSelectedSeasons}/> : ''}
+            {selectedRegion ? Object.keys(selectedSeasons).map(selectedSeasonId => {
                 const selectedSeason = seasons[selectedSeasonId]
                 const filteredShares = Object.keys(shares).reduce<Shares>((filtered, shareId) => {
                     const share: Share = shares[shareId]
@@ -210,13 +242,14 @@ function Signup() {
                 }, {})
                 return <div key={selectedSeasonId}>
                     <h3>{selectedSeason.label} Shares</h3>
-                    <SelectShares shares={filteredShares} handleSelect={handleUpdateSelectedShares} />
-                    <SelectAddons addonShares={filteredAddons} handleSelect={handleUpdateSelectedAddonShares} />
+                    <SelectShares shares={filteredShares} handleSelect={handleUpdateSelectedShares}/>
+                    <SelectAddons addonShares={filteredAddons} handleSelect={handleUpdateSelectedAddonShares}/>
                 </div>
             }) : ""}
-            { selectedRegion && Object.keys(selectedSeasons).length === Object.keys(seasons).length ?
-                <SelectBundle bundles={bundles} bundleOptions={bundleOptions} handleSelect={handleChangeSelectedBundle} />
-            : '' }
+            {selectedRegion && Object.keys(selectedSeasons).length === Object.keys(seasons).length ?
+                <SelectBundle bundles={bundles} bundleOptions={bundleOptions}
+                              handleSelect={handleChangeSelectedBundle}/>
+                : ''}
             {Object.keys(selectedShares).length && Object.keys(selectedSeasons).length ?
                 Object.keys(selectedSeasons).map(selectedSeasonId => {
                     const selectedSeason = seasons[selectedSeasonId]
@@ -226,26 +259,41 @@ function Signup() {
                             This will be your pickup location for the duration of the season.
                             NOTE: Locations and times are subject to change, so please watch your email.
                         </div>
-                        <SelectPickupLocation pickupLocations={pickupLocations} handleSelect={handleChangeSelectedPickupLocation} />
+                        <SelectPickupLocation pickupLocations={pickupLocations}
+                                              handleSelect={handleChangeSelectedPickupLocation}/>
                     </div>
                 })
-            : ""}
-            { total ?
+                : ""}
+            {total ?
                 <>
-                    <Total subtotal={subtotal} deliveryFee={deliveryFee} boxingFee={boxingFee} total={total} />
-                    <SignupPaymentOptions paymentOptions={paymentOptions} handleUpdateSelectedPaymentOption={handleUpdateSelectedPaymentOption} selectedPaymentOption={selectedPaymentOption} unsetSelectedPaymentOption={unsetSelectedPaymentOption} handleUpdateAmountToPay={handleUpdateAmountToPay}/>
-                    <SignupPaymentMethods paymentMethods={paymentMethods} handleUpdateSelectedPaymentMethod={handleUpdateSelectedPaymentMethod} selectedPaymentMethod={selectedPaymentMethod} unsetSelectedPaymentMethod={unsetSelectedPaymentMethod}/>
+                    <Total subtotal={subtotal} deliveryFee={deliveryFee} boxingFee={boxingFee} total={total}/>
+                    <SignupPaymentOptions paymentOptions={paymentOptions}
+                                          handleUpdateSelectedPaymentOption={handleUpdateSelectedPaymentOption}
+                                          selectedPaymentOption={selectedPaymentOption}
+                                          unsetSelectedPaymentOption={unsetSelectedPaymentOption}
+                                          handleUpdateAmountToPay={handleUpdateAmountToPay}/>
+                    <SignupPaymentMethods paymentMethods={paymentMethods}
+                                          handleUpdateSelectedPaymentMethod={handleUpdateSelectedPaymentMethod}
+                                          selectedPaymentMethod={selectedPaymentMethod}
+                                          unsetSelectedPaymentMethod={unsetSelectedPaymentMethod}/>
                 </>
-            : ''}
-            { selectedPaymentOption ?
+                : ''}
+            {selectedPaymentOption ?
                 <>
-                    <Comments hearAboutUsQuestions={hearAboutUsQuestions} selectedHearAboutUsQuestion={selectedHearAboutUsQuestion} handleUpdateComments={handleUpdateComments} handleUpdateSelectedHearAboutUsQuestion={handleUpdateSelectedHearAboutUsQuestion} unsetSelectedHearAboutUsQuestion={unsetSelectedHearAboutUsQuestion} handleUpdateReferral={handleChangeReferral}/>
-                    <ContactInfo setAddress1={setAddress1} setAddress2={setAddress2} setFirstName={setFirstName} setLastName={setLastName} setCity={setCity} setEmail={setEmail} setZip={setZip} setPhone={setPhone} setState={setState}/>
+                    <Comments hearAboutUsQuestions={hearAboutUsQuestions}
+                              selectedHearAboutUsQuestion={selectedHearAboutUsQuestion}
+                              handleUpdateComments={handleUpdateComments}
+                              handleUpdateSelectedHearAboutUsQuestion={handleUpdateSelectedHearAboutUsQuestion}
+                              unsetSelectedHearAboutUsQuestion={unsetSelectedHearAboutUsQuestion}
+                              handleUpdateReferral={handleChangeReferral}/>
+                    <ContactInfo setAddress1={setAddress1} setAddress2={setAddress2} setFirstName={setFirstName}
+                                 setLastName={setLastName} setCity={setCity} setEmail={setEmail} setZip={setZip}
+                                 setPhone={setPhone} setState={setState}/>
                 </>
-            : ""}
-            { (address1 || city || state || zip || firstName || lastName) ?
+                : ""}
+            {(address1 || city || state || zip || firstName || lastName) ?
                 <input type={"submit"} onClick={handleSubmission}/>
-            : ""}
+                : ""}
         </>
     )
 }

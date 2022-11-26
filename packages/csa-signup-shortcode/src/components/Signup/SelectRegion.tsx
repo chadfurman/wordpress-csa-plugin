@@ -22,7 +22,8 @@ const SelectRegion = ({regions, handleSelect}: SelectRegionsProps) => {
         return (
             <li key={regionId} >
                 <label>
-                    <input type="radio" value={regionId} checked={selected && selected.id === regionId} onClick={handleChange}/>
+                    <input type="radio" value={regionId}
+                           defaultChecked={(selected && selected.id === regionId) || false} onClick={handleChange}/>
                     {regions[regionId].label}
                 </label>
             </li>

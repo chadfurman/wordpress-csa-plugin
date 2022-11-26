@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useState} from "react";
 import {PaymentOption, PaymentOptionId, PaymentOptions, Price} from "../../types";
 
 interface SelectPaymentOptionProps {

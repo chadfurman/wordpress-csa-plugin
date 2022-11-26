@@ -41,7 +41,7 @@ import SelectBundle from "../components/Signup/SelectBundle";
 import SelectAddons from "../components/Signup/SelectAddons";
 
 interface SignupProperties {
-    welcomeText: string,
+    welcomeText?: string,
     addonShares: Shares,
     bundleOptions: BundleOptions,
     bundles: Bundles,
@@ -104,13 +104,15 @@ function Signup({
     const [state, setState] = useState<State>("Massachusetts")
     const [zip, setZip] = useState<Zip>()
     const handleUpdateSelectedShares = (share: Share, quantity: number) => {
-        handleChangeSelectedShares(selectedShares => ({
-            ...selectedShares,
-            [share.id]: {
-                shareId: share.id,
-                quantity: quantity
+        handleChangeSelectedShares(selectedShares => {
+            return {
+                [share.id]: {
+                    shareId: share.id,
+                    quantity: quantity
+                },
+                ...selectedShares
             }
-        }))
+        })
     }
     const handleUpdateSelectedAddonShares = (share: Share, quantity: number) => {
         handleChangeSelectedAddonShares(selectedShares => ({
@@ -271,7 +273,7 @@ function Signup({
                     const selectedSeason = seasons[selectedSeasonId]
                     const locations = Object.keys(pickupLocations).reduce<PickupLocations>((filtered, locationId) => {
                         const location = pickupLocations[locationId]
-                        if (location.seasonId === selectedSeason.id) {
+                        if (location.seasonId === selectedSeason.id && location.regionId === selectedRegion.id) {
                             filtered[locationId] = pickupLocations[locationId]
                         }
                         return filtered

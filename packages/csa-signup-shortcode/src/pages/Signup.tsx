@@ -36,11 +36,12 @@ import {
 import SelectShares from "../components/Signup/SelectShares";
 import SelectRegion from "../components/Signup/SelectRegion";
 import SelectPickupLocation from "../components/Signup/SelectPickupLocation";
-import SelectAddons from "../components/Signup/SelectAddons";
 import SelectSeasons from "../components/Signup/SelectSeasons";
 import SelectBundle from "../components/Signup/SelectBundle";
+import SelectAddons from "../components/Signup/SelectAddons";
 
 interface SignupProperties {
+    welcomeText: string,
     addonShares: Shares,
     bundleOptions: BundleOptions,
     bundles: Bundles,
@@ -52,6 +53,7 @@ interface SignupProperties {
 }
 
 function Signup({
+                    welcomeText,
                     addonShares,
                     bundleOptions,
                     bundles,
@@ -61,7 +63,7 @@ function Signup({
                     seasons,
                     paymentMethods
                 }: SignupProperties) {
-    const welcomeText = `
+    welcomeText = welcomeText || `
         <h3>Welcome to our share sign up page! Hello!</h3>
     <h4>sign up for your vegetable share (and any additional shares) here!</h4>
     <p>
@@ -221,11 +223,19 @@ function Signup({
 
     return (
         <>
+            {/* Welcome */}
             <WelcomeText welcomeTextWithHtml={welcomeText}/>
+
+            {/* Regions */}
             <SelectRegion regions={regions} handleSelect={handleChangeSelectedRegion}/>
+
+            {/* Seasons */}
             {selectedRegion ? <SelectSeasons seasons={seasons} handleSelect={handleChangeSelectedSeasons}/> : ''}
+
+            {/* Shares and Addons */}
             {selectedRegion ? Object.keys(selectedSeasons).map(selectedSeasonId => {
                 const selectedSeason = seasons[selectedSeasonId]
+
                 const filteredShares = Object.keys(shares).reduce<Shares>((filtered, shareId) => {
                     const share: Share = shares[shareId]
                     if (share.regionId == selectedRegion.id && share.seasonId == selectedSeason.id) {
@@ -233,37 +243,54 @@ function Signup({
                     }
                     return filtered
                 }, {})
-                const filteredAddons = Object.keys(addonShares).reduce<Shares>((filtered, shareId) => {
-                    const share: Share = shares[shareId]
-                    if (share.regionId == selectedRegion.id && share.seasonId == selectedSeason.id) {
-                        filtered[shareId] = share
+
+                const filteredAddons = Object.keys(addonShares).reduce<Shares>((filtered, addonShareId) => {
+                    const addonShare: Share = addonShares[addonShareId]
+                    if (addonShare.regionId == selectedRegion.id && addonShare.seasonId == selectedSeason.id) {
+                        filtered[addonShareId] = addonShare
                     }
                     return filtered
                 }, {})
+
                 return <div key={selectedSeasonId}>
                     <h3>{selectedSeason.label} Shares</h3>
                     <SelectShares shares={filteredShares} handleSelect={handleUpdateSelectedShares}/>
                     <SelectAddons addonShares={filteredAddons} handleSelect={handleUpdateSelectedAddonShares}/>
                 </div>
             }) : ""}
+
+            {/* Bundles */}
             {selectedRegion && Object.keys(selectedSeasons).length === Object.keys(seasons).length ?
                 <SelectBundle bundles={bundles} bundleOptions={bundleOptions}
                               handleSelect={handleChangeSelectedBundle}/>
                 : ''}
+
+            {/* Pickup Locations */}
             {Object.keys(selectedShares).length && Object.keys(selectedSeasons).length ?
                 Object.keys(selectedSeasons).map(selectedSeasonId => {
                     const selectedSeason = seasons[selectedSeasonId]
+                    const locations = Object.keys(pickupLocations).reduce<PickupLocations>((filtered, locationId) => {
+                        const location = pickupLocations[locationId]
+                        if (location.seasonId === selectedSeason.id) {
+                            filtered[locationId] = pickupLocations[locationId]
+                        }
+                        return filtered
+                    }, {});
+                    console.log(locations)
                     return <div key={selectedSeasonId}>
                         <h3>Choose Your {selectedSeason.label} Pick Up Spot:</h3>
                         <div>
                             This will be your pickup location for the duration of the season.
                             NOTE: Locations and times are subject to change, so please watch your email.
                         </div>
-                        <SelectPickupLocation pickupLocations={pickupLocations}
+
+                        <SelectPickupLocation pickupLocations={locations}
                                               handleSelect={handleChangeSelectedPickupLocation}/>
                     </div>
                 })
                 : ""}
+
+            {/* Payment */}
             {total ?
                 <>
                     <Total subtotal={subtotal} deliveryFee={deliveryFee} boxingFee={boxingFee} total={total}/>
@@ -278,6 +305,8 @@ function Signup({
                                           unsetSelectedPaymentMethod={unsetSelectedPaymentMethod}/>
                 </>
                 : ''}
+
+            {/* Comments */}
             {selectedPaymentOption ?
                 <>
                     <Comments hearAboutUsQuestions={hearAboutUsQuestions}
@@ -291,6 +320,8 @@ function Signup({
                                  setPhone={setPhone} setState={setState}/>
                 </>
                 : ""}
+
+            {/* Submit */}
             {(address1 || city || state || zip || firstName || lastName) ?
                 <input type={"submit"} onClick={handleSubmission}/>
                 : ""}

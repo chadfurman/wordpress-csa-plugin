@@ -1,13 +1,18 @@
-import {Season, SelectedShare, Share, ShareId, Shares} from "../../types";
+import {useState} from "react";
+import {SelectedShare, Share, ShareId, Shares} from "../../types";
 
 interface SelectSharesProps {
     shares: Shares
     handleSelect: (share: Share, quantity: SelectedShare["quantity"]) => void
 }
+
 const SelectShares = ({shares, handleSelect}: SelectSharesProps) => {
+    const [quantity, setQuantity] = useState<string>("0")
     const handleChangeQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
         const shareId: ShareId = e.target.getAttribute('data-share-id') || "missing-share-id-from-quantity-input"
-        const quantity: number = parseInt(e.target.value) || 0
+        const quantityStr = e.target.value || "0"
+        const quantity: number = Math.max(parseInt(quantityStr) || 0, 0)
+        setQuantity(e.target.value)
         handleSelect(shares[shareId], quantity)
     }
     return <>
@@ -24,7 +29,9 @@ const SelectShares = ({shares, handleSelect}: SelectSharesProps) => {
                             </div>
                             <div>
                                 <label>
-                                    <span>Quantity:</span> <input type="number" min={0} data-share-id={share.id} onChange={handleChangeQuantity}/>
+                                    <span>Quantity:</span> <input type="number" value={quantity}
+                                                                  data-share-id={share.id}
+                                                                  onChange={handleChangeQuantity}/>
                                 </label>
                             </div>
                         </label>

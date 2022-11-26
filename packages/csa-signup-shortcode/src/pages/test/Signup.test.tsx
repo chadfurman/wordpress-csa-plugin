@@ -32,17 +32,17 @@ function renderSignupComponent() {
 }
 
 function selectRegion(id: string = "1") {
-    const regionElement = screen.getByLabelText(new RegExp(regions[id].label))
+    const regionElement = screen.getByLabelText(new RegExp(escapeRegex(regions[id].label)))
     userEvent.click(regionElement)
 }
 
 function selectSeason(id: string = "1") {
-    const seasonElement = screen.getByLabelText(new RegExp(seasons[id].label))
+    const seasonElement = screen.getByLabelText(new RegExp(escapeRegex(seasons[id].label)))
     userEvent.click(seasonElement)
 }
 
 function enterShareQuantity(quantity: string = "1") {
-    const shareElement = screen.getByLabelText(new RegExp(shares["1"].label))
+    const shareElement = screen.getByLabelText(new RegExp(escapeRegex(shares["1"].label)))
     userEvent.type(shareElement, quantity)
 }
 
@@ -57,15 +57,15 @@ describe('Signup', () => {
     })
     it('should show seasons only after region is selected', () => {
         renderSignupComponent();
-        const seasonsElement = screen.queryByText(new RegExp(seasons["1"].label))
+        const seasonsElement = screen.queryByText(new RegExp(escapeRegex(seasons["1"].label)))
         expect(seasonsElement).toBeNull()
         selectRegion()
-        const seasonsText = screen.getByText(new RegExp(seasons["1"].label))
+        const seasonsText = screen.getByText(new RegExp(escapeRegex(seasons["1"].label)))
         expect(seasonsText).toBeTruthy();
     })
     it('should show shares for the selected regions and seasons after season is selected', () => {
         renderSignupComponent();
-        const shareElement = screen.queryByText(new RegExp(shares["1"].label))
+        const shareElement = screen.queryByText(new RegExp(escapeRegex(shares["1"].label)))
         expect(shareElement).toBeNull()
         selectRegion()
         selectSeason()
@@ -74,7 +74,7 @@ describe('Signup', () => {
     })
     it('should show bundle shares when all seasons are selected', () => {
         renderSignupComponent();
-        const bundleShareElement = screen.queryByText(new RegExp(bundles["1"].label))
+        const bundleShareElement = screen.queryByText(new RegExp(escapeRegex(bundles["1"].label)))
         expect(bundleShareElement).toBeNull()
         selectRegion()
         for (const seasonId in seasons) {
@@ -85,12 +85,12 @@ describe('Signup', () => {
     })
     it('should show pickup locations when share quantity is updated', () => {
         renderSignupComponent();
-        const pickupLocationElement = screen.queryByText(new RegExp(pickupLocations["1"].label))
+        const pickupLocationElement = screen.queryByText(new RegExp(escapeRegex(pickupLocations["1"].label)))
         expect(pickupLocationElement).toBeNull()
         selectRegion()
         selectSeason()
         enterShareQuantity()
-        const pickupLocation = screen.getByText(new RegExp(pickupLocations["1"].label))
+        const pickupLocation = screen.getByText(new RegExp(escapeRegex(pickupLocations["1"].label)))
         expect(pickupLocation).toBeNull()
     })
     it('should show pickup location options for each selected region and season', () => {

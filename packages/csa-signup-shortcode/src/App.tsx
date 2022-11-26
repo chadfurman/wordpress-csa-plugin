@@ -1,9 +1,19 @@
 import * as React from 'react'
-import {Routes, Route, HashRouter} from "react-router-dom"
+import {HashRouter, Route, Routes} from "react-router-dom"
 import Layout from './pages/Layout'
 import Signup from './pages/Signup'
 import NoPage from "./pages/NoPage";
 import {QueryClient, QueryClientProvider} from "react-query";
+import {
+    addonShares,
+    bundleOptions,
+    bundles,
+    paymentMethods,
+    pickupLocations,
+    regions,
+    seasons,
+    shares
+} from './data/constants';
 
 const queryClient = new QueryClient()
 
@@ -13,8 +23,10 @@ const App = () => {
         <HashRouter>
           <Routes>
             <Route path="/" element={<Layout/>}>
-              <Route index element={<Signup />} />
-              <Route path="*" element={<NoPage />} />
+                <Route index element={<Signup addonShares={addonShares} bundleOptions={bundleOptions} bundles={bundles}
+                                              paymentMethods={paymentMethods} pickupLocations={pickupLocations}
+                                              regions={regions} seasons={seasons} shares={shares}/>}/>
+                <Route path="*" element={<NoPage/>}/>
             </Route>
           </Routes>
         </HashRouter>

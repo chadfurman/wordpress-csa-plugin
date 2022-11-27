@@ -91,7 +91,7 @@ describe('Signup', () => {
         selectSeason()
         enterShareQuantity()
         const pickupLocation = screen.getByText(new RegExp(escapeRegex(pickupLocations["1"].label)))
-        expect(pickupLocation).toBeNull()
+        expect(pickupLocation).toBeTruthy()
     })
     it('should show pickup location options for each selected region and season', () => {
         expect(false).toBeTruthy();

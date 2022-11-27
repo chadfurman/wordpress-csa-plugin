@@ -123,14 +123,15 @@ function Signup({
             }
         }))
     }
-    const unsetSelectedBundle = () => {
-        handleChangeSelectedBundle(undefined)
-    }
-    const handleUpdateSelectedBundle = (bundle: Bundle, bundleOption: BundleOption) => {
-        handleChangeSelectedBundle({
-            bundleId: bundle.id,
-            bundleOptionId: bundleOption.id
-        })
+    const handleUpdateSelectedBundle = (bundle?: Bundle, bundleOption?: BundleOption) => {
+        if (bundle !== undefined && bundleOption !== undefined) {
+            handleChangeSelectedBundle({
+                bundleId: bundle.id,
+                bundleOptionId: bundleOption.id
+            })
+        } else {
+            handleChangeSelectedBundle(undefined)
+        }
     }
     const unsetBoxingFee = () => {
         handleChangeBoxingFee(0)
@@ -264,11 +265,11 @@ function Signup({
             {/* Bundles */}
             {selectedRegion && Object.keys(selectedSeasons).length === Object.keys(seasons).length ?
                 <SelectBundle bundles={bundles} bundleOptions={bundleOptions}
-                              handleSelect={handleChangeSelectedBundle}/>
+                              handleSelect={handleUpdateSelectedBundle}/>
                 : ''}
 
             {/* Pickup Locations */}
-            {Object.keys(selectedShares).length && Object.keys(selectedSeasons).length ?
+            {selectedRegion && Object.keys(selectedShares).length && Object.keys(selectedSeasons).length ?
                 Object.keys(selectedSeasons).map(selectedSeasonId => {
                     const selectedSeason = seasons[selectedSeasonId]
                     const locations = Object.keys(pickupLocations).reduce<PickupLocations>((filtered, locationId) => {
@@ -278,7 +279,6 @@ function Signup({
                         }
                         return filtered
                     }, {});
-                    console.log(locations)
                     return <div key={selectedSeasonId}>
                         <h3>Choose Your {selectedSeason.label} Pick Up Spot:</h3>
                         <div>

@@ -139,18 +139,58 @@ describe('Signup', () => {
         expect(totalPriceElement).toBeTruthy()
     })
     it('should display the payment options', () => {
-        expect(false).toBeTruthy();
+        renderSignupComponent();
+        let paymentOptionsElement = screen.queryByText(new RegExp(escapeRegex("Payment Options")))
+        expect(paymentOptionsElement).toBeNull()
+        selectRegion()
+        selectSeason()
+        enterShareQuantity()
+        selectPickupLocation()
+        paymentOptionsElement = screen.getByText(new RegExp(escapeRegex("Payment Options")))
+        expect(paymentOptionsElement).toBeTruthy()
     })
     it('should display the payment methods', () => {
-        expect(false).toBeTruthy();
+        renderSignupComponent();
+        let paymentMethodElement = screen.queryByText(new RegExp(escapeRegex("Payment Method")))
+        expect(paymentMethodElement).toBeNull()
+        selectRegion()
+        selectSeason()
+        enterShareQuantity()
+        selectPickupLocation()
+        paymentMethodElement = screen.getByText(new RegExp(escapeRegex("Payment Method")))
+        expect(paymentMethodElement).toBeTruthy()
     })
     it('should display the comments area', () => {
-        expect(false).toBeTruthy();
+        renderSignupComponent();
+        let element = screen.queryByText(new RegExp(escapeRegex("Comments")))
+        expect(element).toBeNull()
+        selectRegion()
+        selectSeason()
+        enterShareQuantity()
+        selectPickupLocation()
+        element = screen.getByText(new RegExp(escapeRegex("Comments")))
+        expect(element).toBeTruthy()
     })
     it('should display the contact info area', () => {
-        expect(false).toBeTruthy();
+        renderSignupComponent();
+        let element = screen.queryByText(new RegExp(escapeRegex("Contact Info")))
+        expect(element).toBeNull()
+        selectRegion()
+        selectSeason()
+        enterShareQuantity()
+        selectPickupLocation()
+        element = screen.getByText(new RegExp(escapeRegex("Contact Info")))
+        expect(element).toBeTruthy()
     })
     it('should allow us to submit the form', () => {
-        expect(false).toBeTruthy();
+        renderSignupComponent();
+        let element = screen.queryByText(new RegExp(escapeRegex("Submit")))
+        expect(element).toBeNull()
+        selectRegion()
+        selectSeason()
+        enterShareQuantity()
+        selectPickupLocation()
+        element = screen.getByText(new RegExp(escapeRegex("Submit")))
+        expect(element).toBeTruthy()
     })
 })

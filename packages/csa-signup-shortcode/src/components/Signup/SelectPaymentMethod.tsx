@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useState} from "react";
 import {PaymentMethod, PaymentMethodId, PaymentMethods, SelectedPaymentMethod} from "../../types";
 
 interface SelectPaymentMethodProps {
@@ -27,7 +27,9 @@ function SelectPaymentMethod({paymentMethods, handleUpdateSelectedPaymentMethod}
                 const paymentMethod = paymentMethods[paymentMethodId]
                 return <li key={paymentMethodId}>
                     <label>
-                        <input type="radio" data-payment-method-id={paymentMethodId} checked={(selectedPaymentMethod && selectedPaymentMethod.id == paymentMethodId) || false} onClick={handleChangeSelectedPaymentMethod} />
+                        <input type="radio" data-payment-method-id={paymentMethodId}
+                               defaultChecked={(selectedPaymentMethod && selectedPaymentMethod.id == paymentMethodId) || false}
+                               onClick={handleChangeSelectedPaymentMethod}/>
                         {paymentMethod.label}
                     </label>
                 </li>

@@ -1,6 +1,7 @@
 import {
     BundleOptions,
-    Bundles, HearAboutUsQuestions,
+    Bundles,
+    HearAboutUsQuestions,
     PaymentMethods,
     PaymentOptions,
     PickupLocations,
@@ -82,6 +83,22 @@ export const shares: Shares = {
         price: 219.00,
         regionId: "2",
         seasonId: "1"
+    },
+    "5": {
+        id: "5",
+        label: "Regular Fall CSA Share (Western MA)",
+        description: "Great share for Fall. Root veggies!",
+        price: 200.00,
+        regionId: "1",
+        seasonId: "2"
+    },
+    "6": {
+        id: "6",
+        label: "Regular Fall CSA Share (Boston & Worcester)",
+        description: "Great share for Fall. Root veggies!",
+        price: 220.00,
+        regionId: "2",
+        seasonId: "2"
     },
 }
 export const bundles: Bundles = {
@@ -167,7 +184,7 @@ export const bundleOptions: BundleOptions = {
 export const pickupLocations: PickupLocations = {
     "1": {
         id: "1",
-        label: "GRANBY - Wednesdays 2-6:30 p.m. at the farm store (7 Carver Street)",
+        label: "Summer GRANBY - Wednesdays 2-6:30 p.m. at the farm store (7 Carver Street)",
         description: undefined,
         boxingFee: 0.00,
         deliveryFee: 0.00,
@@ -185,7 +202,7 @@ export const pickupLocations: PickupLocations = {
     },
     "3": {
         id: "3",
-        label: "WORCESTER - Wednesdays 3-7 p.m. at the First Unitarian Church (90 Main Street)",
+        label: "Summer WORCESTER - Wednesdays 3-7 p.m. at the First Unitarian Church (90 Main Street)",
         description: undefined,
         boxingFee: 10.00,
         deliveryFee: 0.00,
@@ -208,6 +225,24 @@ export const pickupLocations: PickupLocations = {
         boxingFee: 10.00,
         deliveryFee: 13.00,
         seasonId: "1",
+        regionId: "2"
+    },
+    "6": {
+        id: "6",
+        label: "Fall GRANBY - Wednesdays 2-6:30 p.m. at the farm store (7 Carver Street)",
+        description: undefined,
+        boxingFee: 0.00,
+        deliveryFee: 0.00,
+        seasonId: "2",
+        regionId: "1"
+    },
+    "7": {
+        id: "7",
+        label: "Fall WORCESTER - Wednesdays 3-7 p.m. at the First Unitarian Church (90 Main Street)",
+        description: undefined,
+        boxingFee: 10.00,
+        deliveryFee: 0.00,
+        seasonId: "2",
         regionId: "2"
     },
 }

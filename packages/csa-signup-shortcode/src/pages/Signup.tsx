@@ -7,7 +7,7 @@ import {
     BundleOptions,
     Bundles,
     City,
-    CommentsType,
+    Comments as CommentsType,
     Email,
     FirstName,
     HearAboutUsQuestions,
@@ -23,14 +23,17 @@ import {
     Region,
     Regions,
     Seasons,
+    SelectedAddonShares,
     SelectedBundle,
     SelectedHearAboutUsQuestion,
     SelectedPaymentMethod,
     SelectedPaymentOption,
     SelectedPickupLocation,
+    SelectedSeasons,
     SelectedShares,
     Share,
     Shares,
+    SignupFormData,
     State,
     StreetAddress,
     Zip
@@ -47,7 +50,7 @@ import SelectPaymentMethod from "../components/Signup/SelectPaymentMethod";
 import Comments from "../components/Signup/Comments";
 import ContactInfo from "../components/Signup/ContactInfo";
 
-interface SignupProperties {
+export interface SignupProperties {
     welcomeText?: string,
     addonShares: Shares,
     bundleOptions: BundleOptions,
@@ -90,9 +93,9 @@ function Signup({
     </p>`
 
     const [selectedRegion, handleChangeSelectedRegion] = useState<Region>()
-    const [selectedSeasons, handleChangeSelectedSeasons] = useState<Seasons>({})
+    const [selectedSeasons, handleChangeSelectedSeasons] = useState<SelectedSeasons>({})
     const [selectedShares, handleChangeSelectedShares] = useState<SelectedShares>({})
-    const [selectedAddonShares, handleChangeSelectedAddonShares] = useState<SelectedShares>({})
+    const [selectedAddonShares, handleChangeSelectedAddonShares] = useState<SelectedAddonShares>({})
     const [selectedBundle, handleChangeSelectedBundle] = useState<SelectedBundle>()
     const [selectedPickupLocation, handleChangeSelectedPickupLocation] = useState<SelectedPickupLocation>()
     const [selectedPaymentOption, handleChangeSelectedPaymentOption] = useState<SelectedPaymentOption>()
@@ -205,7 +208,7 @@ function Signup({
     }, [selectedShares, selectedAddonShares, selectedBundle, selectedPickupLocation])
 
     const handleSubmission = () => {
-        const formData = {
+        const formData: SignupFormData = {
             selectedRegion,
             selectedSeasons,
             selectedShares,

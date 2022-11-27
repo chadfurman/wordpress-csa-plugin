@@ -1,6 +1,6 @@
-import { useState } from "react";
+import {useState} from "react";
 import {
-    CommentsType,
+    Comments as CommentsType,
     HearAboutUsQuestion,
     HearAboutUsQuestionId,
     HearAboutUsQuestions,

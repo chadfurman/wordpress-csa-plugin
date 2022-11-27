@@ -14,7 +14,20 @@ import {
     shares
 } from "../../data/constants";
 import userEvent from '@testing-library/user-event';
-import {escapeRegex} from "../../testUtils";
+import {createSignupServiceMock, escapeRegex} from "../../testUtils";
+
+jest.mock('../../services/SignupService', createSignupServiceMock())
+
+
+// @ts-ignore
+global.fetch = jest.fn(() => {
+    return Promise.resolve({
+        ok: true,
+        json: () => {
+            return Promise.resolve({})
+        }
+    })
+})
 
 function renderSignupComponent() {
     const mockWelcomeText = `Welcome to`
@@ -55,7 +68,28 @@ function selectPickupLocation(id: string = "1") {
     userEvent.click(pickupLocation)
 }
 
+function selectPaymentOption(id: string = "1") {
+    const element = screen.getByText(new RegExp(escapeRegex(paymentOptions[id].label)))
+    userEvent.click(element)
+}
+
+function selectPaymentMethod(id: string = "1") {
+    const element = screen.getByText(new RegExp(escapeRegex(paymentMethods[id].label)))
+    userEvent.click(element)
+}
+
+function enterComments() {
+
+}
+
+function enterContactInfo() {
+
+}
+
 describe('Signup', () => {
+    beforeEach(() => {
+        fetch.clearMock()
+    })
     it('should render without error', () => {
         renderSignupComponent();
     })
@@ -168,6 +202,8 @@ describe('Signup', () => {
         selectSeason()
         enterShareQuantity()
         selectPickupLocation()
+        selectPaymentOption()
+        selectPaymentMethod()
         element = screen.getByText(new RegExp(escapeRegex("Comments")))
         expect(element).toBeTruthy()
     })
@@ -179,10 +215,17 @@ describe('Signup', () => {
         selectSeason()
         enterShareQuantity()
         selectPickupLocation()
+        selectPaymentOption()
+        selectPaymentMethod()
         element = screen.getByText(new RegExp(escapeRegex("Contact Info")))
         expect(element).toBeTruthy()
     })
     it('should allow us to submit the form', () => {
+        fetch.mockImplementationOnce(() => {
+
+        })
+        const mockSubmitHandler = jest.fn()
+        jest.mock()
         renderSignupComponent();
         let element = screen.queryByText(new RegExp(escapeRegex("Submit")))
         expect(element).toBeNull()
@@ -190,7 +233,16 @@ describe('Signup', () => {
         selectSeason()
         enterShareQuantity()
         selectPickupLocation()
+        selectPaymentOption()
+        selectPaymentMethod()
+        enterComments()
+        enterContactInfo()
         element = screen.getByText(new RegExp(escapeRegex("Submit")))
-        expect(element).toBeTruthy()
+        userEvent.click(element)
+        expect(mockSubmitHandler).toHaveBeenCalledWith({
+            address: "test-address",
+            city: "test city",
+            state: "SUBMITTED",
+        })
     })
 })

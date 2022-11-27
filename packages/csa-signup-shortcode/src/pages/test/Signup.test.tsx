@@ -6,6 +6,7 @@ import {
     bundleOptions,
     bundles,
     paymentMethods,
+    paymentOptions,
     pickupLocations,
     regions,
     seasons,
@@ -24,11 +25,12 @@ function renderSignupComponent() {
     const mockSeasons = seasons
     const mockShares = shares
     const mockPaymentMethods = paymentMethods;
+    const mockPaymentOptions = paymentOptions;
     return render(
         <Signup welcomeText={mockWelcomeText}
                 addonShares={mockAddonShares} bundleOptions={mockBundleOptions} bundles={mockBundles}
                 paymentMethods={mockPaymentMethods} pickupLocations={mockPickupLocations} regions={mockRegions}
-                seasons={mockSeasons} shares={mockShares}/>);
+                seasons={mockSeasons} shares={mockShares} paymentOptions={mockPaymentOptions}/>);
 }
 
 function selectRegion(id: string = "1") {

@@ -9,6 +9,7 @@ import {
     bundleOptions,
     bundles,
     paymentMethods,
+    paymentOptions,
     pickupLocations,
     regions,
     seasons,
@@ -25,7 +26,8 @@ const App = () => {
             <Route path="/" element={<Layout/>}>
                 <Route index element={<Signup addonShares={addonShares} bundleOptions={bundleOptions} bundles={bundles}
                                               paymentMethods={paymentMethods} pickupLocations={pickupLocations}
-                                              regions={regions} seasons={seasons} shares={shares}/>}/>
+                                              regions={regions} seasons={seasons} shares={shares}
+                                              paymentOptions={paymentOptions}/>}/>
                 <Route path="*" element={<NoPage/>}/>
             </Route>
           </Routes>

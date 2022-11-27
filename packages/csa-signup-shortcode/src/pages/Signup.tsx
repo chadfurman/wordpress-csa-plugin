@@ -10,10 +10,12 @@ import {
     CommentsType,
     Email,
     FirstName,
+    HearAboutUsQuestions,
     LastName,
     PaymentMethod,
     PaymentMethods,
     PaymentOption,
+    PaymentOptions,
     Phone,
     PickupLocations,
     Price,
@@ -39,6 +41,11 @@ import SelectPickupLocation from "../components/Signup/SelectPickupLocation";
 import SelectSeasons from "../components/Signup/SelectSeasons";
 import SelectBundle from "../components/Signup/SelectBundle";
 import SelectAddons from "../components/Signup/SelectAddons";
+import Total from "../components/Signup/Total";
+import SelectPaymentOption from "../components/Signup/SelectPaymentOption";
+import SelectPaymentMethod from "../components/Signup/SelectPaymentMethod";
+import Comments from "../components/Signup/Comments";
+import ContactInfo from "../components/Signup/ContactInfo";
 
 interface SignupProperties {
     welcomeText?: string,
@@ -50,6 +57,8 @@ interface SignupProperties {
     shares: Shares,
     seasons: Seasons,
     paymentMethods: PaymentMethods,
+    paymentOptions: PaymentOptions,
+    hearAboutUsQuestions: HearAboutUsQuestions
 }
 
 function Signup({
@@ -61,7 +70,9 @@ function Signup({
                     regions,
                     shares,
                     seasons,
-                    paymentMethods
+                    paymentMethods,
+                    paymentOptions,
+                    hearAboutUsQuestions,
                 }: SignupProperties) {
     welcomeText = welcomeText || `
         <h3>Welcome to our share sign up page! Hello!</h3>
@@ -296,15 +307,13 @@ function Signup({
             {total ?
                 <>
                     <Total subtotal={subtotal} deliveryFee={deliveryFee} boxingFee={boxingFee} total={total}/>
-                    <SignupPaymentOptions paymentOptions={paymentOptions}
-                                          handleUpdateSelectedPaymentOption={handleUpdateSelectedPaymentOption}
-                                          selectedPaymentOption={selectedPaymentOption}
-                                          unsetSelectedPaymentOption={unsetSelectedPaymentOption}
-                                          handleUpdateAmountToPay={handleUpdateAmountToPay}/>
-                    <SignupPaymentMethods paymentMethods={paymentMethods}
-                                          handleUpdateSelectedPaymentMethod={handleUpdateSelectedPaymentMethod}
-                                          selectedPaymentMethod={selectedPaymentMethod}
-                                          unsetSelectedPaymentMethod={unsetSelectedPaymentMethod}/>
+                    <SelectPaymentOption paymentOptions={paymentOptions}
+                                         handleUpdateSelectedPaymentOption={handleChangeSelectedPaymentOption}
+                                         handleUpdateAmountToPay={handleChangeAmountToPay}
+                    />
+                    <SelectPaymentMethod paymentMethods={paymentMethods}
+                                         handleUpdateSelectedPaymentMethod={handleChangeSelectedPaymentMethod}
+                    />
                 </>
                 : ''}
 
@@ -312,11 +321,10 @@ function Signup({
             {selectedPaymentOption ?
                 <>
                     <Comments hearAboutUsQuestions={hearAboutUsQuestions}
-                              selectedHearAboutUsQuestion={selectedHearAboutUsQuestion}
-                              handleUpdateComments={handleUpdateComments}
-                              handleUpdateSelectedHearAboutUsQuestion={handleUpdateSelectedHearAboutUsQuestion}
-                              unsetSelectedHearAboutUsQuestion={unsetSelectedHearAboutUsQuestion}
-                              handleUpdateReferral={handleChangeReferral}/>
+                              handleUpdateComments={handleChangeComments}
+                              handleUpdateReferral={handleChangeReferral}
+                              handleUpdateSelectedHearAboutUsQuestion={handleChangeSelectedHearAboutUsQuestion}
+                    />
                     <ContactInfo setAddress1={setAddress1} setAddress2={setAddress2} setFirstName={setFirstName}
                                  setLastName={setLastName} setCity={setCity} setEmail={setEmail} setZip={setZip}
                                  setPhone={setPhone} setState={setState}/>

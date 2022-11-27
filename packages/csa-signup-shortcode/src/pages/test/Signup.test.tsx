@@ -5,6 +5,7 @@ import {
     addonShares,
     bundleOptions,
     bundles,
+    hearAboutUsQuestions,
     paymentMethods,
     paymentOptions,
     pickupLocations,
@@ -30,7 +31,8 @@ function renderSignupComponent() {
         <Signup welcomeText={mockWelcomeText}
                 addonShares={mockAddonShares} bundleOptions={mockBundleOptions} bundles={mockBundles}
                 paymentMethods={mockPaymentMethods} pickupLocations={mockPickupLocations} regions={mockRegions}
-                seasons={mockSeasons} shares={mockShares} paymentOptions={mockPaymentOptions}/>);
+                seasons={mockSeasons} shares={mockShares} paymentOptions={mockPaymentOptions}
+                hearAboutUsQuestions={hearAboutUsQuestions}/>);
 }
 
 function selectRegion(id: string = "1") {
@@ -43,8 +45,8 @@ function selectSeason(id: string = "1") {
     userEvent.click(seasonElement)
 }
 
-function enterShareQuantity(quantity: string = "1") {
-    const shareElement = screen.getByLabelText(new RegExp(escapeRegex(shares["1"].label)))
+function enterShareQuantity(shareId: string = "1", quantity: string = "1") {
+    const shareElement = screen.getByLabelText(new RegExp(escapeRegex(shares[shareId].label)))
     userEvent.type(shareElement, quantity)
 }
 
@@ -96,7 +98,16 @@ describe('Signup', () => {
         expect(pickupLocation).toBeTruthy()
     })
     it('should show pickup location options for each selected region and season', () => {
-        expect(false).toBeTruthy();
+        renderSignupComponent();
+        selectRegion()
+        selectSeason("1")
+        selectSeason("2")
+        enterShareQuantity("1", "1")
+        enterShareQuantity("5", "1")
+        const pickupLocation1 = screen.getByText(new RegExp(escapeRegex(pickupLocations["1"].label)))
+        const pickupLocation6 = screen.getByText(new RegExp(escapeRegex(pickupLocations["6"].label)))
+        expect(pickupLocation1).toBeTruthy()
+        expect(pickupLocation6).toBeTruthy()
     })
     it('should display the total price, including boxing and delivery fees', () => {
         expect(false).toBeTruthy();

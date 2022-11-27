@@ -195,7 +195,7 @@ export const pickupLocations: PickupLocations = {
         id: "2",
         label: "HOME DELIVERY - Fridays 10-8 p.m. (NOTE: Flower Shares are NOT ELIGIBLE for home delivery)",
         description: undefined,
-        boxingFee: 0.00,
+        boxingFee: 20.00,
         deliveryFee: 10.00,
         seasonId: "1",
         regionId: "1"

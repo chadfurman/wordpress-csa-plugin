@@ -50,6 +50,11 @@ function enterShareQuantity(shareId: string = "1", quantity: string = "1") {
     userEvent.type(shareElement, quantity)
 }
 
+function selectPickupLocation(id: string = "1") {
+    const pickupLocation = screen.getByText(new RegExp(escapeRegex(pickupLocations[id].label)))
+    userEvent.click(pickupLocation)
+}
+
 describe('Signup', () => {
     it('should render without error', () => {
         renderSignupComponent();
@@ -110,10 +115,28 @@ describe('Signup', () => {
         expect(pickupLocation6).toBeTruthy()
     })
     it('should display the total price, including boxing and delivery fees', () => {
-        expect(false).toBeTruthy();
+        renderSignupComponent();
+        let totalPriceElement = screen.queryByText(new RegExp(escapeRegex("Total")))
+        expect(totalPriceElement).toBeNull()
+        selectRegion()
+        selectSeason()
+        enterShareQuantity()
+        selectPickupLocation("2")
+        // 1 of Share[1] + boxing and delivery fee == 247 + 20 + 10 = 277
+        totalPriceElement = screen.getByText(new RegExp(escapeRegex("Total: $277.00")))
+        expect(totalPriceElement).toBeTruthy()
     })
-    it('should display the total price, including boxing and delivery fees', () => {
-        expect(false).toBeTruthy();
+    it('should display the total price, without boxing or delivery fees', () => {
+        renderSignupComponent();
+        let totalPriceElement = screen.queryByText(new RegExp(escapeRegex("Total")))
+        expect(totalPriceElement).toBeNull()
+        selectRegion()
+        selectSeason()
+        enterShareQuantity()
+        selectPickupLocation()
+        // 1 of Share[1], no other fee == 247
+        totalPriceElement = screen.getByText(new RegExp(escapeRegex("Total: $247.00")))
+        expect(totalPriceElement).toBeTruthy()
     })
     it('should display the payment options', () => {
         expect(false).toBeTruthy();

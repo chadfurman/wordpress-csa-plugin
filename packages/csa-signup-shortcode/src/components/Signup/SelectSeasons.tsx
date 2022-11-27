@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Seasons} from "../../types";
 
 interface SelectSeasons {
@@ -7,20 +7,27 @@ interface SelectSeasons {
 }
 const SelectSeasons = ({seasons, handleSelect}: SelectSeasons) => {
     const [selectedSeasons, setSelectedSeasons] = useState<Seasons>({})
+    useEffect(() => {
+        handleSelect(selectedSeasons)
+    }, [selectedSeasons])
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const seasonId = e.currentTarget.value
         const isSelected = e.currentTarget.checked
-        setSelectedSeasons((selectedSeasons) => {
-            if (!isSelected) {
+        if (!isSelected) {
+            setSelectedSeasons((selectedSeasons) => {
                 delete selectedSeasons[seasonId]
-            } else if (isSelected) {
+                return {
+                    ...selectedSeasons
+                }
+            })
+        } else if (isSelected) {
+            setSelectedSeasons((selectedSeasons) => {
                 selectedSeasons[seasonId] = seasons[seasonId]
-            }
-            handleSelect(selectedSeasons)
-            return {
-                ...selectedSeasons
-            }
-        })
+                return {
+                    ...selectedSeasons
+                }
+            })
+        }
     }
 
     return <>

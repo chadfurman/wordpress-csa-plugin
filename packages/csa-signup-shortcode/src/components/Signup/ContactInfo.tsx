@@ -1,4 +1,4 @@
-import {City, Email, FirstName, LastName, Phone, State, StreetAddress, Zip } from "../../types"
+import {City, Email, FirstName, LastName, Phone, State, StreetAddress, Zip} from "../../types"
 
 interface ContactInfoProps {
     setFirstName: (firstName: FirstName) => void
@@ -51,21 +51,24 @@ function ContactInfo({ setFirstName, setLastName, setPhone, setEmail, setAddress
     }
     return <>
         <h3>Contact Info</h3>
+        <div>You must enter either your Email or your Phone number.</div>
+        <div><label>Email: <input placeholder="Email" type={"email"} onChange={handleChangeEmail}/></label></div>
         <div>
-            <label>First Name: <input placeholder="First Name" type="text" onChange={handleChangeFirstName} /></label>
+            <label>First Name: <input placeholder="First Name" type="text" onChange={handleChangeFirstName}/></label>
             <label>Last Name: <input placeholder="Last Name" type="text" onChange={handleChangeLastName}/></label>
         </div>
         <div><label>Phone: <input placeholder="Phone" type={"phone"} onChange={handleChangePhone}/></label></div>
-        <div><label>Email: <input placeholder="Email" type={"email"} onChange={handleChangeEmail} /></label></div>
 
         <h4>Address</h4>
-        <div><label>Street Address<input placeholder="Street Address 1" type={"text"} onChange={handleChangeAddress1}/></label></div>
-        <div><label>Address Line 2<input placeholder="Street Address 2" type={"text"} onChange={handleChangeAddress2}/></label></div>
+        <div><label>Street Address<input placeholder="Street Address 1" type={"text"} onChange={handleChangeAddress1}/></label>
+        </div>
+        <div><label>Address Line 2<input placeholder="Street Address 2" type={"text"} onChange={handleChangeAddress2}/></label>
+        </div>
         <div><label>City<input placeholder="City" type={"text"} onChange={handleChangeCity}/></label></div>
         <div>
             <label>
                 State
-                <select defaultValue={"Massachusetts"} onChange={handleChangeState}>
+                <select defaultValue={"Massachusetts"} onChange={handleChangeState} data-testid={"state-select"}>
                     <option value=""></option>
                     <option value="Alabama">Alabama</option>
                     <option value="Alaska">Alaska</option>

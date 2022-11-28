@@ -12,9 +12,7 @@ import {
     FirstName,
     HearAboutUsQuestions,
     LastName,
-    PaymentMethod,
     PaymentMethods,
-    PaymentOption,
     PaymentOptions,
     Phone,
     PickupLocations,
@@ -49,6 +47,7 @@ import SelectPaymentOption from "../components/Signup/SelectPaymentOption";
 import SelectPaymentMethod from "../components/Signup/SelectPaymentMethod";
 import Comments from "../components/Signup/Comments";
 import ContactInfo from "../components/Signup/ContactInfo";
+import {SignupService} from "../services/SignupService";
 
 export interface SignupProperties {
     welcomeText?: string,
@@ -129,12 +128,12 @@ function Signup({
         })
     }
     const handleUpdateSelectedAddonShares = (share: Share, quantity: number) => {
-        handleChangeSelectedAddonShares(selectedShares => ({
-            ...selectedAddonShares,
+        handleChangeSelectedAddonShares(selectedAddonShares => ({
             [share.id]: {
                 shareId: share.id,
                 quantity: quantity
-            }
+            },
+            ...selectedAddonShares
         }))
     }
     const handleUpdateSelectedBundle = (bundle?: Bundle, bundleOption?: BundleOption) => {
@@ -153,34 +152,6 @@ function Signup({
     const unsetDeliveryFee = () => {
         handleChangeDeliveryFee(0)
     }
-    const unsetSelectedPaymentOption = () => {
-        handleChangeSelectedPaymentOption(undefined)
-    }
-    const handleUpdateSelectedPaymentOption = (paymentOption: PaymentOption) => {
-        handleChangeSelectedPaymentOption(paymentOption)
-    }
-    const unsetSelectedPaymentMethod = () => {
-        handleChangeSelectedPaymentMethod(undefined)
-    }
-    const handleUpdateSelectedPaymentMethod = (paymentMethod: PaymentMethod) => {
-        handleChangeSelectedPaymentMethod(paymentMethod)
-    }
-    const handleUpdateAmountToPay = (amountToPay: Price) => {
-        handleChangeAmountToPay(amountToPay)
-    }
-    const handleUpdateComments = (comments: CommentsType) => {
-        handleChangeComments(comments)
-    }
-    const handleUpdateSelectedHearAboutUsQuestion = (selectedHearAboutUsQuestion: SelectedHearAboutUsQuestion) => {
-        handleChangeSelectedHearAboutUsQuestion(selectedHearAboutUsQuestion)
-    }
-    const unsetSelectedHearAboutUsQuestion = () => {
-        handleChangeSelectedHearAboutUsQuestion(undefined)
-    }
-    useEffect(() => {
-    }, [selectedRegion])
-    useEffect(() => {
-    }, [selectedSeasons])
     useEffect(() => {
         let subtotal = Object.keys(selectedShares).reduce((previousTotal, _, currentShareKeyIndex, selectedSharesKeys) => {
             const shareId = selectedSharesKeys[currentShareKeyIndex]
@@ -207,7 +178,7 @@ function Signup({
         }
     }, [selectedShares, selectedAddonShares, selectedBundle, selectedPickupLocation])
 
-    const handleSubmission = () => {
+    const handleSubmission = async () => {
         const formData: SignupFormData = {
             selectedRegion,
             selectedSeasons,
@@ -235,7 +206,8 @@ function Signup({
             state,
             zip,
         }
-        console.debug("Submission Data:", formData)
+        const service = new SignupService()
+        await service.signup(formData)
     }
 
     return (
@@ -335,8 +307,8 @@ function Signup({
                 : ""}
 
             {/* Submit */}
-            {(address1 || city || state || zip || firstName || lastName) ?
-                <input type={"submit"} onClick={handleSubmission}/>
+            {(email || phone) ?
+                <input type={"submit"} onClick={handleSubmission} value={"Submit"}/>
                 : ""}
         </>
     )

@@ -14,37 +14,17 @@ import {
     shares
 } from "../../data/constants";
 import userEvent from '@testing-library/user-event';
-import {createSignupServiceMock, escapeRegex} from "../../testUtils";
+import {escapeRegex} from "../../testUtils";
+import {SignupService} from "../../services/SignupService"
 
-jest.mock('../../services/SignupService', createSignupServiceMock())
-
-
-// @ts-ignore
-global.fetch = jest.fn(() => {
-    return Promise.resolve({
-        ok: true,
-        json: () => {
-            return Promise.resolve({})
-        }
-    })
-})
+jest.mock('../../services/SignupService')
 
 function renderSignupComponent() {
-    const mockWelcomeText = `Welcome to`
-    const mockAddonShares = addonShares
-    const mockBundleOptions = bundleOptions
-    const mockBundles = bundles
-    const mockPickupLocations = pickupLocations
-    const mockRegions = regions
-    const mockSeasons = seasons
-    const mockShares = shares
-    const mockPaymentMethods = paymentMethods;
-    const mockPaymentOptions = paymentOptions;
     return render(
-        <Signup welcomeText={mockWelcomeText}
-                addonShares={mockAddonShares} bundleOptions={mockBundleOptions} bundles={mockBundles}
-                paymentMethods={mockPaymentMethods} pickupLocations={mockPickupLocations} regions={mockRegions}
-                seasons={mockSeasons} shares={mockShares} paymentOptions={mockPaymentOptions}
+        <Signup welcomeText={`Welcome to`}
+                addonShares={addonShares} bundleOptions={bundleOptions} bundles={bundles}
+                paymentMethods={paymentMethods} pickupLocations={pickupLocations} regions={regions}
+                seasons={seasons} shares={shares} paymentOptions={paymentOptions}
                 hearAboutUsQuestions={hearAboutUsQuestions}/>);
 }
 
@@ -63,6 +43,16 @@ function enterShareQuantity(shareId: string = "1", quantity: string = "1") {
     userEvent.type(shareElement, quantity)
 }
 
+function enterAddonShareQuantity(shareId: string = "1", quantity: string = "1") {
+    const shareElement = screen.getByLabelText(new RegExp(escapeRegex(addonShares[shareId].label)))
+    userEvent.type(shareElement, quantity)
+}
+
+function selectBundle(id: string = "1", option: string = "1") {
+    const bundleElement = screen.getByTestId(`bundle-${id}+option-${option}`)
+    userEvent.click(bundleElement)
+}
+
 function selectPickupLocation(id: string = "1") {
     const pickupLocation = screen.getByText(new RegExp(escapeRegex(pickupLocations[id].label)))
     userEvent.click(pickupLocation)
@@ -78,18 +68,84 @@ function selectPaymentMethod(id: string = "1") {
     userEvent.click(element)
 }
 
-function enterComments() {
+function enterAmountToPay(amountToPay: string = "100") {
+    const amountElement = screen.getByLabelText(new RegExp("amount.*you.*pay"))
+    userEvent.type(amountElement, amountToPay)
+}
 
+function enterComments() {
+    const element = screen.getByText(new RegExp(escapeRegex("Additional Thoughts")))
+    userEvent.type(element, "Some comments")
+}
+
+function selectHearAboutUsQuestion(id: string = "1") {
+    const element = screen.getByText(new RegExp(escapeRegex(hearAboutUsQuestions[id].label)))
+    userEvent.click(element)
+}
+
+function enterReferral() {
+    const element = screen.getByText(new RegExp(escapeRegex("Did a friend refer")))
+    userEvent.type(element, "Some referral")
+}
+
+function enterFirstName() {
+    const element = screen.getByText(new RegExp(escapeRegex("First Name")))
+    userEvent.type(element, "First name")
+}
+
+function enterLastName() {
+    const element = screen.getByText(new RegExp(escapeRegex("Last Name")))
+    userEvent.type(element, "Last name")
+}
+
+function enterEmail() {
+    const element = screen.getByText(new RegExp(escapeRegex("Email:")))
+    userEvent.type(element, "test@example.com")
+}
+
+function enterPhone() {
+    const element = screen.getByText(new RegExp(escapeRegex("Phone:")))
+    userEvent.type(element, "Phone")
+}
+
+function enterAddress1() {
+    const element = screen.getByText(new RegExp(escapeRegex("Street Address")))
+    userEvent.type(element, "Address 1")
+}
+
+function enterAddress2() {
+    const element = screen.getByText(new RegExp(escapeRegex("Address Line 2")))
+    userEvent.type(element, "Address 2")
+}
+
+function enterCity() {
+    const element = screen.getByText(new RegExp(escapeRegex("City")))
+    userEvent.type(element, "City")
+}
+
+function selectState() {
+    const element = screen.getByTestId("state-select")
+    userEvent.selectOptions(element, ["New York"])
+}
+
+function enterZipCode() {
+    const element = screen.getByText(new RegExp(escapeRegex("Zip")))
+    userEvent.type(element, "12345")
 }
 
 function enterContactInfo() {
-
+    enterFirstName()
+    enterLastName()
+    enterEmail()
+    enterPhone()
+    enterAddress1()
+    enterAddress2()
+    enterCity()
+    selectState()
+    enterZipCode()
 }
 
 describe('Signup', () => {
-    beforeEach(() => {
-        fetch.clearMock()
-    })
     it('should render without error', () => {
         renderSignupComponent();
     })
@@ -221,28 +277,71 @@ describe('Signup', () => {
         expect(element).toBeTruthy()
     })
     it('should allow us to submit the form', () => {
-        fetch.mockImplementationOnce(() => {
-
-        })
-        const mockSubmitHandler = jest.fn()
-        jest.mock()
         renderSignupComponent();
         let element = screen.queryByText(new RegExp(escapeRegex("Submit")))
         expect(element).toBeNull()
         selectRegion()
-        selectSeason()
+        for (const seasonId in seasons) {
+            selectSeason(seasonId)
+        }
         enterShareQuantity()
-        selectPickupLocation()
+        enterAddonShareQuantity()
+        selectBundle()
+        selectPickupLocation("2")
+        enterAmountToPay()
         selectPaymentOption()
         selectPaymentMethod()
         enterComments()
+        enterReferral()
+        selectHearAboutUsQuestion()
         enterContactInfo()
         element = screen.getByText(new RegExp(escapeRegex("Submit")))
         userEvent.click(element)
-        expect(mockSubmitHandler).toHaveBeenCalledWith({
-            address: "test-address",
-            city: "test city",
-            state: "SUBMITTED",
+        expect(SignupService.prototype.signup).toHaveBeenCalledWith({
+            selectedRegion: {id: '1', label: 'Western Massachusetts'},
+            selectedSeasons: {
+                '1': {id: '1', label: 'Summer'},
+                '2': {id: '2', label: 'Fall'}
+            },
+            selectedShares: {'1': {shareId: '1', quantity: 1}},
+            selectedPickupLocation: {
+                id: '2',
+                label: 'HOME DELIVERY - Fridays 10-8 p.m. (NOTE: Flower Shares are NOT ELIGIBLE for home delivery)',
+                description: undefined,
+                boxingFee: 20,
+                deliveryFee: 10,
+                seasonId: '1',
+                regionId: '1'
+            },
+            selectedPaymentOption: {id: '1', label: 'Full Payment'},
+            selectedPaymentMethod: {id: '1', label: 'Mail us a check- we love this option!'},
+            amountToPay: 100,
+            subtotal: 1492,
+            total: 1522,
+            boxingFee: 20,
+            deliveryFee: 10,
+            comments: 'Some comments',
+            selectedHearAboutUsQuestion: {id: '1', label: 'I was a member in a previous season'},
+            referral: 'Some referral',
+            selectedAddonShares: {
+                "1": {
+                    "quantity": 1,
+                    "shareId": "1",
+                },
+            },
+            selectedBundle: {
+                "bundleId": "1",
+                "bundleOptionId": "1",
+            },
+            firstName: 'First name',
+            lastName: 'Last name',
+            phone: 'Phone',
+            email: 'test@example.com',
+            address1: 'Address 1',
+            address2: 'Address 2',
+            city: 'City',
+            state: 'New York',
+            zip: '12345'
         })
     })
 })

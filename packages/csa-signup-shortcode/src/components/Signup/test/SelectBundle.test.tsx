@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 import SelectBundle from "../SelectBundle";
 import {bundleOptions, bundles} from "../../../data/constants";
 
@@ -11,7 +11,7 @@ describe("SelectBundle", () => {
         const firstBundle = bundles[firstBundleId]
         const firstBundleOptionId = firstBundle.bundle_option_ids[0]
         const firstBundleOption = bundleOptions[firstBundleOptionId]
-        const firstElement = screen.getByTestId(firstBundle.id+'-'+firstBundleOption.id)
+        const firstElement = screen.getByTestId(`bundle-${firstBundle.id}+option-${firstBundleOption.id}`)
         firstElement.click()
         expect(fakeHandle).toBeCalledWith(firstBundle, firstBundleOption)
     })
@@ -22,7 +22,7 @@ describe("SelectBundle", () => {
         const firstBundle = bundles[firstBundleId]
         const firstBundleOptionId = firstBundle.bundle_option_ids[0]
         const firstBundleOption = bundleOptions[firstBundleOptionId]
-        const firstElement = screen.getByTestId(firstBundle.id+'-'+firstBundleOption.id)
+        const firstElement = screen.getByTestId(`bundle-${firstBundle.id}+option-${firstBundleOption.id}`)
         firstElement.click()
         firstElement.click()
         expect(fakeHandle).toHaveBeenLastCalledWith(undefined, undefined)
@@ -34,12 +34,12 @@ describe("SelectBundle", () => {
         const firstBundle = bundles[firstBundleId]
         const firstBundleOptionId = firstBundle.bundle_option_ids[0]
         const firstBundleOption = bundleOptions[firstBundleOptionId]
-        const firstElement = screen.getByTestId(firstBundle.id+'-'+firstBundleOption.id)
+        const firstElement = screen.getByTestId(`bundle-${firstBundle.id}+option-${firstBundleOption.id}`)
         const secondBundleId = Object.keys(bundles)[1]
         const secondBundle = bundles[secondBundleId]
         const secondBundleOptionId = secondBundle.bundle_option_ids[0]
         const secondBundleOption = bundleOptions[secondBundleOptionId]
-        const secondElement = screen.getByTestId(secondBundle.id+'-'+secondBundleOption.id)
+        const secondElement = screen.getByTestId(`bundle-${secondBundle.id}+option-${secondBundleOption.id}`)
         firstElement.click()
         secondElement.click()
         expect(fakeHandle).toHaveBeenLastCalledWith(secondBundle, secondBundleOption)

@@ -37,7 +37,7 @@ function SelectBundleOption({bundles, bundleOptions, handleSelect}: SelectBundle
                         return <li key={optionId}>
                             <label>
                                 <>
-                                    <input type="radio" data-testid={bundle.id + '-' + bundleOption.id}
+                                    <input type="radio" data-testid={`bundle-${bundle.id}+option-${bundleOption.id}`}
                                            data-bundle-id={bundle.id} data-bundle-option-id={bundleOption.id}
                                            defaultChecked={(selectedBundle && selectedBundle.id === bundle.id && selectedBundleOption && selectedBundleOption.id === bundleOption.id) || false}
                                            onClick={handleChangeBundleOption}/> {Intl.NumberFormat('en-us', {

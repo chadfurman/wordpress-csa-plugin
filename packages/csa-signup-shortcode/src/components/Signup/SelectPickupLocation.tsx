@@ -15,11 +15,9 @@ function SelectPickupLocation({pickupLocations, handleSelect}: SelectPickupLocat
         const locationId: PickupLocationId = locationIdAttr
         const current = pickupLocations[locationId]
         if (selected && selected.id == current.id) {
-            console.debug('unselected location: ' + current)
             setSelected(undefined)
             handleSelect(undefined)
         } else {
-            console.debug('selected location: ' + current)
             setSelected(current)
             handleSelect(current)
         }

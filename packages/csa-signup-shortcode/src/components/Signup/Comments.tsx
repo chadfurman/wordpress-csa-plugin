@@ -23,7 +23,6 @@ function Comments({hearAboutUsQuestions, handleUpdateComments, handleUpdateSelec
     const handleChangeHearAboutUsQuestion = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
         const hearAboutUsQuestionId: HearAboutUsQuestionId = e.currentTarget.getAttribute('data-hear-about-us-question-id') || "missing-hear-about-us-question-id-from-radio"
         const hearAboutUsQuestion: HearAboutUsQuestion = hearAboutUsQuestions[hearAboutUsQuestionId]
-        console.log("change method")
         if (selectedHearAboutUsQuestion && selectedHearAboutUsQuestion.id === hearAboutUsQuestionId) {
             setSelectedHearAboutUsQuestion(undefined);
             handleUpdateSelectedHearAboutUsQuestion(undefined)
@@ -51,7 +50,10 @@ function Comments({hearAboutUsQuestions, handleUpdateComments, handleUpdateSelec
                         {Object.keys(hearAboutUsQuestions).map(hearAboutUsQuestionId => {
                             const hearAboutUsQuestion = hearAboutUsQuestions[hearAboutUsQuestionId]
                             return <li key={hearAboutUsQuestionId}>
-                                <label><input type="radio" data-hear-about-us-question-id={hearAboutUsQuestionId} checked={(selectedHearAboutUsQuestion && selectedHearAboutUsQuestion.id == hearAboutUsQuestion.id) || false} onClick={handleChangeHearAboutUsQuestion} />{hearAboutUsQuestion.label}</label>
+                                <label><input type="radio" data-hear-about-us-question-id={hearAboutUsQuestionId}
+                                              defaultChecked={(selectedHearAboutUsQuestion && selectedHearAboutUsQuestion.id == hearAboutUsQuestion.id) || false}
+                                              onClick={handleChangeHearAboutUsQuestion}/>{hearAboutUsQuestion.label}
+                                </label>
                             </li>
                         })}
                     </ul>

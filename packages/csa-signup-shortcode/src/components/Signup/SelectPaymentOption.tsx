@@ -11,7 +11,6 @@ function SelectPaymentOption({paymentOptions, handleUpdateSelectedPaymentOption,
     const handleChangePaymentOption = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
         const paymentOptionId: PaymentOptionId = e.currentTarget.getAttribute('data-payment-option-id') || "missing-payment-option-id-from-radio"
         const paymentOption: PaymentOption = paymentOptions[paymentOptionId]
-        console.debug("change option")
         if (selectedPaymentOption && selectedPaymentOption.id === paymentOptionId) {
             setSelectedPaymentOption(undefined)
             handleUpdateSelectedPaymentOption(undefined)
@@ -22,7 +21,6 @@ function SelectPaymentOption({paymentOptions, handleUpdateSelectedPaymentOption,
     }
     const handleChangeAmountToPay = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
         const amountToPay = parseInt(e.currentTarget.value)
-        console.debug("change amount")
         handleUpdateAmountToPay(amountToPay)
     }
     return <>

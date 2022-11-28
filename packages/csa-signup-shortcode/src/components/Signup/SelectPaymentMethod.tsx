@@ -10,7 +10,6 @@ function SelectPaymentMethod({paymentMethods, handleUpdateSelectedPaymentMethod}
     const handleChangeSelectedPaymentMethod = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
         const paymentMethodId: PaymentMethodId = e.currentTarget.getAttribute('data-payment-method-id') || "missing-payment-method-id-from-radio"
         const paymentMethod: PaymentMethod = paymentMethods[paymentMethodId]
-        console.debug("change method")
         if (selectedPaymentMethod && selectedPaymentMethod.id === paymentMethodId) {
             setSelectedPaymentMethod(undefined)
             handleUpdateSelectedPaymentMethod(undefined)

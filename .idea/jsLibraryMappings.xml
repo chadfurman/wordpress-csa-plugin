@@ -2,12 +2,12 @@
 <project version="4">
   <component name="JavaScriptLibraryMappings">
     <file url="file://$PROJECT_DIR$" libraries="{red-fire-farm-csa-plugin/node_modules}" />
-    <file url="file://$PROJECT_DIR$/packages/csa-signup-shortcode" libraries="{red-fire-farm-csa-plugin/packages/csa-signup-shortcode/node_modules}" />
-    <file url="file://$PROJECT_DIR$/packages/plugin-settings-page" libraries="{red-fire-farm-csa-plugin/packages/plugin-settings-page/node_modules}" />
-    <file url="file://$PROJECT_DIR$/packages/signup-button-block" libraries="{red-fire-farm-csa-plugin/packages/signup-button-block/node_modules}" />
+    <file url="file://$PROJECT_DIR$/ui/packages/csa-signup-shortcode" libraries="{red-fire-farm-csa-plugin/ui/packages/csa-signup-shortcode/node_modules}" />
+    <file url="file://$PROJECT_DIR$/ui/packages/plugin-settings-page" libraries="{red-fire-farm-csa-plugin/ui/packages/plugin-settings-page/node_modules}" />
+    <file url="file://$PROJECT_DIR$/ui/packages/signup-button-block" libraries="{red-fire-farm-csa-plugin/ui/packages/signup-button-block/node_modules}" />
     <file url="file:///opt/lampp/htdocs/wordpress/wp-content/plugins/red-fire-farm-csa-plugin" libraries="{red-fire-farm-csa-plugin/node_modules}" />
-    <file url="file:///opt/lampp/htdocs/wordpress/wp-content/plugins/red-fire-farm-csa-plugin/packages/csa-signup-shortcode" libraries="{red-fire-farm-csa-plugin/packages/csa-signup-shortcode/node_modules}" />
-    <file url="file:///opt/lampp/htdocs/wordpress/wp-content/plugins/red-fire-farm-csa-plugin/packages/plugin-settings-page" libraries="{red-fire-farm-csa-plugin/packages/plugin-settings-page/node_modules}" />
-    <file url="file:///opt/lampp/htdocs/wordpress/wp-content/plugins/red-fire-farm-csa-plugin/packages/signup-button-block" libraries="{red-fire-farm-csa-plugin/packages/signup-button-block/node_modules}" />
+    <file url="file:///opt/lampp/htdocs/wordpress/wp-content/plugins/red-fire-farm-csa-plugin/ui/packages/csa-signup-shortcode" libraries="{red-fire-farm-csa-plugin/ui/packages/csa-signup-shortcode/node_modules}" />
+    <file url="file:///opt/lampp/htdocs/wordpress/wp-content/plugins/red-fire-farm-csa-plugin/ui/packages/plugin-settings-page" libraries="{red-fire-farm-csa-plugin/ui/packages/plugin-settings-page/node_modules}" />
+    <file url="file:///opt/lampp/htdocs/wordpress/wp-content/plugins/red-fire-farm-csa-plugin/ui/packages/signup-button-block" libraries="{red-fire-farm-csa-plugin/ui/packages/signup-button-block/node_modules}" />
   </component>
 </project>

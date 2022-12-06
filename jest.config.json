@@ -8,7 +8,7 @@
       ],
       "displayName": "csa-signup-shortcode",
       "testMatch": [
-        "<rootDir>/packages/csa-signup-shortcode/src/**/*.test.(t|j)s?(x)"
+        "<rootDir>/ui/packages/csa-signup-shortcode/src/**/*.test.(t|j)s?(x)"
       ]
     }
   ]

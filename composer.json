@@ -5,15 +5,17 @@
     "license": "mit",
     "autoload": {
         "psr-4": {
-            "RedFireFarm\\CsaPlugin\\": "src/"
+          "RedFireFarm\\CsaPlugin\\Api\\": "api/src/"
         }
     },
-    "authors": [
-        {
-            "name": "Chad Furman",
-            "email": "chad@chadfurman.com"
-        }
-    ],
-    "minimum-stability": "dev",
-    "require": {}
+  "authors": [
+    {
+      "name": "Chad Furman",
+      "email": "chad@chadfurman.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require-dev": {
+    "phpunit/phpunit": "^9"
+  }
 }

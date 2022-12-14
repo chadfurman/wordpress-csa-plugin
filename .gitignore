@@ -2,8 +2,10 @@
 /vendor
 /build
 /dist
-/packages/plugin-settings-page/node_modules/
-/packages/signup-button-block/node_modules/
-/packages/plugin-settings-page/build
-/packages/signup-button-block/build
+/ui/packages/csa-signup-shortcode/node_modules
+/ui/packages/csa-signup-shortcode/build
+/ui/packages/plugin-settings-page/node_modules
+/ui/packages/plugin-settings-page/build
+/ui/packages/signup-button-block/node_modules
+/ui/packages/signup-button-block/build
 /lerna-debug.log

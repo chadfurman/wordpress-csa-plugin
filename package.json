@@ -2,7 +2,7 @@
   "name": "root",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "ui/packages/*"
   ],
   "devDependencies": {
     "@babel/core": "^7.19.6",

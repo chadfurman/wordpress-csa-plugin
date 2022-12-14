@@ -8,6 +8,7 @@ import {
     addonShares,
     bundleOptions,
     bundles,
+    hearAboutUsQuestions,
     paymentMethods,
     paymentOptions,
     pickupLocations,
@@ -26,7 +27,7 @@ const App = () => {
             <Route path="/" element={<Layout/>}>
                 <Route index element={<Signup addonShares={addonShares} bundleOptions={bundleOptions} bundles={bundles}
                                               paymentMethods={paymentMethods} pickupLocations={pickupLocations}
-                                              regions={regions} seasons={seasons} shares={shares}
+                                              regions={regions} seasons={seasons} shares={shares} hearAboutUsQuestions={hearAboutUsQuestions}
                                               paymentOptions={paymentOptions}/>}/>
                 <Route path="*" element={<NoPage/>}/>
             </Route>

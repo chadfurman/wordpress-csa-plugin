@@ -1,17 +1,18 @@
 <?php
-
 namespace RedFireFarm\CsaPlugin\Api;
+require_once __DIR__ . '/../../vendor/autoload.php';
 
-use RedFireFarm\CsaPlugin\Api\Container\CsaContainer;
+class Application extends Container\CsaContainer
+{
+    private Services\WordPress $wp;
 
-
-class Application extends CsaContainer {
     public function __construct(Services\WordPress $wp)
     {
         $this->wp = $wp;
     }
 
-    public function run(): void {
+    public function run(): void
+    {
         $this->wp->init(array($this, 'register_api_resources'));
     }
 
@@ -46,6 +47,7 @@ class Application extends CsaContainer {
         );
 
     }
+
     public function register_pickup_location_resource(): void {
         register_post_type(
             'rffcsa_pickup_location',
@@ -58,6 +60,7 @@ class Application extends CsaContainer {
             )
         );
     }
+
     public function register_share_option_resource(): void {
         register_post_type(
             'rffcsa_share_option',
@@ -72,27 +75,35 @@ class Application extends CsaContainer {
             )
         );
     }
+
     public function register_addon_share_option_resource(): void {
 
     }
+
     public function register_payment_option_resource(): void {
 
     }
+
     public function register_hear_about_us_question_resource(): void {
 
     }
+
     public function register_bundle_resource(): void {
 
     }
+
     public function register_bundle_option_resource(): void {
 
     }
+
     public function register_payment_method_resource(): void {
 
     }
+
     public function register_region_resource(): void {
 
     }
+
     public function register_season_resource(): void {
 
     }

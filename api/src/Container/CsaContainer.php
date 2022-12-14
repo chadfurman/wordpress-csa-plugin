@@ -103,7 +103,8 @@ class CsaContainer implements ContainerInterface
         return isset($this->services[$id]);
     }
 
-    public function getServices(): array {
+    public function getServices(): array
+    {
         return $this->services;
     }
 }

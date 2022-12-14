@@ -1,7 +1,9 @@
 <?php
+
 namespace RedFireFarm\CsaPlugin\Api\Services;
 
-class Config {
+class Config
+{
     /**
      * Returns a simple config array
      *

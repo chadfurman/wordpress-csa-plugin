@@ -3,7 +3,7 @@ import {useQuery} from "react-query";
 
 const ManageCSAShares = () => {
     const { isLoading, error, data } = useQuery('repoData', () =>
-        fetch(`${rffcsa_site_url}/?rest_route=/wp/v2/share_option`).then(res =>
+        fetch(`${rffcsa_site_url}/?rest_route=/wp/v2/rffcsa_share_option`).then(res =>
             res.json()
         )
     )

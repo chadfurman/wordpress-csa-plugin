@@ -9,6 +9,6 @@ class ConfigServiceTest extends TestCase
 {
     function testGetConfigReturnsConfigArray(): void
     {
-        $this->assertIsArray(Config::getConfig());
+        $this->assertIsArray((new Config)->getConfig());
     }
 }

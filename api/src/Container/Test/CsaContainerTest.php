@@ -8,32 +8,43 @@ use RedFireFarm\CsaPlugin\Api\Services\Config;
 
 class CsaContainerTest extends TestCase
 {
-    public function testRegistersClassDependencies()
+    public function setUp(): void
     {
-        $container = new CsaContainer();
-        $container->register(Config::class, Config::class);
-        $configClass = $container->get(Config::class);
-        $config = $configClass->getConfig();
-        $this->assertIsArray($config);
+        $this->container = new CsaContainer();
+        $this->container->register(Config::class, Config::class);
+    }
+
+    public function tearDown(): void
+    {
+        unset($this->container);
     }
 
     public function testRegistersFunctionDependencies()
     {
-        $this->assertTrue(!true);
+        $testStr = "purple";
+        $this->container->register('someFunction', function () use ($testStr) {
+            return $testStr;
+        });
+        $this->assertEquals($testStr, $this->container->get('someFunction'));
     }
 
     public function testGetsServices()
     {
-        $this->assertTrue(!true);
+        $services = $this->container->getServices();
+        $this->assertIsArray($services);
+        $this->assertNotEmpty($services);
     }
 
     public function testHasService()
     {
-        $this->assertTrue(!true);
+        $this->assertTrue($this->container->has(Config::class));
+        $this->assertFalse($this->container->has("someOtherThing"));
     }
 
     public function testGetService()
     {
-        $this->assertTrue(!true);
+        $configClass = $this->container->get(Config::class);
+        $config = $configClass->getConfig();
+        $this->assertIsArray($config);
     }
 }

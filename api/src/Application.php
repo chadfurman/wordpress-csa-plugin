@@ -4,32 +4,25 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 
 class Application extends Container\CsaContainer
 {
-    private Services\WordPress $wp;
-
-    public function __construct(Services\WordPress $wp)
-    {
-        $this->wp = $wp;
-    }
-
     public function run(): void
     {
-        $this->wp->init(array($this, 'register_api_resources'));
+        add_action('init', array($this, 'register_api_resources'));
     }
 
     public function register_api_resources()
     {
-        $this->wp->register_api_resource(array($this, 'register_signup_resource'));
-        $this->wp->register_api_resource(array($this, 'register_pickup_location_resource'));
-        $this->wp->register_api_resource(array($this, 'register_share_option_resource'));
-        $this->wp->register_api_resource(array($this, 'register_addon_share_option_resource'));
-        $this->wp->register_api_resource(array($this, 'register_payment_option_resource'));
-        $this->wp->register_api_resource(array($this, 'register_hear_about_us_question_resource'));
-        $this->wp->register_api_resource(array($this, 'register_bundle_resource'));
-        $this->wp->register_api_resource(array($this, 'register_bundle_option_resource'));
-        $this->wp->register_api_resource(array($this, 'register_payment_method_resource'));
-        $this->wp->register_api_resource(array($this, 'register_region_resource'));
-        $this->wp->register_api_resource(array($this, 'register_season_resource'));
-        $this->wp->register_api_resource(array($this, 'register_addon_share_option_resource'));
+        add_action('rest_api_init', array($this, 'register_signup_resource'));
+        add_action('rest_api_init', array($this, 'register_pickup_location_resource'));
+        add_action('rest_api_init', array($this, 'register_share_option_resource'));
+        add_action('rest_api_init', array($this, 'register_addon_share_option_resource'));
+        add_action('rest_api_init', array($this, 'register_payment_option_resource'));
+        add_action('rest_api_init', array($this, 'register_hear_about_us_question_resource'));
+        add_action('rest_api_init', array($this, 'register_bundle_resource'));
+        add_action('rest_api_init', array($this, 'register_bundle_option_resource'));
+        add_action('rest_api_init', array($this, 'register_payment_method_resource'));
+        add_action('rest_api_init', array($this, 'register_region_resource'));
+        add_action('rest_api_init', array($this, 'register_season_resource'));
+        add_action('rest_api_init', array($this, 'register_addon_share_option_resource'));
     }
 
     public function register_signup_resource(): void {

@@ -2,14 +2,14 @@
 
 namespace RedFireFarm\CsaPlugin\Api\Services;
 
-class Config
+class Config implements ConfigInterface
 {
     /**
      * Returns a simple config array
      *
      * @return array
      */
-    public static function getConfig(): array
+    public function getConfig(): array
     {
         $config = array();
 

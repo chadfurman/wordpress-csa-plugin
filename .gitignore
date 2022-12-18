@@ -9,3 +9,4 @@
 /ui/packages/signup-button-block/node_modules
 /ui/packages/signup-button-block/build
 /lerna-debug.log
+/.phpunit.result.cache

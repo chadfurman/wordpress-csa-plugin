@@ -3,6 +3,7 @@
 namespace RedFireFarm\CsaPlugin\Api\Controllers;
 
 use RedFireFarm\CsaPlugin\Api\Services\ConfigInterface;
+use function register_rest_route;
 
 abstract class BaseController
 {

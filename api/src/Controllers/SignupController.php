@@ -2,6 +2,8 @@
 
 namespace RedFireFarm\CsaPlugin\Api\Controllers;
 
+use function register_post_type;
+
 class SignupController extends BaseController
 {
     public string $resource_name = "signup";
@@ -33,24 +35,22 @@ class SignupController extends BaseController
     public function register_create_route(): void
     {
         $http_verb = "GET";
-        $route_handler = array($this, "create_handler");
-        $schema_handler = array($this, "schema_handler");
-        $permissions_check_handler = array($this, "create_auth_handler");
-        $this->register_authenticated_route(
+        $route_handler = [$this, "create_handler"](...);
+        $schema_handler = [$this, "schema_handler"](...);
+        $this->register_public_route(
             $this->resource_name,
             $http_verb,
             $route_handler,
             $schema_handler,
-            $permissions_check_handler
         );
     }
 
     public function register_retrieve_route(): void
     {
         $http_verb = "GET";
-        $route_handler = array($this, "retrieve_handler");
-        $schema_handler = array($this, "schema_handler");
-        $permissions_check_handler = array($this, "retrieve_auth_handler");
+        $route_handler = [$this, "retrieve_handler"](...);
+        $schema_handler = [$this, "schema_handler"](...);
+        $permissions_check_handler = [$this, "retrieve_auth_handler"](...);
         $this->register_authenticated_route(
             $this->resource_name,
             $http_verb,
@@ -63,9 +63,9 @@ class SignupController extends BaseController
     public function register_update_route(): void
     {
         $http_verb = "GET";
-        $route_handler = array($this, "update_handler");
-        $schema_handler = array($this, "schema_handler");
-        $permissions_check_handler = array($this, "update_auth_handler");
+        $route_handler = [$this, "update_handler"](...);
+        $schema_handler = [$this, "schema_handler"](...);
+        $permissions_check_handler = [$this, "update_auth_handler"](...);
         $this->register_authenticated_route(
             $this->resource_name,
             $http_verb,
@@ -78,9 +78,9 @@ class SignupController extends BaseController
     public function register_delete_route(): void
     {
         $http_verb = "GET";
-        $route_handler = array($this, "delete_handler");
-        $schema_handler = array($this, "schema_handler");
-        $permissions_check_handler = array($this, "delete_auth_handler");
+        $route_handler = [$this, "delete_handler"](...);
+        $schema_handler = [$this, "schema_handler"](...);
+        $permissions_check_handler = [$this, "delete_auth_handler"](...);
         $this->register_authenticated_route(
             $this->resource_name,
             $http_verb,
@@ -91,11 +91,6 @@ class SignupController extends BaseController
     }
 
     public function create_handler(): void
-    {
-
-    }
-
-    public function create_auth_handler(): void
     {
 
     }
@@ -126,6 +121,11 @@ class SignupController extends BaseController
     }
 
     public function delete_auth_handler(): void
+    {
+
+    }
+
+    public function schema_handler(): void
     {
 
     }

@@ -2,9 +2,10 @@
 
 namespace RedFireFarm\CsaPlugin\Api\Controllers\Test;
 
-use PHPUnit\Framework\TestCase;
 use RedFireFarm\CsaPlugin\Api\Controllers\SignupController;
 use RedFireFarm\CsaPlugin\Api\Services\Config;
+use WP_Mock;
+use WP_Mock\Tools\TestCase;
 
 final class SignupControllerTest extends TestCase
 {
@@ -12,10 +13,13 @@ final class SignupControllerTest extends TestCase
 
     public function setUp(): void
     {
-//        self::$functions = $this->createPartialMock(
-//            SignupController::class, []
+        WP_Mock::setUp();
     }
 
+    public function tearDown(): void
+    {
+        WP_Mock::tearDown();
+    }
 //    public function testRouteRegistrationHappensOnApiInit(): void
 //    {
 //        // mock out add_action
@@ -27,12 +31,14 @@ final class SignupControllerTest extends TestCase
 //
     public function testRegistersCreateHandler(): void
     {
+        WP_Mock::userFunction('register_rest_route');
+        WP_Mock::userFunction('register_post_type');
         $controller = $this->getMockBuilder(SignupController::class)
-            ->onlyMethods(['registerAuthenticatedRoute'])
+            ->onlyMethods(['register_public_route'])
             ->setConstructorArgs([new Config()])
             ->getMock();
-        $controller->expects($this->once())->method('registerAuthenticatedRoute');
-        $controller->registerRoutes();
+        $controller->expects($this->once())->method('register_public_route');
+        $controller->register_create_route();
     }
 //        $controller = new SignupController();
 //        $controller->registerRoutes();
@@ -66,12 +72,4 @@ final class SignupControllerTest extends TestCase
 //    {
 //        $this->assertTrue(!true);
 //    }
-//
-//    public function add_action(...$params): void {
-//
-//    }
-}
-
-function add_action(...$params)
-{
 }

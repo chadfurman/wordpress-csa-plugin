@@ -1,8 +1,10 @@
 <?php
 namespace RedFireFarm\CsaPlugin\Api;
+use RedFireFarm\CsaPlugin\Api\Container\CsaContainer;
+
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-class Application extends Container\CsaContainer
+class Application extends CsaContainer
 {
     public function run(): void
     {
@@ -26,18 +28,6 @@ class Application extends Container\CsaContainer
     }
 
     public function register_signup_resource(): void {
-        register_post_type(
-            'rffcas_signup',
-            array(
-                'labels' => array(
-                    'name' => __('RFFCSA Signups', 'textdomain'),
-                    'singular_name' => __('RFFCSA Signup', 'textdomain'),
-                ),
-                'public' => true,
-                'show_in_rest' => true,
-                'description' => 'A Red Fire Farm CSA Signup.  A user submitted the CSA Signup Form and this is what we logged.'
-            )
-        );
 
     }
 

@@ -9,6 +9,7 @@ final class SignupControllerTest extends TestCase
 {
     public function testRouteRegistrationHappensOnApiInit(): void
     {
+        $this->assertTrue(!true);
         // mock out add_action
 //        $mock_add_action = ...;
         $signupController = new SignupController();
@@ -18,6 +19,7 @@ final class SignupControllerTest extends TestCase
 
     public function testRegistersCreateHandler(): void
     {
+        $this->assertTrue(!true);
         $controller = new SignupController();
         $controller->register_routes();
 
@@ -33,17 +35,21 @@ final class SignupControllerTest extends TestCase
 
     public function testCreateHandlerAuthIsPublic(): void
     {
+        $this->assertTrue(!true);
     }
 
     public function testCreateHandlerRequiresCaptcha(): void
     {
+        $this->assertTrue(!true);
     }
 
     public function testRegistersListHandler(): void
     {
+        $this->assertTrue(!true);
     }
 
     public function testListHandlerAuthRequiresAdmin(): void
     {
+        $this->assertTrue(!true);
     }
 }

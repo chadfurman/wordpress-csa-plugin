@@ -20,16 +20,8 @@ final class SignupControllerTest extends TestCase
     {
         WP_Mock::tearDown();
     }
-//    public function testRouteRegistrationHappensOnApiInit(): void
-//    {
-//        // mock out add_action
-////        $mock_add_action = ...;
-//        $signupController = new SignupController();
-//
-//        $this->assertEquals('/signup', $signupController->routeName());
-//    }
-//
-    public function testRegistersCreateHandler(): void
+
+    public function testRegisterCreate(): void
     {
         WP_Mock::userFunction('register_rest_route');
         WP_Mock::userFunction('register_post_type');
@@ -40,36 +32,74 @@ final class SignupControllerTest extends TestCase
         $controller->expects($this->once())->method('register_public_route');
         $controller->register_create_route();
     }
-//        $controller = new SignupController();
-//        $controller->registerRoutes();
-//
-//        // assert that when we call register_routes, the handler is registered.
-//
-//        // Function to register our new routes from the controller.
-//        function prefix_register_my_rest_routes()
-//        {
-//        }
-//
-//        add_action('rest_api_init', 'prefix_register_my_rest_routes');
-//    }
-//
-//    public function testCreateHandlerAuthIsPublic(): void
-//    {
-//        $this->assertTrue(!true);
-//    }
-//
-//    public function testCreateHandlerRequiresCaptcha(): void
-//    {
-//        $this->assertTrue(!true);
-//    }
-//
-//    public function testRegistersListHandler(): void
-//    {
-//        $this->assertTrue(!true);
-//    }
-//
-//    public function testListHandlerAuthRequiresAdmin(): void
-//    {
-//        $this->assertTrue(!true);
-//    }
+
+    public function testCreateWithCaptcha(): void
+    {
+        $this->assertTrue(!true);
+    }
+
+    public function testCreateWithoutCaptcha(): void
+    {
+        $this->assertTrue(!true);
+    }
+
+    public function testRegistersGetItem(): void
+    {
+        $this->assertTrue(!true);
+    }
+
+    public function testGetItem(): void
+    {
+        $this->assertTrue(!true);
+    }
+
+    public function testGetItemAuthCheck(): void
+    {
+        $this->assertTrue(!true);
+    }
+
+    public function testRegistersGetItems(): void
+    {
+        $this->assertTrue(!true);
+    }
+
+    public function testGetItems(): void
+    {
+        $this->assertTrue(!true);
+    }
+
+    public function testGetItemsAuthCheck(): void
+    {
+        $this->assertTrue(!true);
+    }
+
+    public function testRegistersUpdateItem(): void
+    {
+        $this->assertTrue(!true);
+    }
+
+    public function testUpdateItem(): void
+    {
+        $this->assertTrue(!true);
+    }
+
+    public function testUpdateItemAuthCheck(): void
+    {
+        $this->assertTrue(!true);
+    }
+
+    public function testRegistersDeleteItem(): void
+    {
+        $this->assertTrue(!true);
+    }
+
+    public function testDeleteItem(): void
+    {
+        $this->assertTrue(!true);
+    }
+
+    public function testDeleteItemAuthCheck(): void
+    {
+        $this->assertTrue(!true);
+    }
 }

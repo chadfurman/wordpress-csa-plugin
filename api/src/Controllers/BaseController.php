@@ -17,6 +17,9 @@ use function register_rest_route;
  */
 abstract class BaseController
 {
+    const SINGULAR = true;
+    const PLURAL = false;
+    const UUID = true;
     private array $config;
     private string $namespace;
 
@@ -46,7 +49,7 @@ abstract class BaseController
      * @param string $http_verb the HTTP verb (e.g. GET, POST, DELETE, etc)
      * @param callable $route_handler the callback that will handle the request
      * @param callable $schema_handler the schema for the resource in question
-     * @param callable $permissions_check_handler the authentication handler for this route
+     * @param callable $auth_handler the authentication handler for this route
      * @param bool $is_singular whether the route is singular or not.  For example, if you have a route like "/posts/:post_id" then is_singular should be true, or "/posts" then is_singular should be false.  Default false.
      * @param bool $is_uuid whether the route is using UUID or not.  Default true
      * @return void
@@ -56,9 +59,9 @@ abstract class BaseController
         string   $http_verb,
         callable $route_handler,
         callable $schema_handler,
-        callable $permissions_check_handler,
-        bool     $is_singular = false,
-        bool     $is_uuid = true,
+        callable $auth_handler,
+        bool     $is_singular = self::PLURAL,
+        bool     $is_uuid = self::UUID,
     ): void
     {
         $route = $this->get_route($resource_name, $is_singular, $is_uuid);
@@ -66,7 +69,7 @@ abstract class BaseController
             array(
                 'methods' => $http_verb,
                 'callback' => $route_handler,
-                'permission_callback' => $permissions_check_handler,
+                'permission_callback' => $auth_handler,
             ),
             'schema' => $schema_handler,
         ));
@@ -74,8 +77,8 @@ abstract class BaseController
 
     /**
      * @param string $resource_name base of the route name
-     * @param bool $is_singular whether the route is singular or not.  For example, if you have a route like "/posts/:post_id" then is_singular should be true, or "/posts" then is_singular should be false.  Default false.
-     * @param bool $is_uuid whether the route is using UUID or not.  Default true
+     * @param bool $is_singular whether the route is singular or not.  For example, if you have a route like "/posts/:post_id" then is_singular should be true, or "/posts" then is_singular should be false.
+     * @param bool $is_uuid whether the route is using UUID or not.
      * @return string
      */
     public function get_route(string $resource_name, bool $is_singular, bool $is_uuid): string
@@ -104,8 +107,8 @@ abstract class BaseController
         string   $http_verb,
         callable $route_handler,
         callable $schema_handler,
-        bool     $is_singular = false,
-        bool     $is_uuid = true,
+        bool     $is_singular = self::PLURAL,
+        bool     $is_uuid = self::UUID,
     ): void
     {
         $route = $this->get_route($resource_name, $is_singular, $is_uuid);

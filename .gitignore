@@ -10,3 +10,6 @@
 /ui/packages/signup-button-block/build
 /lerna-debug.log
 /.phpunit.result.cache
+/.idea/workspace.xml
+/.idea/usage.statistics.xml
+/.idea/shelf

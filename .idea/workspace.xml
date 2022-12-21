@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="11e33839-cc6d-47af-9458-5f54857dd639" name="Changes" comment="chore: only one base controller, merged tests to test namespace" />
+    <list default="true" id="11e33839-cc6d-47af-9458-5f54857dd639" name="Changes" comment="chore: adding unversioned idea files after configuring phpunit autoloader" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -53,6 +53,8 @@
       <path value="$PROJECT_DIR$/vendor/phar-io/version" />
       <path value="$PROJECT_DIR$/vendor/10up/wp_mock" />
       <path value="$PROJECT_DIR$/vendor/antecedent/patchwork" />
+      <path value="/usr/share/php" />
+      <path value="$PROJECT_DIR$/../../.." />
     </include_path>
   </component>
   <component name="ProjectId" id="2JE2LSlYGqj28w8ncd3rLm9N3zc" />
@@ -65,9 +67,10 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/opt/lampp/htdocs/wordpress/wp-content/plugins/red-fire-farm-csa-plugin/api",
+    "last_opened_file_path": "/opt/lampp/htdocs/wordpress",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
+    "settings.editor.selected.configurable": "reference.webide.settings.project.settings.php",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -99,7 +102,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1671628866257</updated>
-      <workItem from="1671628867600" duration="313000" />
+      <workItem from="1671628867600" duration="634000" />
     </task>
     <task id="LOCAL-00001" summary="chore: directory cleanup">
       <created>1671628942239</created>
@@ -115,7 +118,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671628965914</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="chore: adding unversioned idea files after configuring phpunit autoloader">
+      <created>1671629409604</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1671629409604</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -135,6 +145,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="chore: directory cleanup" />
     <MESSAGE value="chore: only one base controller, merged tests to test namespace" />
-    <option name="LAST_COMMIT_MESSAGE" value="chore: only one base controller, merged tests to test namespace" />
+    <MESSAGE value="chore: adding unversioned idea files after configuring phpunit autoloader" />
+    <option name="LAST_COMMIT_MESSAGE" value="chore: adding unversioned idea files after configuring phpunit autoloader" />
   </component>
 </project>

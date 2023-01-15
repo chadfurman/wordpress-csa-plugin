@@ -1,0 +1,156 @@
+POST http://localhost/wordpress/?rest_route=/wp/v2/posts
+X-WP-Nonce: 5ebab28c05
+Content-Type: application/json
+
+{
+  "title": "test",
+  "content": "test",
+  "excerpt": "test",
+  "slug": "test"
+}
+
+<> 2022-08-21T194931.201.json
+
+###
+
+POST http://localhost/wordpress/?rest_route=/wp/v2/posts
+X-WP-Nonce: 5ebab28c05
+
+{
+"title": "test",
+"content": "test",
+"excerpt": "test",
+"slug": "test"
+}
+
+<> 2022-08-21T194628.400.json
+
+###
+
+POST http://localhost/wordpress/?rest_route=/wp/v2/posts
+X-WP-Nonce: 5ebab28c05
+{:
+"title": "test",
+"content": "test",
+"excerpt": "test",
+"slug": "test"
+}:
+
+<> 2022-08-21T194608.400.html
+
+###
+
+POST http://localhost/wordpress/?rest_route=/wp/v2/posts
+X-WP-Nonce: 5ebab28c05
+
+{
+"title": "test",
+"content": "test",
+"excerpt": "test",
+"slug": "test"
+}
+
+<> 2022-08-21T194604.400.json
+
+###
+
+POST http://localhost/wordpress/?rest_route=/wp/v2/posts
+X-WP-Nonce: 5ebab28c05
+
+{
+"title":"test",
+"content": "test",
+"excerpt": "test",
+"slug":"test"
+}
+
+<> 2022-08-21T194332.400.json
+
+###
+
+POST http://localhost/wordpress/?rest_route=/wp/v2/posts
+X-WP-Nonce: 5ebab28c05
+
+{
+"title":"test",
+"content": "test",
+"excerpt": "test"
+}
+
+<> 2022-08-21T194010.400.json
+
+###
+
+POST http://localhost/wordpress/?rest_route=/wp/v2/posts
+X-WP-Nonce: 5ebab28c05
+
+{
+"title":"test"
+}
+
+<> 2022-08-21T193953.400.json
+
+###
+
+POST http://localhost/wordpress/?rest_route=/wp/v2/posts
+
+{
+"title":"test"
+}
+
+<> 2022-08-21T193914.401.json
+
+###
+
+POST http://localhost/wordpress/?rest_route=/wp/v2/posts
+
+{
+"title":"test"
+}
+
+<> 2022-08-21T193721.401.json
+
+###
+
+GET http://localhost/wordpress/?rest_route=/wp/v2/posts&_fields=id,title,link
+Accept: application/json
+
+<> 2022-08-21T193614.200.json
+
+###
+
+GET http://localhost/wordpress/?rest_route=/wp/v2/posts
+Accept: application/json
+
+<> 2022-08-21T193459.200.json
+
+###
+
+GET http://localhost/wordpress/?rest_route=/posts
+Accept: application/json
+
+<> 2022-08-21T192753.404.json
+
+###
+
+GET http://localhost/wordpress/?rest_route=/
+Accept: application/json
+
+<> 2022-08-21T173639.200.json
+
+###
+
+GET http://localhost/wordpress/?rest_route=/
+Accept: application/json
+
+<> 2022-08-21T172512.200.json
+
+###
+
+GET http://localhost/wordpress/?rest_route=/
+Accept: application/json
+
+<> 2022-08-21T171639.200.json
+
+###
+

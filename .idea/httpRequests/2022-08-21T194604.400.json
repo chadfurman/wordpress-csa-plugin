@@ -1,0 +1,7 @@
+{
+  "code": "empty_content",
+  "message": "Content, title, and excerpt are empty.",
+  "data": {
+    "status": 400
+  }
+}

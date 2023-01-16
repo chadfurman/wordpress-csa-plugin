@@ -3,22 +3,19 @@
 namespace RedFireFarm\CsaPlugin\Api\Controllers\Test;
 
 use WP_Mock;
-use WP_Mock\Tools\TestCase;
 
-class BaseControllerTest extends TestCase {
-    public function setUp(): void
-    {
-        WP_Mock::setUp();
-    }
+class BaseControllerTest extends WP_Mock\Tools\TestCase {
+    public function setUp(): void {
+		WP_Mock::setUp();
+	}
 
-    public function tearDown(): void
-    {
-        WP_Mock::tearDown();
-    }
+	public function tearDown(): void {
+		WP_Mock::tearDown();
+	}
 
-    public function test_register_public_route()
+    public function test_register_public_route(): void
     {
-        $this->fail("Test not implemented");
+        $this->fail();
     }
 
     public function test_get_route()

@@ -4,6 +4,8 @@ use RedFireFarm\CsaPlugin\Api\Container\CsaContainer;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
+#test this
+
 class Application extends CsaContainer
 {
     public function run(): void

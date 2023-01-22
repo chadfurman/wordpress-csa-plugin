@@ -65,7 +65,7 @@ abstract class BaseController
     ): void
     {
         $route = $this->get_route($resource_name, $is_singular, $is_uuid);
-        register_rest_route($this->namespace, $route, array(
+        register_rest_route($this->route_prefix, $route, array(
             array(
                 'methods' => $http_verb,
                 'callback' => $route_handler,
@@ -112,7 +112,7 @@ abstract class BaseController
     ): void
     {
         $route = $this->get_route($resource_name, $is_singular, $is_uuid);
-        register_rest_route($this->namespace, $route, array(
+        register_rest_route($this->route_prefix, $route, array(
             array(
                 'methods' => $http_verb,
                 'callback' => $route_handler,

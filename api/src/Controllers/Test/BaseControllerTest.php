@@ -4,10 +4,15 @@ namespace RedFireFarm\CsaPlugin\Api\Controllers\Test;
 
 use WP_Mock;
 use WP_Mock\Tools\TestCase;
+class BaseControllerStub extends BaseController {
+    function register_rest_routes(): void {}
+    function register_post_types(): void {}
+}
 
 class BaseControllerTest extends TestCase {
     public function setUp(): void
     {
+        $this->base_controller = new BaseControllerStub(new Config());
         WP_Mock::setUp();
     }
 
@@ -18,7 +23,35 @@ class BaseControllerTest extends TestCase {
 
     public function test_register_public_route()
     {
-        $this->fail("Test not implemented");
+        $resource_name = 'a-public-resource';
+        $http_verb = 'POST';
+        $route_handler = function () {};
+        $schema_handler = function () {};
+        $is_singular = BaseController::PLURAL;
+        $is_uuid = BaseController::UUID;
+        WP_Mock::userFunction('register_rest_route', array(
+            'times' => 1,
+            'args' => array(
+                $this->base_controller->route_prefix,
+                $this->base_controller->get_route($resource_name, $is_singular, $is_uuid),
+                array(
+                   array(
+                       'methods' => $http_verb,
+                       'callback' => $route_handler,
+                   ),
+                   'schema' => $schema_handler,
+                )
+            )
+        ));
+        $this->base_controller->register_public_route(
+            resource_name: $resource_name,
+            http_verb: $http_verb,
+            route_handler: $route_handler,
+            schema_handler: $schema_handler,
+            is_singular: $is_singular,
+            is_uuid: $is_uuid
+        );
+        $this->assertConditionsMet();
     }
 
     public function test_get_route_plural()

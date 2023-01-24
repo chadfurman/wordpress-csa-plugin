@@ -21,13 +21,11 @@ abstract class BaseController
     const PLURAL = false;
     const UUID = true;
     private array $config;
-    private string $namespace;
 
     public function __construct(ConfigInterface $config)
     {
         $this->config = $config->getConfig();
-        $route_prefix = $this->config['route_prefix'];
-        $this->namespace = $route_prefix . '/v1/';
+        $this->route_prefix = $this->config['route_prefix'];
         $this->register_rest_routes();
         $this->register_post_types();
     }

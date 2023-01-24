@@ -13,7 +13,7 @@ class Config implements ConfigInterface
     {
         $config = array();
 
-        $config['route_prefix'] = 'rff-csa-plugin';
+        $config['route_prefix'] = 'rff-csa-plugin/v1/';
 
         return $config;
     }

@@ -2,8 +2,11 @@
 
 namespace RedFireFarm\CsaPlugin\Api\Controllers\Test;
 
+use RedFireFarm\CsaPlugin\Api\Controllers\BaseController;
 use WP_Mock;
 use WP_Mock\Tools\TestCase;
+use RedFireFarm\CsaPlugin\Api\Services\Config;
+
 class BaseControllerStub extends BaseController {
     function register_rest_routes(): void {}
     function register_post_types(): void {}

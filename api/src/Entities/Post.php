@@ -1,6 +1,5 @@
-
 <?php
-namespace RedFireFarm\CsaPlugin\Api\Factories\CsaPlugin\Api\Entities;
+namespace RedFireFarm\CsaPlugin\Api\Entities;
 
 class Post {
     public function __construct(
